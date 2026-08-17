@@ -1,0 +1,641 @@
+/* Google Fonts — must be first @import */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+@import "tailwindcss";
+
+/* ============================================================
+   TNCC DESIGN SYSTEM — TAMIL NADU CREATORS CLUB
+   ============================================================ */
+
+/* ============================================================
+   COLOR TOKENS
+   ============================================================ */
+:root {
+  /* Brand Core */
+  --navy:        #0D2C5B;
+  --navy-dark:   #081A3A;
+  --navy-mid:    #1B3F7E;
+  --orange:      #E84020;
+  --orange-mid:  #FF5733;
+  --orange-light:#FFF0ED;
+  --cyan:        #00B5C8;
+  --cyan-mid:    #00CDE0;
+  --cyan-light:  #E6F9FC;
+  --yellow:      #F5A623;
+  --yellow-mid:  #FFB84D;
+  --yellow-light:#FFF8EC;
+
+  /* Neutrals */
+  --white:       #FFFFFF;
+  --cream:       #F8F6F1;
+  --gray-100:    #F5F5F5;
+  --gray-200:    #E8E8E8;
+  --gray-300:    #D1D1D1;
+  --gray-400:    #A0A0A0;
+  --gray-500:    #6B7280;
+  --gray-600:    #4B5563;
+  --gray-700:    #374151;
+  --gray-800:    #1F2937;
+
+  /* Semantic */
+  --success:     #10B981;
+  --warning:     #F59E0B;
+  --error:       #EF4444;
+
+  /* Background */
+  --background:  #FFFFFF;
+  --foreground:  #0D2C5B;
+
+  /* Typography */
+  --font-display: var(--font-display-custom), 'Juturu', sans-serif;
+  --font-body:    var(--font-dm-sans), 'DM Sans', sans-serif;
+
+  /* Spacing scale */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 128px;
+
+  /* Border radius */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  32px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(13, 44, 91, 0.08);
+  --shadow-md:  0 4px 16px rgba(13, 44, 91, 0.12);
+  --shadow-lg:  0 8px 32px rgba(13, 44, 91, 0.16);
+  --shadow-xl:  0 16px 48px rgba(13, 44, 91, 0.20);
+
+  /* Transitions */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --duration-fast:   150ms;
+  --duration-base:   300ms;
+  --duration-slow:   600ms;
+  --duration-xslow:  900ms;
+}
+
+/* ============================================================
+   TAILWIND v4 THEME TOKENS
+   ============================================================ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-navy:        var(--navy);
+  --color-navy-dark:   var(--navy-dark);
+  --color-navy-mid:    var(--navy-mid);
+  --color-orange:      var(--orange);
+  --color-orange-mid:  var(--orange-mid);
+  --color-orange-light: var(--orange-light);
+  --color-cyan:        var(--cyan);
+  --color-cyan-mid:    var(--cyan-mid);
+  --color-cyan-light:  var(--cyan-light);
+  --color-yellow:      var(--yellow);
+  --color-yellow-mid:  var(--yellow-mid);
+  --color-yellow-light: var(--yellow-light);
+  --color-cream:       var(--cream);
+
+  --font-display: var(--font-display);
+  --font-body:    var(--font-body);
+  --font-sans:    var(--font-body);
+}
+
+/* ============================================================
+   BASE RESET & GLOBALS
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   TYPOGRAPHY SYSTEM
+   ============================================================ */
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+.text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4.25rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+}
+
+.text-display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.text-display-md {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: normal;
+}
+
+.text-heading-lg {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: normal;
+}
+
+.text-heading-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.875rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: normal;
+}
+
+.text-heading-sm {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.text-body-lg { font-size: 1.125rem; line-height: 1.7; }
+.text-body-md { font-size: 1rem;     line-height: 1.65; }
+.text-body-sm { font-size: 0.875rem; line-height: 1.6; }
+.text-label   { font-size: 0.75rem;  font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.text-mono    { font-family: monospace; font-size: 0.8125rem; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--orange-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(232, 64, 32, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+}
+.btn-secondary:hover {
+  background: var(--navy);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--navy);
+  padding: 10px 20px;
+}
+.btn-ghost:hover {
+  background: var(--gray-100);
+}
+
+.btn-cyan {
+  background: var(--cyan);
+  color: #fff;
+}
+.btn-cyan:hover {
+  background: var(--cyan-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 181, 200, 0.4);
+}
+
+.btn-yellow {
+  background: var(--yellow);
+  color: var(--navy);
+}
+.btn-yellow:hover {
+  background: var(--yellow-mid);
+  transform: translateY(-1px);
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 1rem;
+  border-radius: var(--radius-full);
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-full);
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  transition: all var(--duration-base) var(--ease-out);
+}
+.card:hover {
+  border-color: var(--gray-300);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.card-navy {
+  background: var(--navy);
+  color: white;
+  border-color: transparent;
+}
+
+.card-cream {
+  background: var(--cream);
+  border-color: transparent;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-navy    { background: var(--navy); color: white; }
+.badge-orange  { background: var(--orange); color: white; }
+.badge-cyan    { background: var(--cyan-light); color: var(--cyan); }
+.badge-yellow  { background: var(--yellow-light); color: #B37A00; }
+.badge-gray    { background: var(--gray-200); color: var(--gray-600); }
+.badge-success { background: #DCFCE7; color: #16A34A; }
+
+/* ============================================================
+   FORM INPUTS
+   ============================================================ */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--navy);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--duration-fast);
+}
+.input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 181, 200, 0.12);
+}
+.input::placeholder { color: var(--gray-400); }
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+/* ============================================================
+   SECTION SYSTEM
+   ============================================================ */
+.section {
+  padding: var(--space-3xl) 0;
+}
+
+.section-sm {
+  padding: var(--space-2xl) 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container-wide {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .container, .container-wide {
+    padding: 0 16px;
+  }
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+}
+
+/* ============================================================
+   BACKGROUND ELEMENTS SYSTEM
+   ============================================================ */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(13, 44, 91, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 44, 91, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(circle, rgba(13, 44, 91, 0.08) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-fade-up    { animation: fadeInUp var(--duration-slow) var(--ease-out) both; }
+.animate-fade-left  { animation: fadeInLeft var(--duration-slow) var(--ease-out) both; }
+.animate-fade-right { animation: fadeInRight var(--duration-slow) var(--ease-out) both; }
+.animate-scale-in   { animation: scaleIn var(--duration-slow) var(--ease-out) both; }
+.animate-float      { animation: float 3s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-spin-slow  { animation: spin-slow 12s linear infinite; }
+
+/* Animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--gray-100); }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--navy); }
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection { background: var(--cyan); color: white; }
+
+/* ============================================================
+   FOCUS
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.text-gradient-orange {
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, var(--cyan), var(--navy-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.divider {
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.divider-orange { background: var(--orange); }
+.divider-cyan   { background: var(--cyan); }
+.divider-yellow { background: var(--yellow); }
+
+/* Hover lift */
+.hover-lift {
+  transition: transform var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Sticky nav scrolled state */
+.nav-scrolled {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(13, 44, 91, 0.08);
+}
+
+/* Section label */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--orange);
+  border-radius: 1px;
+}
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Glassmorphism (used sparingly) */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================
+   DASHBOARD SPECIFIC
+   ============================================================ */
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all var(--duration-fast);
+  text-decoration: none;
+  cursor: pointer;
+}
+.sidebar-nav-item:hover,
+.sidebar-nav-item.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+.sidebar-nav-item.active {
+  background: rgba(0, 181, 200, 0.2);
+  color: var(--cyan);
+}
+
+/* ============================================================
+   OVERLAY & MODALS
+   ============================================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 26, 58, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+.tab-list {
+  display: flex;
+  gap: 4px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  padding: 4px;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  color: var(--gray-500);
+  border: none;
+  background: transparent;
+}
+
+.tab-item.active {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: var(--shadow-sm);
+}
