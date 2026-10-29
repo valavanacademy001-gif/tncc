@@ -91,17 +91,6 @@ export default function CreativeNetwork() {
         position: 'relative',
       }}
     >
-      {/* Section header */}
-      <div className="container" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
-        <div className="section-label" style={{ marginBottom: '16px' }}>How the network works</div>
-        <h2 className="text-display-md" style={{ color: 'var(--navy)', maxWidth: '600px', marginBottom: '16px' }}>
-          From discovery to delivered work.
-        </h2>
-        <p style={{ color: 'var(--gray-500)', fontSize: '1.05rem', maxWidth: '440px' }}>
-          A clear path from the right opportunity to the right outcome.
-        </p>
-      </div>
-
       {/* Pinned desktop layout */}
       <div style={{ position: 'relative' }}>
         {/* Mobile: sequential cards */}
@@ -164,10 +153,10 @@ export default function CreativeNetwork() {
         {/* Desktop: sticky visual */}
         <div className="desktop-stages" style={{ display: 'none' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '400vh' }}>
-            {/* Left: sticky text */}
-            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', padding: '0 48px 0 24px' }}>
-              <div style={{ maxWidth: '440px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '220vh' }}>
+            {/* Left: sticky text (vertically centered with balanced up and down spacing) */}
+            <div style={{ position: 'sticky', top: '70px', height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', padding: '0 48px 0 24px' }}>
+              <div style={{ maxWidth: '440px', width: '100%' }}>
                 {stages.map((stage, i) => (
                   <motion.div
                     key={stage.id}
@@ -198,8 +187,8 @@ export default function CreativeNetwork() {
                   </motion.div>
                 ))}
 
-                {/* Step indicators */}
-                <div style={{ display: 'flex', gap: '8px', marginTop: '40px', position: 'absolute', bottom: '80px' }}>
+                {/* Step indicators directly under content */}
+                <div style={{ display: 'flex', gap: '8px', marginTop: '36px' }}>
                   {stages.map((stage, i) => (
                     <div
                       key={stage.id}
@@ -218,8 +207,8 @@ export default function CreativeNetwork() {
               </div>
             </div>
 
-            {/* Right: sticky animated network viz */}
-            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Right: sticky animated network viz (vertically centered) */}
+            <div style={{ position: 'sticky', top: '70px', height: 'calc(100vh - 70px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{
                 width: '400px',
                 height: '400px',
@@ -248,14 +237,16 @@ export default function CreativeNetwork() {
                   <NetworkNode label="WORK" x={200} y={340} color={stages[2].color} active={activeStage >= 2} />
                   <NetworkNode label="GROW" x={60} y={200} color={stages[3].color} active={activeStage >= 3} />
 
-                  {/* Center node */}
-                  <circle cx={200} cy={200} r={30} fill="white" stroke="var(--gray-200)" strokeWidth="1.5" />
-                  <text x={200} y={196} textAnchor="middle" fontSize={7} fill="var(--navy)" fontWeight={700} fontFamily="var(--font-display)" letterSpacing="1">
-                    TNCC
-                  </text>
-                  <text x={200} y={208} textAnchor="middle" fontSize={6} fill="var(--gray-400)" fontFamily="monospace">
-                    NETWORK
-                  </text>
+                  {/* Center node with TNCC logo */}
+                  <circle cx={200} cy={200} r={34} fill="white" stroke="var(--gray-200)" strokeWidth="1.5" />
+                  <image
+                    href="/brand/tncc-symbol.png"
+                    x={184}
+                    y={179}
+                    width={32}
+                    height={42}
+                    preserveAspectRatio="xMidYMid meet"
+                  />
                 </svg>
               </div>
             </div>

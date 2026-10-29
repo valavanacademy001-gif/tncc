@@ -4,10 +4,8 @@ import Hero from '@/components/sections/Hero';
 import CategorySection from '@/components/sections/CategorySection';
 import CreativeNetwork from '@/components/sections/CreativeNetwork';
 import FeaturedProjects from '@/components/sections/FeaturedProjects';
-import CreatorSpotlight from '@/components/sections/CreatorSpotlight';
 import HowItWorks from '@/components/sections/HowItWorks';
-import PackagesSection from '@/components/sections/PackagesSection';
-import EventsSection from '@/components/sections/EventsSection';
+import StackingCards from '@/components/sections/StackingCards';
 import CommunityStory from '@/components/sections/CommunityStory';
 import Testimonials from '@/components/sections/Testimonials';
 import PricingSection from '@/components/sections/PricingSection';
@@ -22,10 +20,8 @@ export default function HomePage() {
       <CategorySection />
       <FeaturedProjects />
       <CreativeNetwork />
-      <CreatorSpotlight />
       <HowItWorks />
-      <PackagesSection />
-      <EventsSection />
+      <StackingCards />
       <CommunityStory />
       <Testimonials />
       <PricingSection />

@@ -28,15 +28,16 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
         style={{
           display: 'flex',
           flexDirection: 'column',
-          padding: '24px',
-          background: 'white',
-          border: '1.5px solid var(--gray-200)',
-          borderRadius: '16px',
+          padding: '26px 22px',
+          background: '#F4F5F7',
+          border: '1px solid rgba(0, 0, 0, 0.04)',
+          borderRadius: '22px',
           textDecoration: 'none',
           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           position: 'relative',
           overflow: 'hidden',
           height: '100%',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
         }}
         className="cat-card"
       >
@@ -44,7 +45,7 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
         <div style={{
           width: '48px',
           height: '48px',
-          borderRadius: '12px',
+          borderRadius: '14px',
           background: category.bgColor,
           display: 'flex',
           alignItems: 'center',
@@ -59,7 +60,7 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
         <h3 style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 700,
-          fontSize: '0.975rem',
+          fontSize: '1rem',
           color: 'var(--navy)',
           marginBottom: '6px',
           lineHeight: 1.3,
@@ -69,10 +70,10 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
 
         {/* Description */}
         <p style={{
-          fontSize: '0.8rem',
+          fontSize: '0.825rem',
           color: 'var(--gray-500)',
           lineHeight: 1.5,
-          marginBottom: '16px',
+          marginBottom: '18px',
           flex: 1,
         }}>
           {category.description}
@@ -86,7 +87,7 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
         }}>
           <span style={{
             fontSize: '0.75rem',
-            fontWeight: 600,
+            fontWeight: 700,
             color: category.color,
           }}>
             {category.creatorCount} creators
@@ -110,12 +111,13 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
 
       <style jsx>{`
         .cat-card:hover {
-          border-color: transparent !important;
-          box-shadow: 0 8px 32px rgba(13,44,91,0.12) !important;
+          background: #FFFFFF !important;
+          border-color: rgba(13, 44, 91, 0.08) !important;
+          box-shadow: 0 16px 36px rgba(13, 44, 91, 0.08) !important;
           transform: translateY(-4px) !important;
         }
         .cat-card:hover .cat-icon {
-          transform: scale(1.1) !important;
+          transform: scale(1.08) !important;
         }
         .cat-card:hover .cat-border {
           transform: scaleX(1) !important;
@@ -130,7 +132,7 @@ function CategoryCard({ category, index }: { category: typeof mockCategories[0];
 
 export default function CategorySection() {
   return (
-    <section className="section" style={{ background: 'var(--cream)' }}>
+    <section className="section" style={{ background: '#FFFFFF' }}>
       <div className="container">
         {/* Header */}
         <div style={{ marginBottom: '48px' }}>
@@ -163,13 +165,9 @@ export default function CategorySection() {
           </motion.p>
         </div>
 
-        {/* Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '16px',
-        }}>
-          {mockCategories.map((cat, i) => (
+        {/* Grid - 8 Cards in balanced 4x2 layout */}
+        <div className="category-grid-8">
+          {mockCategories.slice(0, 8).map((cat, i) => (
             <CategoryCard key={cat.id} category={cat} index={i} />
           ))}
         </div>
@@ -180,7 +178,7 @@ export default function CategorySection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          style={{ textAlign: 'center', marginTop: '40px' }}
+          style={{ textAlign: 'center', marginTop: '48px' }}
         >
           <Link href="/explore" className="btn btn-secondary">
             Browse all categories
@@ -188,6 +186,25 @@ export default function CategorySection() {
           </Link>
         </motion.div>
       </div>
+
+      <style jsx>{`
+        .category-grid-8 {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        @media (max-width: 1024px) {
+          .category-grid-8 {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+        }
+        @media (max-width: 560px) {
+          .category-grid-8 {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </section>
   );
 }

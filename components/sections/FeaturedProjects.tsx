@@ -1,292 +1,633 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 import Link from 'next/link';
-import { MapPin, Clock, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { mockProjects } from '@/lib/mock-data';
+import {
+  Palette,
+  Share2,
+  TrendingUp,
+  Video,
+  Layers,
+  Search,
+  Globe,
+  Mic,
+  ChevronDown,
+  Send,
+  Sparkles
+} from 'lucide-react';
 
-function formatBudget(budget: { min: number; max: number; currency: string }) {
-  const fmt = (n: number) => n >= 1000 ? `₹${(n/1000).toFixed(0)}K` : `₹${n}`;
-  return `${fmt(budget.min)} – ${fmt(budget.max)}`;
-}
-
-function daysAgo(dateStr: string) {
-  const date = new Date(dateStr);
-  const now = new Date('2026-08-17');
-  const diff = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Yesterday';
-  return `${diff} days ago`;
-}
-
-function ProjectCard({ project, large = false }: { project: typeof mockProjects[0]; large?: boolean }) {
-  const catColors: Record<string, string> = {
-    'Graphic Design': 'var(--orange)',
-    'Development': 'var(--navy)',
-    'UI/UX Design': 'var(--cyan)',
-    'Video & Motion': 'var(--orange)',
-    'Photography': 'var(--cyan)',
-    'Social Media': 'var(--yellow)',
-    'Marketing': 'var(--orange)',
-    'Content Creation': 'var(--yellow)',
-    'Events': 'var(--orange)',
-  };
-  const catBg: Record<string, string> = {
-    'Graphic Design': 'var(--orange-light)',
-    'Development': '#EEF2FF',
-    'UI/UX Design': 'var(--cyan-light)',
-    'Video & Motion': 'var(--orange-light)',
-    'Photography': 'var(--cyan-light)',
-    'Social Media': 'var(--yellow-light)',
-    'Marketing': 'var(--orange-light)',
-    'Content Creation': 'var(--yellow-light)',
-    'Events': 'var(--orange-light)',
-  };
-  const color = catColors[project.category] || 'var(--navy)';
-  const bgc = catBg[project.category] || 'var(--gray-100)';
-
-  return (
-    <Link
-      href={`/projects/${project.id}`}
-      style={{ textDecoration: 'none', display: 'block', height: '100%' }}
-    >
-      <div style={{
-        background: 'white',
-        border: '1.5px solid var(--gray-200)',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }} className="project-card">
-        {/* Image placeholder with category color */}
-        <div style={{
-          height: large ? '220px' : '160px',
-          background: `linear-gradient(135deg, ${bgc}, white)`,
-          position: 'relative',
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'flex-end',
-          padding: '20px',
-          overflow: 'hidden',
-        }}>
-          {/* Background pattern */}
-          <div className="bg-dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.4 }} />
-
-          {/* Budget badge */}
-          <div style={{
-            background: 'var(--navy)',
-            color: 'white',
-            borderRadius: '100px',
-            padding: '6px 14px',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '0.875rem',
-            zIndex: 1,
-          }}>
-            {formatBudget(project.budget)}
-          </div>
-
-          {/* Status */}
-          <div style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            background: 'rgba(255,255,255,0.95)',
-            padding: '5px 10px',
-            borderRadius: '100px',
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            color: '#10B981',
-          }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Open
-          </div>
-
-          {/* Remote badge */}
-          {project.remote && (
-            <div style={{
-              position: 'absolute',
-              top: '16px',
-              left: '16px',
-              background: 'rgba(255,255,255,0.95)',
-              padding: '4px 8px',
-              borderRadius: '100px',
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              color: 'var(--cyan)',
-            }}>
-              Remote OK
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {/* Category */}
-          <div style={{
-            display: 'inline-block',
-            padding: '3px 10px',
-            background: bgc,
-            borderRadius: '100px',
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            color,
-            marginBottom: '10px',
-            width: 'fit-content',
-          }}>
-            {project.category}
-          </div>
-
-          {/* Title */}
-          <h3 style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: large ? '1.125rem' : '0.975rem',
-            color: 'var(--navy)',
-            lineHeight: 1.3,
-            marginBottom: '12px',
-            flex: 1,
-          }}>
-            {project.title}
-          </h3>
-
-          {/* Skills */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
-            {project.skills.slice(0, 3).map(skill => (
-              <span key={skill} style={{
-                padding: '3px 8px',
-                background: 'var(--gray-100)',
-                borderRadius: '100px',
-                fontSize: '0.7rem',
-                color: 'var(--gray-600)',
-                fontWeight: 500,
-              }}>
-                {skill}
-              </span>
-            ))}
-          </div>
-
-          {/* Meta */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '14px', borderTop: '1px solid var(--gray-100)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--gray-400)' }}>
-                <MapPin size={12} />
-                {project.location}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--gray-400)' }}>
-                <Users size={12} />
-                {project.proposals} proposals
-              </div>
-            </div>
-            <span style={{ fontSize: '0.7rem', color: 'var(--gray-400)' }}>{daysAgo(project.postedAt)}</span>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        .project-card:hover {
-          border-color: var(--gray-300) !important;
-          box-shadow: 0 12px 40px rgba(13,44,91,0.14) !important;
-          transform: translateY(-5px) !important;
-        }
-      `}</style>
-    </Link>
-  );
-}
+// Dramatic, bouncy spring popup animation variants ("perisavey popup")
+const popupVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 90,
+    scale: 0.65,
+  },
+  visible: (customDelay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 220,
+      damping: 14,
+      mass: 0.8,
+      delay: customDelay,
+    },
+  }),
+};
 
 export default function FeaturedProjects() {
-  const featured = mockProjects.filter(p => p.featured).slice(0, 3);
-  const others = mockProjects.filter(p => !p.featured).slice(0, 3);
+  const [activeCenterTab, setActiveCenterTab] = useState<'storefront' | 'portal'>('storefront');
+  const [aiPrompt, setAiPrompt] = useState('Find senior Next.js developers and brand designers in Chennai');
 
   return (
-    <section className="section" style={{ background: 'white' }}>
-      <div className="container">
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', marginBottom: '48px' }}>
-          <div>
-            <div className="section-label" style={{ marginBottom: '16px' }}>Opportunities</div>
-            <h2 className="text-display-md" style={{ color: 'var(--navy)', maxWidth: '500px' }}>
-              Work worth your attention.
-            </h2>
-          </div>
-          <Link href="/projects" className="btn btn-secondary" style={{ flexShrink: 0 }}>
-            All projects <ArrowRight size={16} />
-          </Link>
-        </div>
-
-        {/* Featured asymmetric grid */}
+    <section
+      id="featured-opportunities"
+      style={{
+        background: '#FFFFFF',
+        padding: '90px 0 110px',
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Full-width container with generous padding */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 36px',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Centered Minimal Header with Orange Heading */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 25, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '20px',
-            marginBottom: '20px',
+            textAlign: 'center',
+            maxWidth: '840px',
+            margin: '0 auto 60px',
           }}
-          className="featured-grid"
         >
-          {/* Large featured */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="featured-large"
+          <div
+            className="section-label"
+            style={{
+              justifyContent: 'center',
+              display: 'inline-flex',
+              marginBottom: '14px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--orange)',
+            }}
           >
-            <ProjectCard project={featured[0]} large={true} />
-          </motion.div>
-
-          {/* Stacked smaller */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {featured.slice(1).map((project, i) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-              >
-                <ProjectCard project={project} />
-              </motion.div>
-            ))}
+            Opportunities
           </div>
+
+          {/* User Requested: Orange color text for this heading */}
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2.4rem, 4.5vw, 3.6rem)',
+              fontWeight: 700,
+              color: 'var(--navy)', // TNCC signature brand blue #0D2C5B
+              lineHeight: 1.15,
+              margin: '0 0 16px',
+              letterSpacing: '-0.03em',
+            }}
+          >
+            Work that powers progress
+          </h2>
+
+          <p
+            style={{
+              fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
+              color: '#6B7280',
+              lineHeight: 1.5,
+              margin: 0,
+              fontWeight: 400,
+            }}
+          >
+            Brand systems, digital platforms, motion, social strategy, UI/UX, and AI matching — all under one club.
+          </p>
         </motion.div>
 
-        {/* Row of 3 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: '20px',
-        }}>
-          {others.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+        {/* 3-Column Bento Grid with previous rich color themes */}
+        <div className="bento-fullwidth-grid">
+          {/* ============================================================
+              COLUMN 1 (LEFT) - CARD 1 (Top): Brand & Visual Identity
+              Theme: Orange (Graphic Design)
+              ============================================================ */}
+          <motion.div
+            custom={0.05}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-left-1"
+          >
+            <Link
+              href="/projects/p1"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
-              <ProjectCard project={project} />
-            </motion.div>
-          ))}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--orange-light)', color: 'var(--orange)' }}>
+                    Graphic Design
+                  </span>
+                </div>
+                <h3 className="bento-box-title">Brand & Visual Identity</h3>
+                <p className="bento-box-text">
+                  Complete visual identity systems covering logo design, typography hierarchies, packaging, and brand guidelines. We build iconic creative foundations for ambitious Tamil Nadu brands.
+                </p>
+              </div>
+
+              {/* Bottom Right Single Action Circle Icon in Orange */}
+              <div className="bento-box-action-row">
+                <div
+                  className="bento-action-circle"
+                  style={{
+                    background: 'var(--orange)',
+                    boxShadow: '0 4px 14px rgba(232, 64, 32, 0.38)',
+                  }}
+                >
+                  <Palette size={18} strokeWidth={2.3} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* ============================================================
+              COLUMN 2 (CENTER) - TALL CARD (Spans Rows 1 & 2)
+              Digital & Web Platforms (Theme: Navy & Cyan)
+              ============================================================ */}
+          <motion.div
+            custom={0.18}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-center-item"
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: '#EEF2FF', color: 'var(--navy)' }}>
+                    Development
+                  </span>
+                  <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 8px', borderRadius: '100px', background: '#10B981', color: 'white' }}>
+                    Active Brief
+                  </span>
+                </div>
+
+                <h3 className="bento-box-title">Digital & Web Platforms</h3>
+                <p className="bento-box-text">
+                  High-performance web applications and digital commerce—Storefronts for regional D2C brands and Custom Portals for business scale. Built with Next.js, clean code, and modern architecture.
+                </p>
+
+                {/* Minimal Segmented Pills */}
+                <div className="segmented-pill-container">
+                  <button
+                    type="button"
+                    onClick={() => setActiveCenterTab('storefront')}
+                    className={`segmented-pill-button ${activeCenterTab === 'storefront' ? 'active' : ''}`}
+                  >
+                    Storefront
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveCenterTab('portal')}
+                    className={`segmented-pill-button ${activeCenterTab === 'portal' ? 'active' : ''}`}
+                  >
+                    Portal Console
+                  </button>
+                </div>
+              </div>
+
+              {/* Peeking Mockup Window */}
+              <div className="mockup-frame">
+                {/* Mockup Header */}
+                <div className="mockup-topbar">
+                  <div className="mockup-dots-row">
+                    <span className="dot dot-red" />
+                    <span className="dot dot-yellow" />
+                    <span className="dot dot-green" />
+                  </div>
+                  <div className="mockup-domain-pill">
+                    <Globe size={11} />
+                    <span>tncc.creators/workspace</span>
+                  </div>
+                  <div style={{ width: '40px' }} />
+                </div>
+
+                {/* Mockup Screen Content */}
+                <div className="mockup-screen-body">
+                  <AnimatePresence mode="wait">
+                    {activeCenterTab === 'storefront' ? (
+                      <motion.div
+                        key="storefront"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {/* Search Bar */}
+                        <div className="mockup-search-box">
+                          <Search size={12} />
+                          <span>Search handloom storefronts, web apps, or client briefs...</span>
+                        </div>
+
+                        {/* Data Rows Table */}
+                        <div className="mockup-table">
+                          <div className="mockup-table-header">
+                            <span>Project Title</span>
+                            <span>Category</span>
+                            <span style={{ textAlign: 'right' }}>Status</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>Tiruppur Textiles Co.</span>
+                            <span>E-Commerce Store</span>
+                            <span className="mockup-status-green">Completed</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>GreenRoute Organics</span>
+                            <span>Brand & Storefront</span>
+                            <span className="mockup-status-blue">Active</span>
+                          </div>
+                        </div>
+
+                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Showing 1 to 24 of 120 verified client briefs</span>
+                          <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>Explore Platform →</span>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="portal"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="mockup-table">
+                          <div className="mockup-table-header">
+                            <span>Client Brief</span>
+                            <span>Deliverable</span>
+                            <span style={{ textAlign: 'right' }}>Milestone</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>Zoho Cohort Startup</span>
+                            <span>Next.js Web App</span>
+                            <span className="mockup-status-green">Delivered</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>Madurai Masala Brand</span>
+                            <span>D2C Ads Setup</span>
+                            <span className="mockup-status-blue">In Progress</span>
+                          </div>
+                        </div>
+
+                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                          <span>100% on-time milestone delivery</span>
+                          <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>Open Console →</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ============================================================
+              COLUMN 3 (RIGHT) - CARD 3 (Top): Video & Motion Design
+              Theme: Orange (Motion)
+              ============================================================ */}
+          <motion.div
+            custom={0.31}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-right-1"
+          >
+            <Link
+              href="/projects/p5"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--orange-light)', color: 'var(--orange)' }}>
+                    Video & Motion
+                  </span>
+                </div>
+                <h3 className="bento-box-title">Video & Motion Design</h3>
+                <p className="bento-box-text">
+                  High-retention 2D/3D motion graphics, commercial reels, and animated explainers. We help regional brands and startups communicate complex ideas with effortless visual clarity.
+                </p>
+              </div>
+
+              {/* Bottom Right Single Action Circle Icon in Orange */}
+              <div className="bento-box-action-row">
+                <div
+                  className="bento-action-circle"
+                  style={{
+                    background: 'var(--orange)',
+                    boxShadow: '0 4px 14px rgba(232, 64, 32, 0.38)',
+                  }}
+                >
+                  <Video size={18} strokeWidth={2.3} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* ============================================================
+              COLUMN 1 (LEFT) - CARD 2 (Middle): Social & Content Strategy
+              Theme: Yellow / Amber (Social Media)
+              ============================================================ */}
+          <motion.div
+            custom={0.44}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-left-2"
+          >
+            <Link
+              href="/projects/p3"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--yellow-light)', color: '#B47805' }}>
+                    Social Media
+                  </span>
+                </div>
+                <h3 className="bento-box-title">Social & Content Strategy</h3>
+                <p className="bento-box-text">
+                  Omnichannel social presence through viral short-form reels, photography curation, and community engagement. We connect creators and brands across every modern consumer channel.
+                </p>
+              </div>
+
+              {/* Bottom Right Single Action Circle Icon in Yellow */}
+              <div className="bento-box-action-row">
+                <div
+                  className="bento-action-circle"
+                  style={{
+                    background: 'var(--yellow)',
+                    boxShadow: '0 4px 14px rgba(245, 166, 35, 0.38)',
+                  }}
+                >
+                  <Share2 size={18} strokeWidth={2.3} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* ============================================================
+              COLUMN 3 (RIGHT) - CARD 4 (Middle): Product & UI/UX Design
+              Theme: Cyan (UI/UX)
+              ============================================================ */}
+          <motion.div
+            custom={0.57}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-right-2"
+          >
+            <Link
+              href="/projects/p6"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--cyan-light)', color: '#008796' }}>
+                    UI/UX Design
+                  </span>
+                </div>
+                <h3 className="bento-box-title">Product & UI/UX Design</h3>
+                <p className="bento-box-text">
+                  Human-centered digital products, intuitive mobile interfaces, accessible user journeys, and robust Figma design systems built for rapid customer adoption and lasting retention.
+                </p>
+              </div>
+
+              {/* Bottom Right Single Action Circle Icon in Cyan */}
+              <div className="bento-box-action-row">
+                <div
+                  className="bento-action-circle"
+                  style={{
+                    background: 'var(--cyan)',
+                    boxShadow: '0 4px 14px rgba(0, 181, 200, 0.38)',
+                  }}
+                >
+                  <Layers size={18} strokeWidth={2.3} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* ============================================================
+              COLUMN 1 (LEFT) - CARD 3 (Bottom): Growth & Performance
+              Theme: Orange (Marketing)
+              ============================================================ */}
+          <motion.div
+            custom={0.70}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-item bento-left-3"
+          >
+            <Link
+              href="/projects/p9"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--orange-light)', color: 'var(--orange)' }}>
+                    Performance Marketing
+                  </span>
+                </div>
+                <h3 className="bento-box-title">Growth & Performance</h3>
+                <p className="bento-box-text">
+                  Data-driven digital marketing, conversion funnels, and ad creative optimization. We empower regional startups and D2C brands to scale customer acquisition with confidence.
+                </p>
+              </div>
+
+              {/* Bottom Right Single Action Circle Icon in Orange */}
+              <div className="bento-box-action-row">
+                <div
+                  className="bento-action-circle"
+                  style={{
+                    background: 'var(--orange)',
+                    boxShadow: '0 4px 14px rgba(232, 64, 32, 0.38)',
+                  }}
+                >
+                  <TrendingUp size={18} strokeWidth={2.3} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* ============================================================
+              SPANNING ROW 3, COLS 2 & 3: SmartMatch AI (Light Theme Card)
+              Theme: Soft Indigo / Violet / Cyan Ambient Gradient
+              ============================================================ */}
+          <motion.div
+            custom={0.83}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={popupVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            className="bento-box-ai-wide"
+            style={{
+              background: 'linear-gradient(135deg, #EFF6FF 0%, #FAF5FF 50%, #F5F3FF 100%)',
+              border: '1.5px solid #E2E8F0',
+              borderRadius: '28px',
+              padding: '38px 32px',
+              color: 'var(--navy)',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 4px 20px rgba(13, 44, 91, 0.05)',
+            }}
+          >
+            {/* Ambient Light Mesh Glow Effect */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.2) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(0, 181, 200, 0.16) 0%, transparent 60%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              {/* Header inside wide card with clean visible Dark Navy text */}
+              <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 24px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cyan)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '8px' }}>
+                  <Sparkles size={13} /> TNCC AI Matchmaker
+                </div>
+                <h3
+                  style={{
+                    color: 'var(--navy)', // #0D2C5B - 100% visible, crisp dark navy text
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(1.6rem, 2.8vw, 2.1rem)',
+                    fontWeight: 700,
+                    margin: '0 0 6px',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  SmartMatch AI
+                </h3>
+                <p
+                  style={{
+                    color: '#64748B',
+                    fontSize: '0.95rem',
+                    margin: 0,
+                  }}
+                >
+                  Match your creative briefs with verified top-tier talent in seconds
+                </p>
+              </div>
+
+              {/* Floating Card (Clean White on Soft Gradient) */}
+              <div
+                style={{
+                  background: '#FFFFFF',
+                  borderRadius: '16px',
+                  border: '1.5px solid #E2E8F0',
+                  padding: '18px 24px',
+                  maxWidth: '580px',
+                  margin: '0 auto',
+                  boxShadow: '0 12px 32px rgba(13, 44, 91, 0.08)',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cyan)' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--navy)', letterSpacing: '0.02em' }}>
+                    TNCC SmartMatch AI
+                  </span>
+                </div>
+
+                <div style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748B', marginBottom: '14px' }}>
+                  <span style={{ color: 'var(--cyan)', fontWeight: 700 }}>Hi Founder,</span> how can we help your brand today?
+                </div>
+
+                {/* Input Prompt Box */}
+                <div
+                  style={{
+                    background: '#F8FAFC',
+                    border: '1.5px solid #E2E8F0',
+                    borderRadius: '10px',
+                    padding: '8px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.03)',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    placeholder="e.g. Find senior Next.js developers and brand designers in Chennai..."
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      border: 'none',
+                      outline: 'none',
+                      fontSize: '0.825rem',
+                      color: 'var(--navy)',
+                      background: 'transparent',
+                    }}
+                  />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        color: '#64748B',
+                        background: '#FFFFFF',
+                        border: '1px solid #E2E8F0',
+                        padding: '3px 8px',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      + Tamil & English <ChevronDown size={11} />
+                    </span>
+                    <Mic size={15} style={{ color: '#8A94A6', cursor: 'pointer', flexShrink: 0 }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
-
-      <style jsx>{`
-        @media (min-width: 768px) {
-          .featured-grid {
-            grid-template-columns: 1.4fr 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

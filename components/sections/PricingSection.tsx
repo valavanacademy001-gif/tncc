@@ -101,12 +101,7 @@ export default function PricingSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '20px',
-              alignItems: 'start',
-            }}
+            className="pricing-cards-grid"
           >
             {plans.map((plan, i) => (
               <motion.div
@@ -114,14 +109,14 @@ export default function PricingSection() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
+                className="pricing-plan-card"
                 style={{
                   background: plan.highlight ? 'var(--navy)' : 'white',
                   border: `2px solid ${plan.highlight ? 'var(--orange)' : 'var(--gray-200)'}`,
                   borderRadius: '24px',
-                  padding: '28px',
+                  padding: '32px 28px',
                   position: 'relative',
-                  transform: plan.highlight ? 'scale(1.02)' : 'scale(1)',
-                  boxShadow: plan.highlight ? '0 16px 48px rgba(13,44,91,0.25)' : 'none',
+                  boxShadow: plan.highlight ? '0 16px 48px rgba(13,44,91,0.22)' : '0 2px 8px rgba(0,0,0,0.03)',
                 }}
               >
                 {/* Badge */}
@@ -148,51 +143,64 @@ export default function PricingSection() {
                   </div>
                 )}
 
-                {/* Plan name */}
-                <div style={{ marginBottom: '8px' }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: plan.highlight ? 'white' : 'var(--navy)', marginBottom: '4px' }}>
-                    {plan.name}
+                {/* Plan details container expanding to fill height */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  {/* Plan name & description */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: plan.highlight ? 'white' : 'var(--navy)', marginBottom: '4px' }}>
+                      {plan.name}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: plan.highlight ? 'rgba(255,255,255,0.6)' : 'var(--gray-500)', minHeight: '40px', lineHeight: 1.4 }}>
+                      {plan.description}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: plan.highlight ? 'rgba(255,255,255,0.5)' : 'var(--gray-500)' }}>
-                    {plan.description}
+
+                  {/* Price */}
+                  <div style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: `1px solid ${plan.highlight ? 'rgba(255,255,255,0.12)' : 'var(--gray-200)'}`, minHeight: '74px', display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '2.5rem', color: plan.highlight ? 'white' : 'var(--navy)' }}>
+                        {plan.price[billing] === 0 ? 'Free' : `₹${plan.price[billing].toLocaleString('en-IN')}`}
+                      </span>
+                      {plan.price[billing] > 0 && (
+                        <span style={{ fontSize: '0.8rem', color: plan.highlight ? 'rgba(255,255,255,0.5)' : 'var(--gray-400)', fontWeight: 400 }}>
+                          /{billing === 'monthly' ? 'month' : 'month billed yearly'}
+                        </span>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Features */}
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+                    {plan.features.map(feature => (
+                      <li key={feature} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <CheckCircle2 size={16} color={plan.highlight ? 'var(--cyan)' : 'var(--orange)'} style={{ flexShrink: 0, marginTop: '2px' }} />
+                        <span style={{ fontSize: '0.85rem', color: plan.highlight ? 'rgba(255,255,255,0.85)' : 'var(--gray-600)', lineHeight: 1.4 }}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Price */}
-                <div style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: `1px solid ${plan.highlight ? 'rgba(255,255,255,0.12)' : 'var(--gray-200)'}` }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '2.5rem', color: plan.highlight ? 'white' : 'var(--navy)' }}>
-                      {plan.price[billing] === 0 ? 'Free' : `₹${plan.price[billing].toLocaleString('en-IN')}`}
-                    </span>
-                    {plan.price[billing] > 0 && (
-                      <span style={{ fontSize: '0.8rem', color: plan.highlight ? 'rgba(255,255,255,0.4)' : 'var(--gray-400)', fontWeight: 400 }}>
-                        /{billing === 'monthly' ? 'month' : 'month billed yearly'}
-                      </span>
-                    )}
-                  </div>
+                {/* CTA - pinned to bottom */}
+                <div style={{ marginTop: 'auto', paddingTop: '12px' }}>
+                  <Link
+                    href="/app"
+                    className={`btn ${plan.highlight ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxSizing: 'border-box',
+                      ...(plan.highlight ? {} : { borderColor: 'var(--gray-300)' })
+                    }}
+                  >
+                    {plan.cta}
+                    {plan.id !== 'free' && plan.id !== 'starter' && <ArrowRight size={16} />}
+                  </Link>
                 </div>
-
-                {/* Features */}
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {plan.features.map(feature => (
-                    <li key={feature} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                      <CheckCircle2 size={16} color={plan.highlight ? 'var(--cyan)' : 'var(--orange)'} style={{ flexShrink: 0, marginTop: '1px' }} />
-                      <span style={{ fontSize: '0.85rem', color: plan.highlight ? 'rgba(255,255,255,0.75)' : 'var(--gray-600)', lineHeight: 1.4 }}>
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <Link
-                  href="/app"
-                  className={`btn ${plan.highlight ? 'btn-primary' : 'btn-secondary'}`}
-                  style={{ width: '100%', justifyContent: 'center', ...(plan.highlight ? {} : { borderColor: 'var(--gray-300)' }) }}
-                >
-                  {plan.cta}
-                  {plan.id !== 'free' && plan.id !== 'starter' && <ArrowRight size={16} />}
-                </Link>
               </motion.div>
             ))}
           </motion.div>
