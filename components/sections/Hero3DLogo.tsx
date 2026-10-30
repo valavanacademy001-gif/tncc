@@ -32,9 +32,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     // Scene
     const scene = new THREE.Scene();
 
-    // Camera with natural perspective and ample frustum so NO edge ever cuts off
-    const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 50);
-    camera.position.set(0, 0, 3.85);
+    // Camera with wider FOV and calibrated depth so the enlarged logo NEVER cuts off
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 50);
+    camera.position.set(0, 0, 3.65);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -80,11 +80,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     scene.add(logoGroup);
 
     // Target and current rotations (in radians)
-    // Horizontal Yaw: -25° to +25° (~0.43 rad) - smooth, visible turn without rotating 360
-    // Vertical Pitch: -13° to +13° (~0.22 rad)
-    const MAX_ROT_Y = 25 * (Math.PI / 180);
-    const MAX_ROT_X = 13 * (Math.PI / 180);
-    const MAX_ROT_Z = 3.0 * (Math.PI / 180);
+    // Horizontal Yaw: -24° to +24° (~0.42 rad) - smooth, visible turn without rotating 360
+    // Vertical Pitch: -10° to +10° (~0.17 rad) - calibrated to prevent any top/bottom clipping
+    const MAX_ROT_Y = 24 * (Math.PI / 180);
+    const MAX_ROT_X = 10 * (Math.PI / 180);
+    const MAX_ROT_Z = 2.5 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
@@ -128,9 +128,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       model.position.y = -center.y;
       model.position.z = -center.z;
 
-      // Auto-scale to fill the hero area comfortably with 12% safety margin so NO edge ever cuts off
+      // Enlarged scale: fills the hero visual prominently while leaving safe headroom to avoid clipping
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const baseScale = 2.08 / maxDim;
+      const baseScale = 2.42 / maxDim;
       logoGroup.scale.set(baseScale, baseScale, baseScale);
 
       logoGroup.add(model);
@@ -215,11 +215,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       // Adjust camera distance dynamically for different viewports to prevent any clipping
       if (width < 640) {
-        camera.position.z = 4.15;
+        camera.position.z = 4.0;
       } else if (width < 1024) {
-        camera.position.z = 3.95;
+        camera.position.z = 3.8;
       } else {
-        camera.position.z = 3.85;
+        camera.position.z = 3.65;
       }
 
       camera.updateProjectionMatrix();

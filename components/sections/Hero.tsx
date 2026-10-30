@@ -97,6 +97,7 @@ function ElasticEntranceCard({
 }
 
 // 1st Card: Creator Preview Card (Top-Left Edge)
+// 1st Card: Creator Preview Card (Top-Left Overlapping Edge)
 function CreatorPreviewCard({
   name,
   title,
@@ -114,18 +115,20 @@ function CreatorPreviewCard({
 }) {
   return (
     <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'white',
-      borderRadius: '16px',
-      padding: '12px 16px',
-      boxShadow: '0 10px 30px rgba(13,44,91,0.12), 0 2px 6px rgba(13,44,91,0.04)',
+      background: 'rgba(255, 255, 255, 0.94)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      borderRadius: '14px',
+      padding: '8px 12px',
+      boxShadow: '0 12px 30px rgba(13,44,91,0.13), 0 2px 6px rgba(13,44,91,0.05)',
       border: '1px solid rgba(13,44,91,0.08)',
-      minWidth: '185px',
+      minWidth: '150px',
       pointerEvents: 'auto',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
         <div style={{
-          width: '34px',
-          height: '34px',
+          width: '28px',
+          height: '28px',
           borderRadius: '50%',
           background: color,
           flexShrink: 0,
@@ -135,28 +138,30 @@ function CreatorPreviewCard({
           color: 'white',
           fontWeight: 700,
           fontFamily: 'var(--font-display)',
-          fontSize: '0.9rem',
+          fontSize: '0.8rem',
         }}>
           {name[0]}
         </div>
         <div>
-          <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--navy)', lineHeight: 1.2 }}>{name}</div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--gray-500)' }}>{title}</div>
+          <div style={{ fontWeight: 700, fontSize: '0.78rem', color: 'var(--navy)', lineHeight: 1.15 }}>{name}</div>
+          <div style={{ fontSize: '0.65rem', color: 'var(--gray-500)' }}>{title}</div>
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-        <MapPin size={11} color="var(--gray-400)" />
-        <span style={{ fontSize: '0.7rem', color: 'var(--gray-400)' }}>{location}</span>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-        <span style={{ fontSize: '0.68rem', color: '#F5A623' }}>★★★★★</span>
-        <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--gray-500)', marginLeft: '2px' }}>4.9</span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <MapPin size={10} color="var(--gray-400)" />
+          <span style={{ fontSize: '0.64rem', color: 'var(--gray-400)' }}>{location}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+          <span style={{ fontSize: '0.62rem', color: '#F5A623' }}>★★★★★</span>
+          <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--gray-500)', marginLeft: '1px' }}>4.9</span>
+        </div>
       </div>
     </ElasticEntranceCard>
   );
 }
 
-// 2nd Card: Project Opportunity Card (Bottom-Right Edge)
+// 2nd Card: Project Opportunity Card (Bottom-Right Overlapping Edge)
 function ProjectPreviewCard({
   title,
   budget,
@@ -174,37 +179,39 @@ function ProjectPreviewCard({
 }) {
   return (
     <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'white',
-      borderRadius: '16px',
-      padding: '12px 16px',
-      boxShadow: '0 10px 30px rgba(13,44,91,0.12), 0 2px 6px rgba(13,44,91,0.04)',
+      background: 'rgba(255, 255, 255, 0.94)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      borderRadius: '14px',
+      padding: '9px 12px',
+      boxShadow: '0 12px 30px rgba(13,44,91,0.13), 0 2px 6px rgba(13,44,91,0.05)',
       border: '1px solid rgba(13,44,91,0.08)',
-      minWidth: '210px',
-      maxWidth: '235px',
+      minWidth: '170px',
+      maxWidth: '190px',
       pointerEvents: 'auto',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
         <span style={{
-          fontSize: '0.65rem',
+          fontSize: '0.58rem',
           fontWeight: 700,
-          padding: '2px 8px',
+          padding: '1.5px 6px',
           borderRadius: '100px',
           background: 'rgba(0,181,200,0.1)',
           color: 'var(--cyan)',
         }}>
           {category}
         </span>
-        <div style={{ fontSize: '0.68rem', color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+        <div style={{ fontSize: '0.62rem', color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
           Open
         </div>
       </div>
-      <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--navy)', marginBottom: '6px', lineHeight: 1.3 }}>
+      <div style={{ fontWeight: 700, fontSize: '0.74rem', color: 'var(--navy)', marginBottom: '5px', lineHeight: 1.25 }}>
         {title}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--navy)', fontSize: '0.9rem' }}>{budget}</span>
-        <span style={{ fontSize: '0.68rem', color: 'var(--gray-500)', fontWeight: 500 }}>{proposals}</span>
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--navy)', fontSize: '0.82rem' }}>{budget}</span>
+        <span style={{ fontSize: '0.62rem', color: 'var(--gray-500)', fontWeight: 500 }}>{proposals}</span>
       </div>
     </ElasticEntranceCard>
   );
@@ -518,13 +525,13 @@ export default function Hero() {
             }}
             className="hero-3d-wrapper"
           >
-            {/* Top-Left Floating Creator Card (Edge Layered) */}
+            {/* Top-Left Floating Creator Card (Layered Over 3D Logo) */}
             <div
               style={{
                 position: 'absolute',
-                top: '12px',
-                left: '-8px',
-                zIndex: 20,
+                top: '42px',
+                left: '24px',
+                zIndex: 25,
                 pointerEvents: 'none',
               }}
               className="hidden sm:block"
@@ -539,18 +546,18 @@ export default function Hero() {
               />
             </div>
 
-            {/* Central 3D Logo Canvas (Never Cut Off) */}
+            {/* Central 3D Logo Canvas (Enlarged & Never Cut Off) */}
             <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }}>
               <Hero3DLogo />
             </div>
 
-            {/* Bottom-Right Floating Project Card (Edge Layered) */}
+            {/* Bottom-Right Floating Project Card (Layered Over 3D Logo) */}
             <div
               style={{
                 position: 'absolute',
-                bottom: '20px',
-                right: '-8px',
-                zIndex: 20,
+                bottom: '46px',
+                right: '24px',
+                zIndex: 25,
                 pointerEvents: 'none',
               }}
               className="hidden sm:block"
