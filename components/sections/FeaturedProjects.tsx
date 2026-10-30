@@ -15,7 +15,8 @@ import {
   Mic,
   ChevronDown,
   Send,
-  Sparkles
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 
 // Dramatic, bouncy spring popup animation variants ("perisavey popup")
@@ -40,8 +41,8 @@ const popupVariants: Variants = {
 };
 
 export default function FeaturedProjects() {
-  const [activeCenterTab, setActiveCenterTab] = useState<'storefront' | 'portal'>('storefront');
-  const [aiPrompt, setAiPrompt] = useState('Find senior Next.js developers and brand designers in Chennai');
+  const [activeCenterTab, setActiveCenterTab] = useState<'showcase' | 'challenges'>('showcase');
+  const [aiPrompt, setAiPrompt] = useState('Find senior video editors in Coimbatore and brand identity designers in Chennai');
 
   return (
     <section
@@ -54,17 +55,16 @@ export default function FeaturedProjects() {
         overflow: 'hidden',
       }}
     >
-      {/* Full-width container with generous padding */}
+      {/* Centered Minimal Header with Orange Heading */}
       <div
         style={{
           width: '100%',
-          maxWidth: '1440px',
-          margin: '0 auto',
-          padding: '0 36px',
+          maxWidth: '840px',
+          margin: '0 auto 60px',
+          padding: '0 24px',
           boxSizing: 'border-box',
         }}
       >
-        {/* Centered Minimal Header with Orange Heading */}
         <motion.div
           initial={{ opacity: 0, y: 25, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -72,8 +72,6 @@ export default function FeaturedProjects() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
             textAlign: 'center',
-            maxWidth: '840px',
-            margin: '0 auto 60px',
           }}
         >
           <div
@@ -89,22 +87,21 @@ export default function FeaturedProjects() {
               color: 'var(--orange)',
             }}
           >
-            Opportunities
+            CREATOR SHOWCASE
           </div>
 
-          {/* User Requested: Orange color text for this heading */}
           <h2
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.4rem, 4.5vw, 3.6rem)',
               fontWeight: 700,
-              color: 'var(--navy)', // TNCC signature brand blue #0D2C5B
+              color: 'var(--navy)',
               lineHeight: 1.15,
               margin: '0 0 16px',
               letterSpacing: '-0.03em',
             }}
           >
-            Work that powers progress
+            TALENT DESERVES TO BE SEEN.
           </h2>
 
           <p
@@ -116,10 +113,20 @@ export default function FeaturedProjects() {
               fontWeight: 400,
             }}
           >
-            Brand systems, digital platforms, motion, social strategy, UI/UX, and AI matching — all under one club.
+            Discover creative works from the TNCC community.
           </p>
         </motion.div>
+      </div>
 
+      {/* Full-width container spanning display width for cards */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          padding: '0 clamp(16px, 3.5vw, 48px)',
+          boxSizing: 'border-box',
+        }}
+      >
         {/* 3-Column Bento Grid with previous rich color themes */}
         <div className="bento-fullwidth-grid">
           {/* ============================================================
@@ -136,7 +143,7 @@ export default function FeaturedProjects() {
             className="bento-box-item bento-left-1"
           >
             <Link
-              href="/projects/p1"
+              href="/community/portfolio"
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
               <div>
@@ -147,7 +154,7 @@ export default function FeaturedProjects() {
                 </div>
                 <h3 className="bento-box-title">Brand & Visual Identity</h3>
                 <p className="bento-box-text">
-                  Complete visual identity systems covering logo design, typography hierarchies, packaging, and brand guidelines. We build iconic creative foundations for ambitious Tamil Nadu brands.
+                  Complete visual identity systems covering logo design, Tamil typography hierarchies, packaging, and brand guidelines crafted by TNCC designers for ambitious regional brands.
                 </p>
               </div>
 
@@ -168,7 +175,7 @@ export default function FeaturedProjects() {
 
           {/* ============================================================
               COLUMN 2 (CENTER) - TALL CARD (Spans Rows 1 & 2)
-              Digital & Web Platforms (Theme: Navy & Cyan)
+              Tamil Nadu Creator Showcase (Theme: Navy & Cyan)
               ============================================================ */}
           <motion.div
             custom={0.18}
@@ -183,33 +190,33 @@ export default function FeaturedProjects() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: '#EEF2FF', color: 'var(--navy)' }}>
-                    Development
+                    Creative Showcase
                   </span>
                   <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 8px', borderRadius: '100px', background: '#10B981', color: 'white' }}>
-                    Active Brief
+                    Live Briefs & Works
                   </span>
                 </div>
 
-                <h3 className="bento-box-title">Digital & Web Platforms</h3>
+                <h3 className="bento-box-title">Tamil Nadu Creator Showcase</h3>
                 <p className="bento-box-text">
-                  High-performance web applications and digital commerce—Storefronts for regional D2C brands and Custom Portals for business scale. Built with Next.js, clean code, and modern architecture.
+                  Explore verified design projects, cinematic video edits, and active creative bounties from creators across Chennai, Coimbatore, Madurai, and beyond.
                 </p>
 
                 {/* Minimal Segmented Pills */}
                 <div className="segmented-pill-container">
                   <button
                     type="button"
-                    onClick={() => setActiveCenterTab('storefront')}
-                    className={`segmented-pill-button ${activeCenterTab === 'storefront' ? 'active' : ''}`}
+                    onClick={() => setActiveCenterTab('showcase')}
+                    className={`segmented-pill-button ${activeCenterTab === 'showcase' ? 'active' : ''}`}
                   >
-                    Storefront
+                    Verified Works
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveCenterTab('portal')}
-                    className={`segmented-pill-button ${activeCenterTab === 'portal' ? 'active' : ''}`}
+                    onClick={() => setActiveCenterTab('challenges')}
+                    className={`segmented-pill-button ${activeCenterTab === 'challenges' ? 'active' : ''}`}
                   >
-                    Portal Console
+                    Live Challenges
                   </button>
                 </div>
               </div>
@@ -225,7 +232,7 @@ export default function FeaturedProjects() {
                   </div>
                   <div className="mockup-domain-pill">
                     <Globe size={11} />
-                    <span>tncc.creators/workspace</span>
+                    <span>{activeCenterTab === 'showcase' ? 'tncc.in/community/portfolio' : 'tncc.in/community/challenges'}</span>
                   </div>
                   <div style={{ width: '40px' }} />
                 </div>
@@ -233,9 +240,9 @@ export default function FeaturedProjects() {
                 {/* Mockup Screen Content */}
                 <div className="mockup-screen-body">
                   <AnimatePresence mode="wait">
-                    {activeCenterTab === 'storefront' ? (
+                    {activeCenterTab === 'showcase' ? (
                       <motion.div
-                        key="storefront"
+                        key="showcase"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -244,62 +251,82 @@ export default function FeaturedProjects() {
                         {/* Search Bar */}
                         <div className="mockup-search-box">
                           <Search size={12} />
-                          <span>Search handloom storefronts, web apps, or client briefs...</span>
+                          <span>Search 350+ logos, motion reels, 3D renders...</span>
                         </div>
 
                         {/* Data Rows Table */}
                         <div className="mockup-table">
                           <div className="mockup-table-header">
-                            <span>Project Title</span>
-                            <span>Category</span>
+                            <span>Project & Creator</span>
+                            <span>Discipline</span>
                             <span style={{ textAlign: 'right' }}>Status</span>
                           </div>
                           <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Tiruppur Textiles Co.</span>
-                            <span>E-Commerce Store</span>
-                            <span className="mockup-status-green">Completed</span>
+                            <span style={{ fontWeight: 600 }}>Kavery Heritage · Karthik S.</span>
+                            <span>Brand Identity</span>
+                            <span className="mockup-status-green">⚡ 840 XP · Featured</span>
                           </div>
                           <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>GreenRoute Organics</span>
-                            <span>Brand & Storefront</span>
-                            <span className="mockup-status-blue">Active</span>
+                            <span style={{ fontWeight: 600 }}>Western Ghats · Ananya R.</span>
+                            <span>Color Grading</span>
+                            <span className="mockup-status-blue">⚡ 720 XP · Top 1%</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>Madurai Folk · Sundar M.</span>
+                            <span>AI Art & 3D</span>
+                            <span className="mockup-status-purple">⚡ 610 XP · Verified</span>
                           </div>
                         </div>
 
-                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Showing 1 to 24 of 120 verified client briefs</span>
-                          <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>Explore Platform →</span>
+                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>12 verified creators active this week</span>
+                          <Link href="/community/portfolio" style={{ color: 'var(--cyan)', fontWeight: 700, textDecoration: 'none' }}>
+                            Explore Directory →
+                          </Link>
                         </div>
                       </motion.div>
                     ) : (
                       <motion.div
-                        key="portal"
+                        key="challenges"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
                       >
+                        {/* Search Bar */}
+                        <div className="mockup-search-box">
+                          <Search size={12} />
+                          <span>Search weekly creative challenges & cash bounties...</span>
+                        </div>
+
                         <div className="mockup-table">
                           <div className="mockup-table-header">
-                            <span>Client Brief</span>
-                            <span>Deliverable</span>
-                            <span style={{ textAlign: 'right' }}>Milestone</span>
+                            <span>Challenge Brief</span>
+                            <span>Category</span>
+                            <span style={{ textAlign: 'right' }}>Reward</span>
                           </div>
                           <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Zoho Cohort Startup</span>
-                            <span>Next.js Web App</span>
-                            <span className="mockup-status-green">Delivered</span>
+                            <span style={{ fontWeight: 600 }}>Tamil Brand Mascot</span>
+                            <span>Logo & Mascot</span>
+                            <span className="mockup-status-orange">₹15,000 Bounty</span>
                           </div>
                           <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Madurai Masala Brand</span>
-                            <span>D2C Ads Setup</span>
-                            <span className="mockup-status-blue">In Progress</span>
+                            <span style={{ fontWeight: 600 }}>Regional Tourism Reel</span>
+                            <span>Video Editing</span>
+                            <span className="mockup-status-green">₹25,000 Bounty</span>
+                          </div>
+                          <div className="mockup-table-row">
+                            <span style={{ fontWeight: 600 }}>Heritage Festival App</span>
+                            <span>UI/UX Design</span>
+                            <span className="mockup-status-blue">₹20,000 Bounty</span>
                           </div>
                         </div>
 
-                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                          <span>100% on-time milestone delivery</span>
-                          <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>Open Console →</span>
+                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>Powered by Valavan Academy</span>
+                          <Link href="/community/challenges" style={{ color: 'var(--cyan)', fontWeight: 700, textDecoration: 'none' }}>
+                            View Challenges →
+                          </Link>
                         </div>
                       </motion.div>
                     )}
@@ -323,7 +350,7 @@ export default function FeaturedProjects() {
             className="bento-box-item bento-right-1"
           >
             <Link
-              href="/projects/p5"
+              href="/community/portfolio"
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
               <div>
@@ -334,7 +361,7 @@ export default function FeaturedProjects() {
                 </div>
                 <h3 className="bento-box-title">Video & Motion Design</h3>
                 <p className="bento-box-text">
-                  High-retention 2D/3D motion graphics, commercial reels, and animated explainers. We help regional brands and startups communicate complex ideas with effortless visual clarity.
+                  High-retention 2D/3D motion graphics, commercial reels, kinetic typography, and YouTube post-production edited by seasoned regional video artists.
                 </p>
               </div>
 
@@ -367,7 +394,7 @@ export default function FeaturedProjects() {
             className="bento-box-item bento-left-2"
           >
             <Link
-              href="/projects/p3"
+              href="/community/portfolio"
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
               <div>
@@ -378,7 +405,7 @@ export default function FeaturedProjects() {
                 </div>
                 <h3 className="bento-box-title">Social & Content Strategy</h3>
                 <p className="bento-box-text">
-                  Omnichannel social presence through viral short-form reels, photography curation, and community engagement. We connect creators and brands across every modern consumer channel.
+                  Viral short-form reels, typography teasers, aesthetic photography curation, and creator collaborations designed to build deeply loyal regional audiences.
                 </p>
               </div>
 
@@ -411,7 +438,7 @@ export default function FeaturedProjects() {
             className="bento-box-item bento-right-2"
           >
             <Link
-              href="/projects/p6"
+              href="/community/portfolio"
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
               <div>
@@ -422,7 +449,7 @@ export default function FeaturedProjects() {
                 </div>
                 <h3 className="bento-box-title">Product & UI/UX Design</h3>
                 <p className="bento-box-text">
-                  Human-centered digital products, intuitive mobile interfaces, accessible user journeys, and robust Figma design systems built for rapid customer adoption and lasting retention.
+                  Human-centered digital products, intuitive mobile interfaces, accessible user journeys, and robust Figma design systems built for modern Tamil Nadu startups.
                 </p>
               </div>
 
@@ -442,8 +469,8 @@ export default function FeaturedProjects() {
           </motion.div>
 
           {/* ============================================================
-              COLUMN 1 (LEFT) - CARD 3 (Bottom): Growth & Performance
-              Theme: Orange (Marketing)
+              COLUMN 1 (LEFT) - CARD 3 (Bottom): AI & 3D Art
+              Theme: Coral / Amber
               ============================================================ */}
           <motion.div
             custom={0.70}
@@ -455,22 +482,22 @@ export default function FeaturedProjects() {
             className="bento-box-item bento-left-3"
           >
             <Link
-              href="/projects/p9"
+              href="/community/portfolio"
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: 'var(--orange-light)', color: 'var(--orange)' }}>
-                    Performance Marketing
+                    AI & 3D Art
                   </span>
                 </div>
-                <h3 className="bento-box-title">Growth & Performance</h3>
+                <h3 className="bento-box-title">AI Art & 3D Visualization</h3>
                 <p className="bento-box-text">
-                  Data-driven digital marketing, conversion funnels, and ad creative optimization. We empower regional startups and D2C brands to scale customer acquisition with confidence.
+                  Pushing creative boundaries with Midjourney, ComfyUI, Blender 3D, and Unreal Engine. Exploring the intersection of Tamil heritage and digital futurism.
                 </p>
               </div>
 
-              {/* Bottom Right Single Action Circle Icon in Orange */}
+              {/* Bottom Right Single Action Circle Icon */}
               <div className="bento-box-action-row">
                 <div
                   className="bento-action-circle"
@@ -479,7 +506,7 @@ export default function FeaturedProjects() {
                     boxShadow: '0 4px 14px rgba(232, 64, 32, 0.38)',
                   }}
                 >
-                  <TrendingUp size={18} strokeWidth={2.3} />
+                  <Sparkles size={18} strokeWidth={2.3} />
                 </div>
               </div>
             </Link>
@@ -519,114 +546,181 @@ export default function FeaturedProjects() {
               }}
             />
 
-            <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              {/* Header inside wide card with clean visible Dark Navy text */}
-              <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 24px' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cyan)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '8px' }}>
-                  <Sparkles size={13} /> TNCC AI Matchmaker
-                </div>
-                <h3
-                  style={{
-                    color: 'var(--navy)', // #0D2C5B - 100% visible, crisp dark navy text
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(1.6rem, 2.8vw, 2.1rem)',
-                    fontWeight: 700,
-                    margin: '0 0 6px',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  SmartMatch AI
-                </h3>
-                <p
-                  style={{
-                    color: '#64748B',
-                    fontSize: '0.95rem',
-                    margin: 0,
-                  }}
-                >
-                  Match your creative briefs with verified top-tier talent in seconds
-                </p>
-              </div>
-
-              {/* Floating Card (Clean White on Soft Gradient) */}
+            <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div
                 style={{
-                  background: '#FFFFFF',
-                  borderRadius: '16px',
-                  border: '1.5px solid #E2E8F0',
-                  padding: '18px 24px',
-                  maxWidth: '580px',
-                  margin: '0 auto',
-                  boxShadow: '0 12px 32px rgba(13, 44, 91, 0.08)',
-                  width: '100%',
-                  boxSizing: 'border-box',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+                  gap: '32px',
+                  alignItems: 'center',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cyan)' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--navy)', letterSpacing: '0.02em' }}>
-                    TNCC SmartMatch AI
-                  </span>
-                </div>
-
-                <div style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748B', marginBottom: '14px' }}>
-                  <span style={{ color: 'var(--cyan)', fontWeight: 700 }}>Hi Founder,</span> how can we help your brand today?
-                </div>
-
-                {/* Input Prompt Box */}
-                <div
-                  style={{
-                    background: '#F8FAFC',
-                    border: '1.5px solid #E2E8F0',
-                    borderRadius: '10px',
-                    padding: '8px 12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.03)',
-                    width: '100%',
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  <input
-                    type="text"
-                    value={aiPrompt}
-                    onChange={(e) => setAiPrompt(e.target.value)}
-                    placeholder="e.g. Find senior Next.js developers and brand designers in Chennai..."
-                    style={{
-                      flex: 1,
-                      minWidth: 0,
-                      border: 'none',
-                      outline: 'none',
-                      fontSize: '0.825rem',
-                      color: 'var(--navy)',
-                      background: 'transparent',
-                    }}
-                  />
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                    <span
+                {/* Left Column: Heading, description & Interactive prompt box */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                  <div>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cyan)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '8px' }}>
+                      <Sparkles size={13} /> TNCC AI Matchmaker
+                    </div>
+                    <h3
                       style={{
-                        fontSize: '0.72rem',
-                        color: '#64748B',
-                        background: '#FFFFFF',
-                        border: '1px solid #E2E8F0',
-                        padding: '3px 8px',
-                        borderRadius: '6px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '3px',
-                        whiteSpace: 'nowrap',
+                        color: 'var(--navy)',
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'clamp(1.75rem, 2.5vw, 2.2rem)',
+                        fontWeight: 700,
+                        margin: '0 0 6px',
+                        letterSpacing: '-0.02em',
                       }}
                     >
-                      + Tamil & English <ChevronDown size={11} />
-                    </span>
-                    <Mic size={15} style={{ color: '#8A94A6', cursor: 'pointer', flexShrink: 0 }} />
+                      SmartMatch AI
+                    </h3>
+                    <p
+                      style={{
+                        color: '#64748B',
+                        fontSize: '0.92rem',
+                        lineHeight: 1.5,
+                        margin: 0,
+                      }}
+                    >
+                      Match your creative briefs with verified top-tier talent in seconds
+                    </p>
                   </div>
+
+                  {/* Floating Card (Clean White on Soft Gradient) */}
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      borderRadius: '16px',
+                      border: '1.5px solid #E2E8F0',
+                      padding: '16px 20px',
+                      boxShadow: '0 10px 28px rgba(13, 44, 91, 0.08)',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cyan)' }} />
+                        <span style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--navy)', letterSpacing: '0.02em' }}>
+                          TNCC SmartMatch AI
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#059669', background: '#ECFDF5', padding: '2px 8px', borderRadius: '100px', border: '1px solid #A7F3D0' }}>
+                        ● Live AI Match
+                      </span>
+                    </div>
+
+                    <div style={{ fontSize: '0.825rem', color: '#64748B', marginBottom: '12px' }}>
+                      <span style={{ color: 'var(--cyan)', fontWeight: 700 }}>Hi Founder,</span> how can we help your brand today?
+                    </div>
+
+                    {/* Input Prompt Box */}
+                    <div
+                      style={{
+                        background: '#F8FAFC',
+                        border: '1.5px solid #E2E8F0',
+                        borderRadius: '10px',
+                        padding: '8px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.03)',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                      }}
+                    >
+                      <input
+                        type="text"
+                        value={aiPrompt}
+                        onChange={(e) => setAiPrompt(e.target.value)}
+                        placeholder="e.g. Find senior video editors in Coimbatore and brand designers..."
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          border: 'none',
+                          outline: 'none',
+                          fontSize: '0.825rem',
+                          color: 'var(--navy)',
+                          background: 'transparent',
+                        }}
+                      />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        <span
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#64748B',
+                            background: '#FFFFFF',
+                            border: '1px solid #E2E8F0',
+                            padding: '3px 8px',
+                            borderRadius: '6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '3px',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          + Tamil & English <ChevronDown size={11} />
+                        </span>
+                        <Mic size={15} style={{ color: '#8A94A6', cursor: 'pointer', flexShrink: 0 }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Realistic Creators Collaboration Image */}
+                <div
+                  style={{
+                    position: 'relative',
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    border: '1.5px solid rgba(255, 255, 255, 0.95)',
+                    boxShadow: '0 16px 36px rgba(13, 44, 91, 0.12)',
+                    height: '100%',
+                    minHeight: '260px',
+                    width: '100%',
+                    background: '#FFFFFF',
+                  }}
+                >
+                  <img
+                    src="/smartmatch-creators.jpg"
+                    alt="Tamil Nadu Creators Collaboration"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      transition: 'transform 0.5s ease',
+                    }}
+                    className="hover:scale-105"
+                  />
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* Public Showcase CTA */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '840px',
+          margin: '54px auto 0',
+          padding: '0 24px',
+          boxSizing: 'border-box',
+          textAlign: 'center',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Link href="/community/auth?mode=register" className="btn btn-primary btn-lg">
+            SHOWCASE YOUR WORK – JOIN FREE
+            <ArrowRight size={18} />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

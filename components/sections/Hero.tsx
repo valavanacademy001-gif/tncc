@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, MapPin, Zap, Users, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, MapPin, Zap, Users, Briefcase } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Floating card component
@@ -264,7 +264,21 @@ function CreatorPreviewCard({ name, title, location, color, delay, floatType }: 
 }
 
 // Project card preview
-function ProjectPreviewCard({ title, budget, category, delay, floatType }: { title: string; budget: string; category: string; delay: number; floatType: 'project' }) {
+function ProjectPreviewCard({
+  title,
+  budget,
+  category,
+  proposals = '12 proposals',
+  delay,
+  floatType,
+}: {
+  title: string;
+  budget: string;
+  category: string;
+  proposals?: string;
+  delay: number;
+  floatType: 'project';
+}) {
   return (
     <ElasticEntranceCard delay={delay} floatType={floatType} style={{
       background: 'white',
@@ -272,7 +286,7 @@ function ProjectPreviewCard({ title, budget, category, delay, floatType }: { tit
       padding: '16px',
       boxShadow: '0 8px 32px rgba(13,44,91,0.14)',
       border: '1px solid rgba(13,44,91,0.06)',
-      minWidth: '220px',
+      minWidth: '230px',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
         <div className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>{category}</div>
@@ -284,7 +298,7 @@ function ProjectPreviewCard({ title, budget, category, delay, floatType }: { tit
       <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--navy)', marginBottom: '8px', lineHeight: 1.4 }}>{title}</div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--navy)', fontSize: '0.95rem' }}>₹{budget}</span>
-        <span style={{ fontSize: '0.7rem', color: 'var(--gray-500)' }}>8 proposals</span>
+        <span style={{ fontSize: '0.7rem', color: 'var(--gray-500)' }}>{proposals}</span>
       </div>
     </ElasticEntranceCard>
   );
@@ -372,7 +386,7 @@ export default function Hero() {
         }} className="hero-grid">
 
           {/* Left: Text content */}
-          <div style={{ maxWidth: '640px' }}>
+          <div style={{ maxWidth: '720px' }}>
             {/* Label */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -380,35 +394,48 @@ export default function Hero() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="section-label" style={{ marginBottom: '24px' }}>
-                Tamil Nadu's Creative Platform
+                TAMIL NADU&apos;S CREATOR COMMUNITY
               </div>
             </motion.div>
 
-            {/* Headline */}
-            <h1 className="text-display-xl" style={{ color: 'var(--navy)', marginBottom: '24px' }}>
+            {/* Headline - 3 lines */}
+            <h1
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(2.1rem, 4.2vw, 3.5rem)',
+                fontWeight: 800,
+                lineHeight: 1.08,
+                letterSpacing: '-0.01em',
+                color: 'var(--navy)',
+                marginBottom: '24px',
+              }}
+            >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 style={{ display: 'block' }}
+                className="whitespace-normal sm:whitespace-nowrap"
               >
-                Good work starts
+                WHERE TAMIL NADU&apos;S
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 style={{ display: 'block', color: 'var(--orange)' }}
+                className="whitespace-normal sm:whitespace-nowrap"
               >
-                with the right
+                CREATORS CONNECT,
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 style={{ display: 'block' }}
+                className="whitespace-normal sm:whitespace-nowrap"
               >
-                connection.
+                CREATE &amp; GROW.
               </motion.span>
             </h1>
 
@@ -418,10 +445,9 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="text-body-lg"
-              style={{ color: 'var(--gray-600)', maxWidth: '480px', marginBottom: '36px' }}
+              style={{ color: 'var(--gray-600)', maxWidth: '540px', marginBottom: '32px' }}
             >
-              TNCC brings Tamil Nadu's creators, businesses, projects, and opportunities 
-              into one living creative network — from Chennai to Kanyakumari.
+              A free community for designers, video editors, photographers, filmmakers and AI creators. Share your creativity, participate in competitions, showcase your work and grow together.
             </motion.p>
 
             {/* CTAs */}
@@ -429,15 +455,25 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '40px' }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '36px' }}
             >
-              <Link href="/app" className="btn btn-primary btn-lg">
-                I'm a Freelancer
-                <ArrowRight size={18} />
-              </Link>
-              <Link href="/app/hiring" className="btn btn-secondary btn-lg">
-                I'm Hiring
-              </Link>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                <Link
+                  href="/community/auth?mode=register"
+                  className="btn btn-primary btn-lg"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <span>JOIN THE COMMUNITY</span>
+                  <ArrowRight size={18} />
+                </Link>
+                <Link href="#about" className="btn btn-secondary btn-lg" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                  <span>EXPLORE TNCC</span>
+                  <ArrowUpRight size={18} />
+                </Link>
+              </div>
+              <p style={{ fontSize: '0.825rem', color: 'var(--gray-500)', fontWeight: 500, margin: '4px 0 0' }}>
+                A space for every creative mind.
+              </p>
             </motion.div>
 
             {/* Stats pills */}
@@ -448,8 +484,8 @@ export default function Hero() {
               style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}
             >
               <StatPill icon={Users} value="1,240+" label="Active creators" color="var(--cyan)" delay={0.7} />
-              <StatPill icon={Briefcase} value="3,800+" label="Projects posted" color="var(--orange)" delay={0.8} />
-              <StatPill icon={Zap} value="27" label="Cities covered" color="var(--yellow)" delay={0.9} />
+              <StatPill icon={Briefcase} value="48+" label="Creative challenges" color="var(--orange)" delay={0.8} />
+              <StatPill icon={Zap} value="27" label="Cities in Tamil Nadu" color="var(--yellow)" delay={0.9} />
             </motion.div>
           </div>
 
@@ -463,22 +499,29 @@ export default function Hero() {
             <div style={{ position: 'absolute', top: '0', left: '0' }}>
               <CreatorPreviewCard name="Karthik" title="Brand Designer" location="Chennai" color="var(--navy)" delay={0} floatType="karthik" />
             </div>
-            <div style={{ position: 'absolute', top: '140px', right: '20px' }}>
+            <div style={{ position: 'absolute', top: '210px', right: '15px' }}>
               <CreatorPreviewCard name="Priya" title="UI/UX Designer" location="Coimbatore" color="var(--cyan)" delay={240} floatType="priya" />
             </div>
-            <div style={{ position: 'absolute', bottom: '100px', left: '30px' }}>
+            <div style={{ position: 'absolute', bottom: '90px', left: '20px' }}>
               <CreatorPreviewCard name="Deepika" title="Content Creator" location="Vellore" color="var(--yellow)" delay={320} floatType="deepika" />
             </div>
 
             {/* Project card */}
-            <div style={{ position: 'absolute', top: '80px', right: '0' }}>
-              <ProjectPreviewCard title="Brand Identity for Organic Startup" budget="15K–25K" category="Graphic Design" delay={180} floatType="project" />
+            <div style={{ position: 'absolute', top: '45px', right: '0' }}>
+              <ProjectPreviewCard
+                title="Tamil Heritage Brand Identity & Packaging"
+                budget="25K–40K"
+                category="Brand Design"
+                proposals="12 proposals"
+                delay={180}
+                floatType="project"
+              />
             </div>
 
             {/* Live indicator */}
             <ElasticEntranceCard delay={500} floatType="badge" style={{
               position: 'absolute',
-              bottom: '60px',
+              bottom: '50px',
               right: '0',
               background: 'var(--navy)',
               color: 'white',
@@ -499,7 +542,7 @@ export default function Hero() {
                 display: 'inline-block',
                 animation: 'pulse-soft 1.5s ease-in-out infinite',
               }} />
-              7 projects posted today
+              8 creative projects posted today
             </ElasticEntranceCard>
           </div>
         </div>

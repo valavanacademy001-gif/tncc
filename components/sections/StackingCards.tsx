@@ -25,14 +25,14 @@ interface StackingCardData {
 
 const stackingCards: StackingCardData[] = [
   {
-    id: 'digital-transformation',
-    tag: 'Digital Transformation',
+    id: 'creative-opportunities',
+    tag: 'Creative Opportunities',
     tagIcon: Sparkles,
-    title: 'Where Creative Vision Meets Digital Scale.',
+    title: 'YOUR NEXT CREATIVE OPPORTUNITY STARTS HERE.',
     description:
-      'We connect forward-thinking Tamil Nadu brands with elite creators who transform brand identity, digital storefronts, and interactive web experiences into measurable business growth.',
-    ctaText: 'Explore Digital Work',
-    ctaLink: '/projects',
+      'Discover creative job openings, hiring announcements and opportunities shared through TNCC. Explore verified openings across Graphic Design, Video Editing, Motion Graphics, UI/UX Design, Photography, AI Creative Work, and Freelance Projects.',
+    ctaText: 'JOIN TO EXPLORE OPPORTUNITIES',
+    ctaLink: '/community/auth?mode=register',
     bgColor: '#E6F9FC', // TNCC Brand Cyan Tint
     accentColor: '#00B5C8',
     borderColor: 'rgba(0, 181, 200, 0.32)',
@@ -43,39 +43,39 @@ const stackingCards: StackingCardData[] = [
     imagePosition: 'left', // 1st: Image Left
   },
   {
-    id: 'our-strategy',
-    tag: 'Our Strategy',
-    tagIcon: Compass,
-    title: 'Curated Teams, Guided from Brief to Delivery.',
+    id: 'community-guidelines',
+    tag: 'Community Guidelines',
+    tagIcon: ShieldCheck,
+    title: 'A COMMUNITY BUILT ON CREATIVITY & RESPECT.',
     description:
-      "We start by understanding each business's unique regional vision, then assemble handpicked creative talent who guide every step of execution — backed by verified milestone escrow, NDA protection, and production standards.",
-    ctaText: 'How Matching Works',
-    ctaLink: '/explore',
+      'TNCC thrives on mutual respect and professional integrity. Respect every creator, share original work with proper credits, provide constructive critique, follow competition rules, avoid spam, respect intellectual property, and support other creators across Tamil Nadu.',
+    ctaText: 'Join Our Respectful Community',
+    ctaLink: '/community/auth?mode=register',
     bgColor: '#FFF0ED', // TNCC Brand Orange Tint
     accentColor: '#E84020',
     borderColor: 'rgba(232, 64, 32, 0.28)',
     ctaBg: 'var(--navy)',
     ctaColor: 'white',
     image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1400&auto=format&fit=crop&q=80',
-    imageAlt: 'Strategy and planning workshop',
+    imageAlt: 'Strategy and community discussion',
     imagePosition: 'right', // 2nd: Image Right
   },
   {
-    id: 'community-empowerment',
-    tag: 'Community Empowerment',
-    tagIcon: ShieldCheck,
-    title: 'Empowering Tamil Nadu’s Next-Gen Creators.',
+    id: 'resources-and-portfolio',
+    tag: 'Vault & Portfolio',
+    tagIcon: Compass,
+    title: 'Free Tools, Curated Assets & Verified Portfolio.',
     description:
-      'Our platform provides hands-on summits, design bootcamp intensives, and mentorship programs across Chennai, Coimbatore, Madurai, and Trichy — helping local talent build sustainable, world-class creative businesses.',
-    ctaText: 'Join the Community',
-    ctaLink: '/signup',
+      'Access useful fonts, design tools, AI websites, tutorials, and recorded sessions. Share your creative works with the community to automatically build your permanent showcase portfolio.',
+    ctaText: 'SHOWCASE YOUR WORK – JOIN FREE',
+    ctaLink: '/community/auth?mode=register',
     bgColor: '#EEF2FF', // TNCC Brand Navy/Periwinkle Tint
     accentColor: '#0D2C5B',
     borderColor: 'rgba(13, 44, 91, 0.25)',
     ctaBg: 'var(--orange)',
     ctaColor: 'white',
     image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1400&auto=format&fit=crop&q=80',
-    imageAlt: 'Creators workshop in modern studio',
+    imageAlt: 'Creators studio session',
     imagePosition: 'left', // 3rd: Image Left
   },
 ];

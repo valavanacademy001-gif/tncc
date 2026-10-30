@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 interface Pillar {
   id: string;
-  code: string;
   word: string;
   number: string;
   category: string;
@@ -26,79 +25,93 @@ interface Pillar {
 const pillars: Pillar[] = [
   {
     id: 'learn',
-    code: 'LN',
     word: 'LEARN',
     number: '01',
     category: 'WORKSHOPS & BOOTCAMPS',
-    tagline: 'Workshops, bootcamps, and hands-on sessions across Tamil Nadu.',
+    tagline: 'Practical masterclasses & skill sprints across Tamil Nadu.',
     detail:
-      'From content creation to design systems — TNCC is where creators grow their skills alongside peers. Practical, no-fluff masterclasses taught by seasoned industry practitioners.',
-    statNumber: '14+',
-    statLabel: 'events hosted',
+      'From Tamil typography and Figma design systems to DaVinci Resolve color grading, 3D Blender, and AI creative workflows. Practical sessions led by active industry professionals.',
+    statNumber: '18+',
+    statLabel: 'workshops hosted',
     location: 'Across Tamil Nadu',
     bgGradient: 'linear-gradient(155deg, #00A3B5 0%, #006D7A 100%)',
     accentColor: '#00B5C8',
-    chips: ['UI/UX Design', 'Video Production', 'Content Strategy', 'Design Systems'],
+    chips: ['UI/UX Design', 'Video Production', 'Tamil Typography', '3D & AI Art'],
     ctaText: 'Explore Workshops',
     ctaLink: '/events',
     icon: BookOpen,
   },
   {
     id: 'connect',
-    code: 'CN',
     word: 'CONNECT',
     number: '02',
     category: 'COMMUNITY & MEETUPS',
-    tagline: 'The right conversation can change where your career goes.',
+    tagline: 'Ego-free creator hangouts & lifelong statewide friendships.',
     detail:
-      'Meetups in Chennai, Coimbatore, Vellore, and beyond. Meet designers, writers, filmmakers, and builders in an ego-free space built for lifelong peer friendships and statewide collaboration.',
+      'Offline meetups in Chennai, Coimbatore, Madurai, Salem, and beyond. Meet designers, editors, filmmakers, and builders to trade feedback, co-create, and collaborate.',
     statNumber: '1,240+',
-    statLabel: 'active members',
-    location: 'Chennai • Coimbatore • Vellore',
+    statLabel: 'active creators',
+    location: 'Chennai • Coimbatore • Madurai',
     bgGradient: 'linear-gradient(155deg, #E84020 0%, #AB270D 100%)',
     accentColor: '#E84020',
-    chips: ['Monthly Meetups', 'Creator Circles', 'IRL Co-working', 'Discord Community'],
+    chips: ['Creator Meetups', 'Feedback Circles', 'Discord Lounge', 'State Chapters'],
     ctaText: 'Join the Community',
     ctaLink: '/join',
     icon: Users,
   },
   {
-    id: 'grow',
-    code: 'GR',
-    word: 'GROW',
+    id: 'create',
+    word: 'CREATE',
     number: '03',
-    category: 'CLIENTS & REVENUE',
-    tagline: 'More projects. Better clients. Stronger work.',
+    category: 'CHALLENGES & BOUNTIES',
+    tagline: 'Weekly brand briefs, video remixes & cash prize bounties.',
     detail:
-      'Creators on TNCC report finding consistent, well-paying freelance work within their first three months. Standardized scopes, verified client briefs, and direct talent matching.',
+      'Test your craft against real briefs from Tamil Nadu brands. Win cash prizes, collect XP badges, climb the statewide leaderboard, and earn recognized bragging rights.',
+    statNumber: '₹2.5L+',
+    statLabel: 'bounties rewarded',
+    location: 'Weekly State Contests',
+    bgGradient: 'linear-gradient(155deg, #1B3F7E 0%, #0B2247 100%)',
+    accentColor: '#1B3F7E',
+    chips: ['Brand Briefs', 'Reel Remixes', 'Cash Bounties', 'Leaderboard XP'],
+    ctaText: 'Explore Challenges',
+    ctaLink: '/community/challenges',
+    icon: Sparkles,
+  },
+  {
+    id: 'showcase',
+    word: 'SHOWCASE',
+    number: '04',
+    category: 'VERIFIED PORTFOLIOS',
+    tagline: 'Your verified creative identity discovered by top studios.',
+    detail:
+      'Build a verified creator portfolio showcasing your best graphic design, video edits, 3D renders, and UI mockups. Ranked by XP and craft merit, not algorithm tricks.',
+    statNumber: '350+',
+    statLabel: 'verified works',
+    location: 'Chennai to Kanyakumari',
+    bgGradient: 'linear-gradient(155deg, #10B981 0%, #047857 100%)',
+    accentColor: '#059669',
+    chips: ['Creator Directory', 'Verified Badges', 'Client Discovery', 'Behance Sync'],
+    ctaText: 'Browse Portfolios',
+    ctaLink: '/community/portfolio',
+    icon: Award,
+  },
+  {
+    id: 'grow',
+    word: 'GROW',
+    number: '05',
+    category: 'CLIENT GIGS & CAREERS',
+    tagline: 'High-value freelance gigs, studio hiring & Valavan mentorship.',
+    detail:
+      'Connect directly with startups, D2C brands, and film studios hiring Tamil creators. Supported by Valavan Academy mentorship to help you price right and work with confidence.',
     statNumber: '₹85L+',
     statLabel: 'paid to creators',
     location: 'Statewide Opportunities',
-    bgGradient: 'linear-gradient(155deg, #1B3F7E 0%, #0B2247 100%)',
-    accentColor: '#1B3F7E',
-    chips: ['Direct Client Leads', 'Verified Pricing', 'Portfolio Reviews', 'Contract Support'],
-    ctaText: 'Find Creator Gigs',
-    ctaLink: '/creators',
-    icon: TrendingUp,
-  },
-  {
-    id: 'impact',
-    code: 'IM',
-    word: 'IMPACT',
-    number: '04',
-    category: 'CREATIVE ECONOMY',
-    tagline: 'Creative work that matters — to clients, to communities, to you.',
-    detail:
-      'From a tiny grassroots startup in Vellore to major film productions and brand campaigns in Chennai. Tamil Nadu’s creative ecosystem, unified and amplified on national and global stages.',
-    statNumber: '2,100+',
-    statLabel: 'successful hires',
-    location: 'Startups to Film Studios',
     bgGradient: 'linear-gradient(155deg, #D98200 0%, #8C5200 100%)',
     accentColor: '#F5A623',
-    chips: ['Startup Brands', 'Film & Media', 'Agency Retainers', 'Statewide Spotlight'],
-    ctaText: 'View Success Stories',
-    ctaLink: '/about',
-    icon: Award,
+    chips: ['Direct Client Leads', 'Pricing Guidance', 'Agency Retainers', 'Valavan Mentorship'],
+    ctaText: 'Find Creator Gigs',
+    ctaLink: '/community/feed',
+    icon: TrendingUp,
   },
 ];
 
@@ -200,14 +213,15 @@ export default function CommunityStory() {
           <p
             style={{
               color: '#4B5563',
-              fontSize: 'clamp(1rem, 1.8vw, 1.125rem)',
-              lineHeight: 1.65,
+              fontSize: 'clamp(1rem, 1.7vw, 1.125rem)',
+              lineHeight: 1.6,
               maxWidth: '680px',
               margin: '0 auto',
             }}
           >
-            A statewide movement uniting creators across skills, conversations, career growth,
-            and real-world impact — from Chennai to Coimbatore, Madurai, and beyond.
+            Uniting Tamil Nadu’s designers, video editors, and creative builders statewide.
+            <br className="hidden sm:inline" />
+            {' '}Collaborate, showcase verified craft, and unlock high-value career opportunities.
           </p>
         </div>
 
@@ -230,7 +244,7 @@ export default function CommunityStory() {
                 onMouseEnter={() => setActive(i)}
                 aria-label={`View ${p.word} pillar`}
                 style={{
-                  padding: '9px 24px',
+                  padding: '9px 22px',
                   borderRadius: '100px',
                   border: `1.5px solid ${
                     isSelected ? p.accentColor : '#E5E7EB'
@@ -240,7 +254,7 @@ export default function CommunityStory() {
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
                   fontSize: '0.85rem',
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -260,6 +274,9 @@ export default function CommunityStory() {
                     transition: 'all 0.25s ease',
                   }}
                 />
+                <span style={{ opacity: isSelected ? 0.8 : 0.6, fontSize: '0.78rem', fontVariantNumeric: 'tabular-nums' }}>
+                  {p.number}
+                </span>
                 {p.word}
               </button>
             );
@@ -267,8 +284,8 @@ export default function CommunityStory() {
         </div>
 
         {/* ============================================================
-            EXPANDING ACCORDION CARDS
-            Rock-solid layout: Collapsed cards have fixed 76px width,
+            EXPANDING ACCORDION CARDS (5 Pillars)
+            Rock-solid layout: Collapsed cards have fixed 58px width,
             Active card takes flex: 1 1 0% without resizing flicker.
             ============================================================ */}
         <div
@@ -278,7 +295,7 @@ export default function CommunityStory() {
             gap: '12px',
             height: '490px',
             width: '100%',
-            maxWidth: '860px',
+            maxWidth: '940px',
             margin: '0 auto',
           }}
         >
@@ -302,13 +319,13 @@ export default function CommunityStory() {
                   overflow: 'hidden',
                   position: 'relative',
                   /* Smooth flex transition with strictly fixed collapsed size */
-                  flex: isExpanded ? '1 1 0%' : '0 0 64px',
-                  minWidth: isExpanded ? '0' : '64px',
-                  maxWidth: isExpanded ? '100%' : '64px',
+                  flex: isExpanded ? '1 1 0%' : '0 0 58px',
+                  minWidth: isExpanded ? '0' : '58px',
+                  maxWidth: isExpanded ? '100%' : '58px',
                   transition: 'flex 0.5s cubic-bezier(0.22, 1, 0.36, 1), max-width 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease',
                 }}
               >
-                {/* Collapsed State Spine (Always fixed at 64px width, fades out smoothly on expand) */}
+                {/* Collapsed State Spine (Always fixed at 58px width, fades out smoothly on expand) */}
                 <div
                   className="card-spine"
                   style={{
@@ -316,30 +333,30 @@ export default function CommunityStory() {
                     top: 0,
                     left: 0,
                     bottom: 0,
-                    width: '64px',
+                    width: '58px',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '26px 8px',
+                    padding: '24px 6px',
                     zIndex: 2,
                     pointerEvents: isExpanded ? 'none' : 'auto',
                     opacity: isExpanded ? 0 : 1,
                     transition: 'opacity 0.2s ease',
                   }}
                 >
-                  {/* Initials code at top */}
+                  {/* Number 01-05 at top */}
                   <div
                     style={{
                       fontFamily: 'var(--font-display)',
                       fontWeight: 800,
-                      fontSize: '1.25rem',
-                      letterSpacing: '0.04em',
+                      fontSize: '1.2rem',
+                      letterSpacing: '0.02em',
                       color: '#FFFFFF',
                       lineHeight: 1,
                     }}
                   >
-                    {p.code}
+                    {p.number}
                   </div>
 
                   {/* Rotated text along spine (reading bottom-to-top like reference) */}
@@ -350,9 +367,9 @@ export default function CommunityStory() {
                       whiteSpace: 'nowrap',
                       fontFamily: 'var(--font-display)',
                       fontWeight: 700,
-                      fontSize: '1rem',
-                      letterSpacing: '0.1em',
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '0.95rem',
+                      letterSpacing: '0.12em',
+                      color: 'rgba(255, 255, 255, 0.92)',
                       textTransform: 'uppercase',
                       padding: '8px 0',
                     }}
@@ -363,8 +380,8 @@ export default function CommunityStory() {
                   {/* Small icon indicator at bottom */}
                   <div
                     style={{
-                      width: '34px',
-                      height: '34px',
+                      width: '32px',
+                      height: '32px',
                       borderRadius: '50%',
                       background: 'rgba(255, 255, 255, 0.12)',
                       display: 'flex',
@@ -373,7 +390,7 @@ export default function CommunityStory() {
                       color: 'rgba(255, 255, 255, 0.85)',
                     }}
                   >
-                    <IconComponent size={16} />
+                    <IconComponent size={15} />
                   </div>
                 </div>
 
@@ -397,7 +414,7 @@ export default function CommunityStory() {
                 >
                   {/* Top Header Row */}
                   <div>
-                    {/* Initials & Category row */}
+                    {/* Number (with subtle low opacity) & Category row */}
                     <div
                       style={{
                         display: 'flex',
@@ -410,13 +427,13 @@ export default function CommunityStory() {
                         style={{
                           fontFamily: 'var(--font-display)',
                           fontWeight: 800,
-                          fontSize: '2rem',
-                          letterSpacing: '0.02em',
-                          color: '#FFFFFF',
+                          fontSize: '2.5rem',
+                          letterSpacing: '-0.02em',
+                          color: 'rgba(255, 255, 255, 0.28)', // Low opacity as requested
                           lineHeight: 1,
                         }}
                       >
-                        {p.code}
+                        {p.number}
                       </div>
 
                       <div

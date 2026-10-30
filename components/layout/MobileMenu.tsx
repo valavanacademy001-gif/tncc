@@ -12,11 +12,12 @@ interface MobileMenuProps {
 }
 
 const navItems = [
-  { label: 'Explore', href: '/explore', sub: 'Discover everything' },
-  { label: 'Creators', href: '/creators', sub: 'Find talent' },
-  { label: 'Projects', href: '/projects', sub: 'Browse opportunities' },
-  { label: 'Packages', href: '/packages', sub: 'Ready-made services' },
-  { label: 'Events', href: '/events', sub: 'Meetups & workshops' },
+  { label: 'About', href: '#about', sub: 'More than a community' },
+  { label: 'How It Works', href: '#how-it-works', sub: 'Your creative journey' },
+  { label: 'Activities', href: '#activities', sub: 'Challenges, showcases & events' },
+  { label: 'Benefits', href: '#benefits', sub: 'Why join TNCC' },
+  { label: 'Plans', href: '#pricing', sub: 'Free Community & Pro Freelance' },
+  { label: 'FAQ', href: '#faq', sub: 'Common questions & answers' },
 ];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
@@ -139,14 +140,14 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Divider */}
               <div style={{ height: '1px', background: 'var(--gray-200)', margin: '12px 0' }} />
 
-              {/* Role actions */}
+              {/* Sign in action */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.35 }}
               >
                 <Link
-                  href="/app"
+                  href="/community/auth"
                   onClick={onClose}
                   style={{
                     display: 'flex',
@@ -154,16 +155,17 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     gap: '12px',
                     padding: '14px 16px',
                     borderRadius: '12px',
-                    background: 'var(--cyan-light)',
+                    background: 'var(--cream)',
                     textDecoration: 'none',
                     marginBottom: '8px',
+                    border: '1px solid var(--gray-200)',
                   }}
                 >
                   <div style={{
                     width: '36px',
                     height: '36px',
                     borderRadius: '50%',
-                    background: 'var(--cyan)',
+                    background: 'var(--navy)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -171,38 +173,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     <User2 size={18} color="white" />
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Find Creative Work</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Browse projects, send proposals</div>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/app/hiring"
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '14px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--orange-light)',
-                    textDecoration: 'none',
-                  }}
-                >
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background: 'var(--orange)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <Briefcase size={18} color="white" />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Hire a Creator</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Post projects, find talent</div>
+                    <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Member Sign In</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Access your creator account & XP</div>
                   </div>
                 </Link>
               </motion.div>
@@ -210,8 +182,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
             {/* Footer CTA */}
             <div style={{ padding: '20px 24px', borderTop: '1px solid var(--gray-200)' }}>
-              <Link href="/app" onClick={onClose} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                Post a Project
+              <Link href="/community/auth?mode=register" onClick={onClose} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                Join Free Community
               </Link>
             </div>
           </motion.div>

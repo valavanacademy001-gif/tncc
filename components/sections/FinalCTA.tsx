@@ -87,33 +87,32 @@ function CTAContent({ isInverted = false }: { isInverted?: boolean }) {
       <h2 style={{
         fontFamily: 'var(--font-display)',
         fontWeight: 800,
-        fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
+        fontSize: 'clamp(2.3rem, 6vw, 4.8rem)',
         color: isInverted ? 'var(--navy)' : 'white',
-        lineHeight: 0.95,
+        lineHeight: 1.05,
         letterSpacing: '-0.03em',
         marginBottom: '24px',
+        maxWidth: '860px',
+        marginInline: 'auto',
       }}>
-        Your next collaboration<br />
-        <span style={{ color: isInverted ? 'var(--navy)' : 'var(--orange)' }}>
-          could start here.
-        </span>
+        YOUR CREATIVITY DESERVES A COMMUNITY.
       </h2>
 
       {/* Sub text */}
       <p style={{
-        color: isInverted ? 'rgba(13, 44, 91, 0.85)' : 'rgba(255, 255, 255, 0.6)',
-        fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-        marginBottom: '48px',
-        maxWidth: '500px',
+        color: isInverted ? 'rgba(13, 44, 91, 0.85)' : 'rgba(255, 255, 255, 0.75)',
+        fontSize: 'clamp(1rem, 2vw, 1.15rem)',
+        marginBottom: '36px',
+        maxWidth: '580px',
         marginInline: 'auto',
         lineHeight: 1.65,
         fontWeight: isInverted ? 500 : 400,
       }}>
-        Thousands of creators and businesses already building, working, and growing through TNCC.
+        Join Tamil Nadu Creators Club and become part of a growing creative community where ideas are shared, talent is recognized and creators grow together.
       </p>
 
       {/* CTAs */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', justifyContent: 'center' }}>
         {isInverted ? (
           <div
             className="btn btn-lg"
@@ -122,64 +121,35 @@ function CTAContent({ isInverted = false }: { isInverted?: boolean }) {
               background: 'var(--navy)',
               color: 'white',
               borderRadius: 'var(--radius-full)',
-              padding: '12px 24px',
+              padding: '14px 32px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              fontWeight: 600,
+              fontWeight: 700,
               boxShadow: '0 8px 24px rgba(13, 44, 91, 0.3)',
             }}
           >
-            Find your next opportunity
+            JOIN TNCC FOR FREE
             <ArrowRight size={20} />
           </div>
         ) : (
-          <Link href="/app" className="btn btn-primary btn-lg" style={{ fontSize: '1rem' }}>
-            Find your next opportunity
+          <Link href="/community/auth?mode=register" className="btn btn-primary btn-lg" style={{ fontSize: '1rem', padding: '14px 32px', fontWeight: 700 }}>
+            JOIN TNCC FOR FREE
             <ArrowRight size={20} />
           </Link>
         )}
 
-        {isInverted ? (
-          <div
-            className="btn btn-lg"
-            style={{
-              background: 'transparent',
-              color: 'var(--navy)',
-              border: '2px solid var(--navy)',
-              borderRadius: '100px',
-              padding: '16px 32px',
-              fontSize: '1rem',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontWeight: 600,
-            }}
-          >
-            Build with a creator
-          </div>
-        ) : (
-          <Link
-            href="/app/hiring"
-            className="btn btn-lg cta-ghost"
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              color: 'white',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '100px',
-              padding: '16px 32px',
-              fontSize: '1rem',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              textDecoration: 'none',
-              fontWeight: 600,
-              transition: 'all 0.2s ease',
-            }}
-          >
-            Build with a creator
-          </Link>
-        )}
+        {/* Supporting microcopy */}
+        <p style={{
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: isInverted ? 'var(--navy)' : 'rgba(255, 255, 255, 0.65)',
+          margin: 0,
+        }}>
+          Create. Connect. Compete. Grow.
+        </p>
       </div>
 
       {/* Trust signals */}

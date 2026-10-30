@@ -2,20 +2,66 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Plus } from 'lucide-react';
-import { mockFAQs } from '@/lib/mock-data';
+import { ChevronDown } from 'lucide-react';
 
-function FAQItem({ faq, index }: { faq: typeof mockFAQs[0]; index: number }) {
-  const [open, setOpen] = useState(false);
+const communityFAQs = [
+  {
+    question: 'What is Tamil Nadu Creators Club?',
+    answer: 'TNCC is a free creator community organized by Valavan Academy for creative individuals across Tamil Nadu.',
+  },
+  {
+    question: 'Is TNCC free to join?',
+    answer: 'Yes. TNCC is a completely free community. There are no membership fees or subscription plans.',
+  },
+  {
+    question: 'Who can join TNCC?',
+    answer: 'Designers, video editors, photographers, filmmakers, AI creators, students, freelancers and other creative individuals can join.',
+  },
+  {
+    question: 'Can beginners join?',
+    answer: 'Yes. Beginners and experienced creators are welcome.',
+  },
+  {
+    question: 'Can I share my creative work?',
+    answer: 'Yes. Members can publish their designs, videos, photography and other creative projects.',
+  },
+  {
+    question: 'How do TNCC challenges work?',
+    answer: 'Members can discover creative competitions, follow the guidelines, submit their work and get recognized through winner announcements.',
+  },
+  {
+    question: 'How can I earn XP?',
+    answer: 'Members earn XP through approved community activities, engagement and competition achievements.',
+  },
+  {
+    question: 'Can I create my own portfolio?',
+    answer: 'Yes. Members get a portfolio space where their selected creative projects can be showcased.',
+  },
+  {
+    question: 'Can I access creative resources?',
+    answer: 'Yes. Members can explore available fonts, tutorials, useful websites, tools and recorded sessions.',
+  },
+  {
+    question: 'How can I find job opportunities?',
+    answer: 'Published creative hiring opportunities can be explored through the member dashboard.',
+  },
+  {
+    question: 'Who organizes TNCC?',
+    answer: 'Tamil Nadu Creators Club is organized by Valavan Academy.',
+  },
+];
+
+function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }) {
+  const [open, setOpen] = useState(index === 0);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.05 }}
+      transition={{ duration: 0.45, delay: index * 0.04 }}
       style={{
-        border: `1.5px solid ${open ? 'var(--cyan)' : 'var(--gray-200)'}`,
+        border: `1.5px solid ${open ? 'var(--orange)' : 'var(--gray-200)'}`,
         borderRadius: '16px',
         overflow: 'hidden',
         transition: 'border-color 0.2s ease',
@@ -52,7 +98,7 @@ function FAQItem({ faq, index }: { faq: typeof mockFAQs[0]; index: number }) {
           width: '28px',
           height: '28px',
           borderRadius: '50%',
-          background: open ? 'var(--cyan)' : 'var(--gray-100)',
+          background: open ? 'var(--orange)' : 'var(--gray-100)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -79,7 +125,7 @@ function FAQItem({ faq, index }: { faq: typeof mockFAQs[0]; index: number }) {
             <div style={{
               padding: '0 24px 20px',
               fontSize: '0.9rem',
-              color: 'var(--gray-500)',
+              color: 'var(--gray-600)',
               lineHeight: 1.7,
             }}>
               {faq.answer}
@@ -93,7 +139,7 @@ function FAQItem({ faq, index }: { faq: typeof mockFAQs[0]; index: number }) {
 
 export default function FAQ() {
   return (
-    <section className="section" style={{ background: 'white' }}>
+    <section id="faq" className="section" style={{ background: 'white' }}>
       <div className="container">
         <div style={{
           display: 'grid',
@@ -104,15 +150,15 @@ export default function FAQ() {
           {/* Header */}
           <div style={{ position: 'sticky', top: '96px' }}>
             <div className="section-label" style={{ marginBottom: '16px' }}>Got questions?</div>
-            <h2 className="text-display-md" style={{ color: 'var(--navy)', marginBottom: '16px', maxWidth: '360px' }}>
-              Things people ask.
+            <h2 className="text-display-md" style={{ color: 'var(--navy)', marginBottom: '16px', maxWidth: '380px' }}>
+              FREQUENTLY ASKED QUESTIONS.
             </h2>
-            <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '24px', maxWidth: '320px' }}>
-              If your question isn't here, reach out — we're always happy to help.
+            <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '24px', maxWidth: '340px' }}>
+              Everything you need to know about joining, sharing, competing, and growing inside TNCC.
             </p>
             <a
               href="mailto:hello@tncc.in"
-              style={{ color: 'var(--cyan)', fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ color: 'var(--orange)', fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               hello@tncc.in →
             </a>
@@ -120,7 +166,7 @@ export default function FAQ() {
 
           {/* FAQs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {mockFAQs.map((faq, i) => (
+            {communityFAQs.map((faq, i) => (
               <FAQItem key={i} faq={faq} index={i} />
             ))}
           </div>

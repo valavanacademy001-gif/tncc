@@ -46,12 +46,12 @@ const displayFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TNCC — Tamil Nadu Creators Club",
-  description: "Tamil Nadu's premier creative marketplace and community platform. Connect creators with opportunities, build, collaborate, and grow.",
-  keywords: ["Tamil Nadu creators", "freelancers", "creative marketplace", "TNCC", "designers", "Tamil Nadu", "projects"],
+  title: "Tamil Nadu Creators Club (TNCC) – A Creative Community for Everyone.",
+  description: "Join Tamil Nadu Creators Club, a free community organized by Valavan Academy. Connect with creators, participate in competitions, showcase your work and discover creative opportunities across Tamil Nadu.",
+  keywords: ["Tamil Nadu creators", "TNCC", "Valavan Academy", "creator community", "designers", "video editors", "creative competitions", "Tamil Nadu"],
   openGraph: {
-    title: "TNCC — Tamil Nadu Creators Club",
-    description: "Where Tamil Nadu's creative talent meets opportunity.",
+    title: "Tamil Nadu Creators Club (TNCC) – A Creative Community for Everyone.",
+    description: "Join Tamil Nadu Creators Club, a free community organized by Valavan Academy. Connect with creators, participate in competitions, showcase your work and discover creative opportunities across Tamil Nadu.",
     type: "website",
   },
 };

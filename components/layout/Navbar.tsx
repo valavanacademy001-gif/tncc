@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Menu, X, Search, Briefcase, User, ExternalLink, Sparkles } from 'lucide-react';
+import { Menu, X, Search, Briefcase, User, ExternalLink, Sparkles, ShieldCheck } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { mockCreators, mockProjects } from '@/lib/mock-data';
 import { useUser } from '@/lib/user-context';
@@ -18,6 +18,25 @@ export default function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const handleDemoAdmin = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tncc_admin_demo', 'true');
+      try {
+        const stored = localStorage.getItem('tncc_community_members');
+        if (stored) {
+          const members = JSON.parse(stored);
+          const updated = members.map((m: any) =>
+            m.id === 'mem-current' ? { ...m, role: 'admin' } : m
+          );
+          localStorage.setItem('tncc_community_members', JSON.stringify(updated));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    router.push('/community');
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -237,11 +256,12 @@ export default function Navbar() {
               gap: '4px',
             }} className="nav-links-desktop">
               {[
-                { label: 'Explore', href: '/explore' },
-                { label: 'Creators', href: '/creators' },
-                { label: 'Projects', href: '/projects' },
-                { label: 'Packages', href: '/packages' },
-                { label: 'Events', href: '/events' },
+                { label: 'About', href: '#about' },
+                { label: 'How It Works', href: '#how-it-works' },
+                { label: 'Activities', href: '#activities' },
+                { label: 'Benefits', href: '#benefits' },
+                { label: 'Plans', href: '#pricing' },
+                { label: 'FAQ', href: '#faq' },
               ].map(item => (
                 <Link
                   key={item.href}
@@ -331,12 +351,36 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="btn btn-ghost" style={{ fontSize: '0.875rem', padding: '8px 14px' }}>
+                  <Link href="/community/auth" className="btn btn-ghost" style={{ fontSize: '0.875rem', padding: '8px 14px' }}>
                     Sign in
                   </Link>
-                  <Link href="/signup" className="btn btn-primary btn-sm">
-                    Sign up free
+                  <Link href="/community/auth?mode=register" className="btn btn-primary btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <Sparkles size={14} />
+                    <span>Join Free</span>
                   </Link>
+                  <button
+                    onClick={handleDemoAdmin}
+                    className="btn btn-sm"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'linear-gradient(135deg, #0D2C5B 0%, #1B3F7E 100%)',
+                      color: '#FFFFFF',
+                      borderRadius: '100px',
+                      padding: '8px 15px',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 4px 12px rgba(13, 44, 91, 0.25)',
+                      transition: 'all 0.2s ease',
+                    }}
+                    title="Enter TNCC Community with Demo Admin privileges"
+                  >
+                    <ShieldCheck size={14} style={{ color: '#F5A623' }} />
+                    <span>Demo Admin</span>
+                  </button>
                 </>
               )}
             </div>
