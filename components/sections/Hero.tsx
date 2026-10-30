@@ -2,8 +2,24 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, MapPin, Zap, Users, Briefcase } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { ArrowRight, ArrowUpRight, Zap, Users, Briefcase } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+// Dynamic import for client-only 3D logo rendering
+const Hero3DLogo = dynamic(() => import('./Hero3DLogo'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+      <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full border-2 border-dashed border-[#00B5C8]/30 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-2 border-[#E84020] border-t-transparent animate-spin" />
+      </div>
+      <span className="text-xs font-bold tracking-wider uppercase text-gray-400">
+        Loading 3D Logo...
+      </span>
+    </div>
+  ),
+});
 
 // Floating card component
 function FloatingCard({ children, style, delay = 0 }: { children: React.ReactNode; style?: React.CSSProperties; delay?: number }) {
@@ -19,122 +35,7 @@ function FloatingCard({ children, style, delay = 0 }: { children: React.ReactNod
   );
 }
 
-// Elastic snap entrance card component
-function ElasticEntranceCard({
-  children,
-  style,
-  delay = 0,
-  floatType,
-}: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-  delay?: number;
-  floatType: 'karthik' | 'deepika' | 'project' | 'badge' | 'priya';
-}) {
-  const [isFloating, setIsFloating] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mediaQuery.matches);
-    const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, []);
-
-  if (reducedMotion) {
-    return (
-      <div style={{ ...style, opacity: 1, transform: 'none' }}>
-        {children}
-      </div>
-    );
-  }
-
-  // Elastic snap parameters:
-  // Start offset: x=140
-  // Build tension: x=165
-  // Shoot left: x=-20
-  // Pull back right snap: x=6
-  // Small correction left: x=-1.5
-  // Settle at: x=0
-  const xKeyframes = [140, 165, -20, 6, -1.5, 0];
-  const scaleKeyframes = [0.96, 0.96, 1.02, 0.995, 1.002, 1];
-  const opacityKeyframes = [0, 0.1, 1, 1, 1, 1];
-  const keyframeTimes = [0, 0.15, 0.45, 0.7, 0.85, 1];
-  const easings = [
-    "easeOut",
-    [0.25, 1.2, 0.35, 1.15],
-    [0.4, 0, 0.2, 1],
-    "easeInOut",
-    "easeInOut",
-  ];
-
-  // Floating animations
-  const getFloatingAnimate = () => {
-    switch (floatType) {
-      case 'karthik':
-        return { y: [0, -10, 0] };
-      case 'deepika':
-        return { y: [0, 10, 0] };
-      case 'priya':
-        return { y: [0, -7, 0] };
-      case 'project':
-        return { y: [0, -4, 0], x: [0, 4, 0] };
-      case 'badge':
-        return { scale: [1, 1.02, 1] };
-      default:
-        return {};
-    }
-  };
-
-  const getFloatingTransition = () => {
-    switch (floatType) {
-      case 'karthik':
-        return { repeat: Infinity, duration: 6, ease: "easeInOut" };
-      case 'deepika':
-        return { repeat: Infinity, duration: 7, ease: "easeInOut" };
-      case 'priya':
-        return { repeat: Infinity, duration: 7.5, ease: "easeInOut" };
-      case 'project':
-        return {
-          y: { repeat: Infinity, duration: 8, ease: "easeInOut" },
-          x: { repeat: Infinity, duration: 8, ease: "easeInOut" },
-        };
-      case 'badge':
-        return { repeat: Infinity, duration: 4.5, ease: "easeInOut" };
-      default:
-        return {};
-    }
-  };
-
-  return (
-    <motion.div
-      initial={isFloating ? undefined : { x: 140, opacity: 0, scale: 0.96 }}
-      animate={isFloating ? getFloatingAnimate() : {
-        x: xKeyframes,
-        scale: scaleKeyframes,
-        opacity: opacityKeyframes,
-      }}
-      transition={isFloating ? (getFloatingTransition() as any) : ({
-        duration: 1.15,
-        delay: delay / 1000,
-        times: keyframeTimes,
-        ease: easings as any,
-      } as any)}
-      onAnimationComplete={() => {
-        if (!isFloating) {
-          setIsFloating(true);
-        }
-      }}
-      style={{
-        ...style,
-        willChange: 'transform, opacity',
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 
 // Animated connection thread (SVG)
@@ -216,93 +117,7 @@ function TNSilhouette() {
   );
 }
 
-// Creator card preview
-function CreatorPreviewCard({ name, title, location, color, delay, floatType }: { name: string; title: string; location: string; color: string; delay: number; floatType: 'karthik' | 'deepika' | 'priya' }) {
-  return (
-    <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'white',
-      borderRadius: '16px',
-      padding: '16px',
-      boxShadow: '0 8px 32px rgba(13,44,91,0.14)',
-      border: '1px solid rgba(13,44,91,0.06)',
-      minWidth: '200px',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: '50%',
-          background: color,
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontWeight: 700,
-          fontFamily: 'var(--font-display)',
-          fontSize: '1rem',
-        }}>
-          {name[0]}
-        </div>
-        <div>
-          <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--navy)' }}>{name}</div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>{title}</div>
-        </div>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
-        <MapPin size={11} color="var(--gray-400)" />
-        <span style={{ fontSize: '0.7rem', color: 'var(--gray-400)' }}>{location}</span>
-      </div>
-      <div style={{ display: 'flex', gap: '4px' }}>
-        {['★★★★★'].map((stars, i) => (
-          <span key={i} style={{ fontSize: '0.65rem', color: '#F5A623' }}>{stars}</span>
-        ))}
-        <span style={{ fontSize: '0.65rem', color: 'var(--gray-400)', marginLeft: '2px' }}>4.9</span>
-      </div>
-    </ElasticEntranceCard>
-  );
-}
 
-// Project card preview
-function ProjectPreviewCard({
-  title,
-  budget,
-  category,
-  proposals = '12 proposals',
-  delay,
-  floatType,
-}: {
-  title: string;
-  budget: string;
-  category: string;
-  proposals?: string;
-  delay: number;
-  floatType: 'project';
-}) {
-  return (
-    <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'white',
-      borderRadius: '16px',
-      padding: '16px',
-      boxShadow: '0 8px 32px rgba(13,44,91,0.14)',
-      border: '1px solid rgba(13,44,91,0.06)',
-      minWidth: '230px',
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-        <div className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>{category}</div>
-        <div style={{ fontSize: '0.7rem', color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--success)', display: 'inline-block' }}></span>
-          Open
-        </div>
-      </div>
-      <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--navy)', marginBottom: '8px', lineHeight: 1.4 }}>{title}</div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--navy)', fontSize: '0.95rem' }}>₹{budget}</span>
-        <span style={{ fontSize: '0.7rem', color: 'var(--gray-500)' }}>{proposals}</span>
-      </div>
-    </ElasticEntranceCard>
-  );
-}
 
 // Stats pill
 function StatPill({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string; label: string; color: string; delay: number }) {
@@ -489,62 +304,22 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right: Visual composition */}
-          <div style={{
-            position: 'relative',
-            height: '480px',
-            display: 'none',
-          }} className="hero-visual">
-            {/* Creator cards */}
-            <div style={{ position: 'absolute', top: '0', left: '0' }}>
-              <CreatorPreviewCard name="Karthik" title="Brand Designer" location="Chennai" color="var(--navy)" delay={0} floatType="karthik" />
-            </div>
-            <div style={{ position: 'absolute', top: '210px', right: '15px' }}>
-              <CreatorPreviewCard name="Priya" title="UI/UX Designer" location="Coimbatore" color="var(--cyan)" delay={240} floatType="priya" />
-            </div>
-            <div style={{ position: 'absolute', bottom: '90px', left: '20px' }}>
-              <CreatorPreviewCard name="Deepika" title="Content Creator" location="Vellore" color="var(--yellow)" delay={320} floatType="deepika" />
-            </div>
-
-            {/* Project card */}
-            <div style={{ position: 'absolute', top: '45px', right: '0' }}>
-              <ProjectPreviewCard
-                title="Tamil Heritage Brand Identity & Packaging"
-                budget="25K–40K"
-                category="Brand Design"
-                proposals="12 proposals"
-                delay={180}
-                floatType="project"
-              />
-            </div>
-
-            {/* Live indicator */}
-            <ElasticEntranceCard delay={500} floatType="badge" style={{
-              position: 'absolute',
-              bottom: '50px',
-              right: '0',
-              background: 'var(--navy)',
-              color: 'white',
-              borderRadius: '100px',
-              padding: '10px 16px',
+          {/* Right: Interactive 3D Tamil Nadu Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: 'relative',
+              width: '100%',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              boxShadow: '0 8px 24px rgba(13,44,91,0.18)',
-            }}>
-              <span style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: '#10B981',
-                display: 'inline-block',
-                animation: 'pulse-soft 1.5s ease-in-out infinite',
-              }} />
-              8 creative projects posted today
-            </ElasticEntranceCard>
-          </div>
+              justifyContent: 'center',
+            }}
+            className="hero-3d-wrapper"
+          >
+            <Hero3DLogo />
+          </motion.div>
         </div>
       </div>
 
@@ -574,12 +349,27 @@ export default function Hero() {
       </motion.div>
 
       <style jsx>{`
+        .hero-3d-wrapper {
+          height: 380px;
+          min-height: 340px;
+          display: flex;
+          align-items: center;
+          justifyContent: center;
+        }
+        @media (min-width: 768px) {
+          .hero-3d-wrapper {
+            height: 460px;
+            min-height: 420px;
+          }
+        }
         @media (min-width: 1024px) {
           .hero-grid {
-            grid-template-columns: 1fr 1fr !important;
+            grid-template-columns: 1.05fr 0.95fr !important;
+            gap: 40px !important;
           }
-          .hero-visual {
-            display: block !important;
+          .hero-3d-wrapper {
+            height: 540px !important;
+            min-height: 500px !important;
           }
         }
       `}</style>
