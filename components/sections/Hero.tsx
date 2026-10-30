@@ -370,12 +370,7 @@ export default function Hero() {
       </div>
 
       <div className="container-wide" style={{ position: 'relative', zIndex: 10, padding: '80px 24px 60px', maxWidth: '1460px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr)',
-          gap: '48px',
-          alignItems: 'center',
-        }} className="hero-grid">
+        <div className="hero-grid">
 
           {/* Left: Text content */}
           <div style={{ maxWidth: '720px' }}>
@@ -529,8 +524,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                top: '55px',
-                left: '18px',
+                top: '10%',
+                left: '12px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -547,7 +542,7 @@ export default function Hero() {
             </div>
 
             {/* Central 3D Logo Canvas (Enlarged & Never Cut Off) */}
-            <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }}>
+            <div style={{ width: '100%', height: '100%', minHeight: 'inherit', position: 'relative', zIndex: 10 }}>
               <Hero3DLogo />
             </div>
 
@@ -555,8 +550,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '55px',
-                right: '18px',
+                bottom: '10%',
+                right: '12px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -600,52 +595,6 @@ export default function Hero() {
         }} />
       </motion.div>
 
-      <style jsx>{`
-        .hero-3d-wrapper {
-          height: 480px;
-          min-height: 440px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-        }
-        @media (min-width: 768px) {
-          .hero-3d-wrapper {
-            height: 580px;
-            min-height: 520px;
-          }
-        }
-        @media (min-width: 1024px) {
-          .hero-grid {
-            grid-template-columns: 1fr 1.18fr !important;
-            gap: 28px !important;
-          }
-          .hero-3d-wrapper {
-            height: 720px !important;
-            min-height: 660px !important;
-          }
-        }
-        @media (min-width: 1280px) {
-          .hero-grid {
-            grid-template-columns: 0.95fr 1.25fr !important;
-            gap: 36px !important;
-          }
-          .hero-3d-wrapper {
-            height: 780px !important;
-            min-height: 720px !important;
-          }
-        }
-        @media (min-width: 1536px) {
-          .hero-grid {
-            grid-template-columns: 0.92fr 1.35fr !important;
-            gap: 40px !important;
-          }
-          .hero-3d-wrapper {
-            height: 840px !important;
-            min-height: 780px !important;
-          }
-        }
-      `}</style>
-    </section>
+      </section>
   );
 }

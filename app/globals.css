@@ -1195,3 +1195,80 @@ body {
   }
 }
 
+
+
+/* ==========================================================================
+   Hero Section & Interactive 3D Tamil Nadu Logo
+   ========================================================================== */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 0.88fr 1.35fr;
+    gap: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-grid {
+    grid-template-columns: 0.82fr 1.45fr;
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-grid {
+    grid-template-columns: 0.78fr 1.55fr;
+    gap: 48px;
+  }
+}
+
+.hero-3d-wrapper {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .hero-3d-wrapper {
+    height: 620px;
+    min-height: 580px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-3d-wrapper {
+    height: 700px;
+    min-height: 660px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-3d-wrapper {
+    height: 800px;
+    min-height: 760px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-3d-wrapper {
+    height: 880px;
+    min-height: 840px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-3d-wrapper {
+    height: 940px;
+    min-height: 900px;
+  }
+}

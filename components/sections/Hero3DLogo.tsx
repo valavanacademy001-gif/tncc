@@ -26,15 +26,15 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     let isVisible = true;
 
     // Dimensions
-    let width = container.clientWidth || 600;
-    let height = container.clientHeight || 600;
+    let width = container.clientWidth || 650;
+    let height = container.clientHeight || 750;
 
     // Scene
     const scene = new THREE.Scene();
 
-    // Camera calibrated for maximum scale without cutting off any vertex
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 50);
-    camera.position.set(0, 0, 3.55);
+    // Camera calibrated close-up for massive heroic presence matching Neptune
+    const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 50);
+    camera.position.set(0, 0, 2.95);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -71,7 +71,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     scene.add(bottomFillLight);
 
     // 5. Subtle Rim Light for edge separation
-    const rimLight = new THREE.DirectionalLight(0x00B5C8, 0.9);
+    const rimLight = new THREE.DirectionalLight(0x00B5C8, 0.95);
     rimLight.position.set(0, 3.5, -3.5);
     scene.add(rimLight);
 
@@ -80,11 +80,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     scene.add(logoGroup);
 
     // Target and current rotations (in radians)
-    // Horizontal Yaw: -22° to +22° (~0.38 rad) - smooth, visible turn
-    // Vertical Pitch: -8.5° to +8.5° (~0.148 rad) - calibrated so top/bottom never cut off
-    const MAX_ROT_Y = 22 * (Math.PI / 180);
-    const MAX_ROT_X = 8.5 * (Math.PI / 180);
-    const MAX_ROT_Z = 2.2 * (Math.PI / 180);
+    // Horizontal Yaw: -18° to +18° (~0.31 rad) - smooth, visible turn
+    // Vertical Pitch: -6.5° to +6.5° (~0.11 rad) - calibrated so top/bottom never cut off
+    const MAX_ROT_Y = 18 * (Math.PI / 180);
+    const MAX_ROT_X = 6.0 * (Math.PI / 180);
+    const MAX_ROT_Z = 1.8 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
@@ -128,10 +128,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       model.position.y = -center.y;
       model.position.z = -center.z;
 
-      // Colossal scale: fills 92% of frustum height prominently like the Neptune reference
+      // Colossal scale: fills 96% of frustum height prominently like the Neptune reference
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const baseScale = 2.52 / maxDim;
+      const baseScale = 1.90 / maxDim;
       logoGroup.scale.set(baseScale, baseScale, baseScale);
+      logoGroup.position.set(0.22, 0, 0);
 
       logoGroup.add(model);
       setIsReady(true);
@@ -205,21 +206,23 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     heroSection.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('blur', handleMouseLeave);
 
-    // Responsive Resize Handler with ResizeObserver
+    // Responsive Resize Handler with aspect-ratio adaptive camera
     const handleResize = () => {
       if (!container || isDisposed) return;
-      width = container.clientWidth || 440;
-      height = container.clientHeight || 440;
+      width = container.clientWidth || 600;
+      height = container.clientHeight || 750;
 
-      camera.aspect = width / height;
+      const aspect = width / height;
+      camera.aspect = aspect;
 
-      // Adjust camera distance dynamically for different viewports to prevent any clipping
-      if (width < 640) {
-        camera.position.z = 4.2;
-      } else if (width < 1024) {
-        camera.position.z = 3.9;
+      // Model aspect ratio is ~0.76. If screen width is narrower, adapt z so width never clips
+      const modelAspect = 0.76;
+      if (aspect < modelAspect) {
+        camera.position.z = (2.95 * modelAspect) / aspect;
+        logoGroup.position.x = 0.05; // center more on mobile / narrow viewports
       } else {
-        camera.position.z = 3.55;
+        camera.position.z = 2.95;
+        logoGroup.position.x = 0.22; // shift right to fill right spacing on desktop
       }
 
       camera.updateProjectionMatrix();
@@ -261,8 +264,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       // When idle, add a gentle organic floating motion
       const now = performance.now();
       const idleBlend = Math.min(1, Math.max(0, (now - lastInteractionTime - 1200) / 1000));
-      const idleFloatY = Math.sin(time * 0.75) * 0.032 * idleBlend;
-      const idleFloatX = Math.cos(time * 0.55) * 0.016 * idleBlend;
+      const idleFloatY = Math.sin(time * 0.75) * 0.028 * idleBlend;
+      const idleFloatX = Math.cos(time * 0.55) * 0.014 * idleBlend;
 
       logoGroup.rotation.y = currentRotY + idleFloatY;
       logoGroup.rotation.x = currentRotX + idleFloatX;
@@ -310,7 +313,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       ref={containerRef}
       className={`relative w-full h-full flex items-center justify-center select-none ${className}`}
       style={{
-        minHeight: '440px',
+        width: '100%',
+        height: '100%',
+        minHeight: 'inherit',
         opacity: isReady ? 1 : 0,
         transition: 'opacity 0.3s ease',
         ...style,
