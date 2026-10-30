@@ -1231,8 +1231,8 @@ body {
 .hero-3d-wrapper {
   position: relative;
   width: 100%;
-  height: 520px;
-  min-height: 500px;
+  height: 480px;
+  min-height: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1240,35 +1240,35 @@ body {
 
 @media (min-width: 640px) {
   .hero-3d-wrapper {
-    height: 620px;
-    min-height: 580px;
+    height: 540px;
+    min-height: 500px;
   }
 }
 
 @media (min-width: 768px) {
   .hero-3d-wrapper {
-    height: 700px;
-    min-height: 660px;
+    height: 600px;
+    min-height: 560px;
   }
 }
 
 @media (min-width: 1024px) {
   .hero-3d-wrapper {
-    height: 800px;
-    min-height: 760px;
+    height: 660px;
+    min-height: 620px;
   }
 }
 
 @media (min-width: 1280px) {
   .hero-3d-wrapper {
-    height: 880px;
-    min-height: 840px;
+    height: 720px;
+    min-height: 680px;
   }
 }
 
 @media (min-width: 1536px) {
   .hero-3d-wrapper {
-    height: 940px;
-    min-height: 900px;
+    height: 760px;
+    min-height: 720px;
   }
 }

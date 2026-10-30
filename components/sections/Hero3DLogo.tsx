@@ -34,7 +34,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
     // Camera calibrated close-up for massive heroic presence matching Neptune
     const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 50);
-    camera.position.set(0, 0, 2.95);
+    camera.position.set(0, 0, 3.25);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -130,9 +130,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       // Colossal scale: fills 96% of frustum height prominently like the Neptune reference
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const baseScale = 1.90 / maxDim;
+      const baseScale = 1.55 / maxDim;
       logoGroup.scale.set(baseScale, baseScale, baseScale);
-      logoGroup.position.set(0.22, 0, 0);
+      logoGroup.position.set(0.20, 0, 0);
 
       logoGroup.add(model);
       setIsReady(true);
@@ -218,11 +218,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       // Model aspect ratio is ~0.76. If screen width is narrower, adapt z so width never clips
       const modelAspect = 0.76;
       if (aspect < modelAspect) {
-        camera.position.z = (2.95 * modelAspect) / aspect;
+        camera.position.z = (3.25 * modelAspect) / aspect;
         logoGroup.position.x = 0.05; // center more on mobile / narrow viewports
       } else {
-        camera.position.z = 2.95;
-        logoGroup.position.x = 0.22; // shift right to fill right spacing on desktop
+        camera.position.z = 3.25;
+        logoGroup.position.x = 0.20; // shift right to fill right spacing on desktop
       }
 
       camera.updateProjectionMatrix();

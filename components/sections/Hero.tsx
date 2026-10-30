@@ -524,8 +524,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                top: '10%',
-                left: '12px',
+                top: '15%',
+                left: '20px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -550,8 +550,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '10%',
-                right: '12px',
+                bottom: '15%',
+                right: '20px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
