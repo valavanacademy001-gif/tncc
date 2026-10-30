@@ -369,7 +369,7 @@ export default function Hero() {
         TN
       </div>
 
-      <div className="container" style={{ position: 'relative', zIndex: 10, padding: '80px 24px 60px' }}>
+      <div className="container-wide" style={{ position: 'relative', zIndex: 10, padding: '80px 24px 60px', maxWidth: '1460px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 1fr)',
@@ -529,8 +529,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                top: '42px',
-                left: '24px',
+                top: '55px',
+                left: '18px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -555,8 +555,8 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '46px',
-                right: '24px',
+                bottom: '55px',
+                right: '18px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -602,8 +602,8 @@ export default function Hero() {
 
       <style jsx>{`
         .hero-3d-wrapper {
-          height: 440px;
-          min-height: 400px;
+          height: 480px;
+          min-height: 440px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -611,28 +611,38 @@ export default function Hero() {
         }
         @media (min-width: 768px) {
           .hero-3d-wrapper {
-            height: 520px;
-            min-height: 480px;
+            height: 580px;
+            min-height: 520px;
           }
         }
         @media (min-width: 1024px) {
           .hero-grid {
-            grid-template-columns: 1fr 1.05fr !important;
-            gap: 32px !important;
+            grid-template-columns: 1fr 1.18fr !important;
+            gap: 28px !important;
           }
           .hero-3d-wrapper {
-            height: 640px !important;
-            min-height: 580px !important;
+            height: 720px !important;
+            min-height: 660px !important;
           }
         }
         @media (min-width: 1280px) {
           .hero-grid {
-            grid-template-columns: 1fr 1.1fr !important;
+            grid-template-columns: 0.95fr 1.25fr !important;
+            gap: 36px !important;
+          }
+          .hero-3d-wrapper {
+            height: 780px !important;
+            min-height: 720px !important;
+          }
+        }
+        @media (min-width: 1536px) {
+          .hero-grid {
+            grid-template-columns: 0.92fr 1.35fr !important;
             gap: 40px !important;
           }
           .hero-3d-wrapper {
-            height: 700px !important;
-            min-height: 640px !important;
+            height: 840px !important;
+            min-height: 780px !important;
           }
         }
       `}</style>

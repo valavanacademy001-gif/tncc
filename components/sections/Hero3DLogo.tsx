@@ -26,15 +26,15 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     let isVisible = true;
 
     // Dimensions
-    let width = container.clientWidth || 560;
-    let height = container.clientHeight || 560;
+    let width = container.clientWidth || 600;
+    let height = container.clientHeight || 600;
 
     // Scene
     const scene = new THREE.Scene();
 
-    // Camera with wider FOV and calibrated depth so the enlarged logo NEVER cuts off
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 50);
-    camera.position.set(0, 0, 3.65);
+    // Camera calibrated for maximum scale without cutting off any vertex
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 50);
+    camera.position.set(0, 0, 3.55);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -52,21 +52,21 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
     // Studio Lighting setup to accentuate the 4 solid colors & 3D relief
     // 1. Ambient Light for balanced base illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.85);
     scene.add(ambientLight);
 
     // 2. Key Directional Light (upper right)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.3);
     keyLight.position.set(4.0, 4.5, 4.5);
     scene.add(keyLight);
 
     // 3. Left Fill Light (to illuminate left side when turning left)
-    const leftFillLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    const leftFillLight = new THREE.DirectionalLight(0xffffff, 1.7);
     leftFillLight.position.set(-4.0, 2.0, 3.5);
     scene.add(leftFillLight);
 
     // 4. Warm Bottom Fill Light
-    const bottomFillLight = new THREE.DirectionalLight(0xfff7ed, 1.1);
+    const bottomFillLight = new THREE.DirectionalLight(0xfff7ed, 1.15);
     bottomFillLight.position.set(0, -3.0, 2.5);
     scene.add(bottomFillLight);
 
@@ -80,11 +80,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     scene.add(logoGroup);
 
     // Target and current rotations (in radians)
-    // Horizontal Yaw: -24° to +24° (~0.42 rad) - smooth, visible turn without rotating 360
-    // Vertical Pitch: -10° to +10° (~0.17 rad) - calibrated to prevent any top/bottom clipping
-    const MAX_ROT_Y = 24 * (Math.PI / 180);
-    const MAX_ROT_X = 10 * (Math.PI / 180);
-    const MAX_ROT_Z = 2.5 * (Math.PI / 180);
+    // Horizontal Yaw: -22° to +22° (~0.38 rad) - smooth, visible turn
+    // Vertical Pitch: -8.5° to +8.5° (~0.148 rad) - calibrated so top/bottom never cut off
+    const MAX_ROT_Y = 22 * (Math.PI / 180);
+    const MAX_ROT_X = 8.5 * (Math.PI / 180);
+    const MAX_ROT_Z = 2.2 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
@@ -128,9 +128,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       model.position.y = -center.y;
       model.position.z = -center.z;
 
-      // Enlarged scale: fills the hero visual prominently while leaving safe headroom to avoid clipping
+      // Colossal scale: fills 92% of frustum height prominently like the Neptune reference
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const baseScale = 2.42 / maxDim;
+      const baseScale = 2.52 / maxDim;
       logoGroup.scale.set(baseScale, baseScale, baseScale);
 
       logoGroup.add(model);
@@ -215,11 +215,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       // Adjust camera distance dynamically for different viewports to prevent any clipping
       if (width < 640) {
-        camera.position.z = 4.0;
+        camera.position.z = 4.2;
       } else if (width < 1024) {
-        camera.position.z = 3.8;
+        camera.position.z = 3.9;
       } else {
-        camera.position.z = 3.65;
+        camera.position.z = 3.55;
       }
 
       camera.updateProjectionMatrix();
@@ -261,8 +261,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       // When idle, add a gentle organic floating motion
       const now = performance.now();
       const idleBlend = Math.min(1, Math.max(0, (now - lastInteractionTime - 1200) / 1000));
-      const idleFloatY = Math.sin(time * 0.75) * 0.035 * idleBlend;
-      const idleFloatX = Math.cos(time * 0.55) * 0.018 * idleBlend;
+      const idleFloatY = Math.sin(time * 0.75) * 0.032 * idleBlend;
+      const idleFloatX = Math.cos(time * 0.55) * 0.016 * idleBlend;
 
       logoGroup.rotation.y = currentRotY + idleFloatY;
       logoGroup.rotation.x = currentRotX + idleFloatX;
