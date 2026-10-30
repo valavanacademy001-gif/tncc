@@ -5,6 +5,9 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
+// Module-level in-memory cache to make subsequent renders instant
+let cachedGLTF: any = null;
+
 interface Hero3DLogoProps {
   className?: string;
   style?: React.CSSProperties;
@@ -12,8 +15,7 @@ interface Hero3DLogoProps {
 
 export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -30,9 +32,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     // Scene
     const scene = new THREE.Scene();
 
-    // Camera with natural perspective
+    // Camera with natural perspective and ample frustum so NO edge ever cuts off
     const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 50);
-    camera.position.set(0, 0, 3.25);
+    camera.position.set(0, 0, 3.85);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -77,20 +79,12 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     const logoGroup = new THREE.Group();
     scene.add(logoGroup);
 
-    // Draco Loader for KHR_draco_mesh_compression
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
-
-    // GLTF Loader
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
-
     // Target and current rotations (in radians)
-    // Horizontal Yaw: -26° to +26° (~0.45 rad) - smooth, visible turn without rotating 360
-    // Vertical Pitch: -14° to +14° (~0.24 rad)
-    const MAX_ROT_Y = 26 * (Math.PI / 180);
-    const MAX_ROT_X = 14 * (Math.PI / 180);
-    const MAX_ROT_Z = 3.5 * (Math.PI / 180);
+    // Horizontal Yaw: -25° to +25° (~0.43 rad) - smooth, visible turn without rotating 360
+    // Vertical Pitch: -13° to +13° (~0.22 rad)
+    const MAX_ROT_Y = 25 * (Math.PI / 180);
+    const MAX_ROT_X = 13 * (Math.PI / 180);
+    const MAX_ROT_Z = 3.0 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
@@ -107,57 +101,67 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       (window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
         'ontouchstart' in window);
 
-    // Load Model (regional_map_logo (3).glb)
-    loader.load(
-      '/regional_map_logo.glb?v=3',
-      (gltf) => {
-        if (isDisposed) return;
+    const setupModel = (gltf: any) => {
+      if (isDisposed) return;
+      const model = gltf.scene.clone();
 
-        const model = gltf.scene;
-
-        // Traverse meshes to ensure materials look clean and preserve solid colours
-        model.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const mesh = child as THREE.Mesh;
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            if (mesh.material) {
-              const mat = mesh.material as THREE.MeshStandardMaterial;
-              // Preserve original colors & textures while providing subtle premium sheen
-              mat.roughness = Math.min(Math.max(mat.roughness ?? 0.32, 0.22), 0.55);
-              mat.metalness = Math.min(mat.metalness ?? 0.08, 0.22);
-              mat.needsUpdate = true;
-            }
+      // Traverse meshes to ensure materials look clean and preserve solid colours
+      model.traverse((child: any) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          if (child.material) {
+            const mat = child.material;
+            mat.roughness = Math.min(Math.max(mat.roughness ?? 0.32, 0.22), 0.55);
+            mat.metalness = Math.min(mat.metalness ?? 0.08, 0.22);
+            mat.needsUpdate = true;
           }
-        });
-
-        // Compute Bounding Box to precisely center the geometry at (0, 0, 0)
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-
-        model.position.x = -center.x;
-        model.position.y = -center.y;
-        model.position.z = -center.z;
-
-        // Auto-scale to fill the right hero section prominently like the reference image
-        const maxDim = Math.max(size.x, size.y, size.z) || 1;
-        // Large, commanding presence
-        const baseScale = 2.92 / maxDim;
-        logoGroup.scale.set(baseScale, baseScale, baseScale);
-
-        logoGroup.add(model);
-        setIsLoading(false);
-      },
-      undefined,
-      (error) => {
-        console.error('Error loading 3D logo:', error);
-        if (!isDisposed) {
-          setLoadError('Failed to load 3D logo');
-          setIsLoading(false);
         }
-      }
-    );
+      });
+
+      // Compute Bounding Box to precisely center the geometry at (0, 0, 0)
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+
+      model.position.x = -center.x;
+      model.position.y = -center.y;
+      model.position.z = -center.z;
+
+      // Auto-scale to fill the hero area comfortably with 12% safety margin so NO edge ever cuts off
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const baseScale = 2.08 / maxDim;
+      logoGroup.scale.set(baseScale, baseScale, baseScale);
+
+      logoGroup.add(model);
+      setIsReady(true);
+    };
+
+    // If already cached, instantiate immediately without any network roundtrip
+    if (cachedGLTF) {
+      setupModel(cachedGLTF);
+    } else {
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('/draco/');
+
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+
+      loader.load(
+        '/regional_map_logo.glb?v=3',
+        (gltf) => {
+          cachedGLTF = gltf;
+          setupModel(gltf);
+        },
+        undefined,
+        (error) => {
+          console.error('Error loading 3D logo:', error);
+          if (!isDisposed) {
+            setIsReady(true);
+          }
+        }
+      );
+    }
 
     // Mouse Interaction across the ENTIRE Hero Section
     const heroSection = container.closest('section') || container;
@@ -209,13 +213,13 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       camera.aspect = width / height;
 
-      // Adjust camera distance dynamically for different viewports
+      // Adjust camera distance dynamically for different viewports to prevent any clipping
       if (width < 640) {
-        camera.position.z = 3.65;
+        camera.position.z = 4.15;
       } else if (width < 1024) {
-        camera.position.z = 3.4;
+        camera.position.z = 3.95;
       } else {
-        camera.position.z = 3.25;
+        camera.position.z = 3.85;
       }
 
       camera.updateProjectionMatrix();
@@ -257,8 +261,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       // When idle, add a gentle organic floating motion
       const now = performance.now();
       const idleBlend = Math.min(1, Math.max(0, (now - lastInteractionTime - 1200) / 1000));
-      const idleFloatY = Math.sin(time * 0.75) * 0.04 * idleBlend;
-      const idleFloatX = Math.cos(time * 0.55) * 0.02 * idleBlend;
+      const idleFloatY = Math.sin(time * 0.75) * 0.035 * idleBlend;
+      const idleFloatX = Math.cos(time * 0.55) * 0.018 * idleBlend;
 
       logoGroup.rotation.y = currentRotY + idleFloatY;
       logoGroup.rotation.x = currentRotX + idleFloatX;
@@ -280,8 +284,6 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
-
-      dracoLoader.dispose();
 
       // Traverse & dispose geometries, materials, textures
       scene.traverse((object) => {
@@ -309,29 +311,11 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       className={`relative w-full h-full flex items-center justify-center select-none ${className}`}
       style={{
         minHeight: '440px',
-        cursor: 'default',
+        opacity: isReady ? 1 : 0,
+        transition: 'opacity 0.3s ease',
         ...style,
       }}
-      title="TNCC 3D Tamil Nadu Logo — Move cursor across hero to turn"
-    >
-      {/* Loading Skeleton */}
-      {isLoading && !loadError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none animate-pulse">
-          <div className="w-56 h-56 sm:w-72 sm:h-72 rounded-full border-2 border-dashed border-[#00B5C8]/30 flex items-center justify-center">
-            <div className="w-10 h-10 rounded-full border-2 border-[#E84020] border-t-transparent animate-spin" />
-          </div>
-          <span className="text-xs font-bold tracking-wider uppercase text-gray-400">
-            Loading 3D Logo...
-          </span>
-        </div>
-      )}
-
-      {/* Error Fallback */}
-      {loadError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-          <p className="text-xs text-gray-400">{loadError}</p>
-        </div>
-      )}
-    </div>
+      title="TNCC 3D Tamil Nadu Logo"
+    />
   );
 }

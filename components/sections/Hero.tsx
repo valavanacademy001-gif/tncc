@@ -3,22 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { ArrowRight, ArrowUpRight, Zap, Users, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Zap, Users, Briefcase, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Dynamic import for client-only 3D logo rendering
+// Dynamic import for client-only 3D logo rendering without any jarring loading text
 const Hero3DLogo = dynamic(() => import('./Hero3DLogo'), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-      <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full border-2 border-dashed border-[#00B5C8]/30 flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full border-2 border-[#E84020] border-t-transparent animate-spin" />
-      </div>
-      <span className="text-xs font-bold tracking-wider uppercase text-gray-400">
-        Loading 3D Logo...
-      </span>
-    </div>
-  ),
+  loading: () => <div className="w-full h-full" />,
 });
 
 // Floating card component
@@ -35,8 +26,189 @@ function FloatingCard({ children, style, delay = 0 }: { children: React.ReactNod
   );
 }
 
+// Elastic snap entrance card component with floating idle loop
+function ElasticEntranceCard({
+  children,
+  style,
+  delay = 0,
+  floatType,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  delay?: number;
+  floatType: 'karthik' | 'project';
+}) {
+  const [isFloating, setIsFloating] = useState(false);
 
+  const xKeyframes = [100, 120, -15, 5, -1, 0];
+  const scaleKeyframes = [0.96, 0.96, 1.02, 0.995, 1.002, 1];
+  const opacityKeyframes = [0, 0.1, 1, 1, 1, 1];
 
+  const getFloatingAnimate = () => {
+    switch (floatType) {
+      case 'karthik':
+        return { y: [0, -10, 0] };
+      case 'project':
+        return { y: [0, -6, 0], x: [0, 5, 0] };
+      default:
+        return {};
+    }
+  };
+
+  const getFloatingTransition = (): any => {
+    switch (floatType) {
+      case 'karthik':
+        return { repeat: Infinity, duration: 6, ease: 'easeInOut' };
+      case 'project':
+        return {
+          y: { repeat: Infinity, duration: 7.5, ease: 'easeInOut' },
+          x: { repeat: Infinity, duration: 7.5, ease: 'easeInOut' },
+        };
+      default:
+        return {};
+    }
+  };
+
+  return (
+    <motion.div
+      initial={isFloating ? undefined : { x: 100, opacity: 0, scale: 0.96 }}
+      animate={isFloating ? getFloatingAnimate() : {
+        x: xKeyframes,
+        scale: scaleKeyframes,
+        opacity: opacityKeyframes,
+      }}
+      transition={isFloating ? getFloatingTransition() : {
+        duration: 0.95,
+        delay: delay / 1000,
+        times: [0, 0.15, 0.45, 0.7, 0.85, 1],
+        ease: 'easeOut',
+      }}
+      onAnimationComplete={() => {
+        if (!isFloating) setIsFloating(true);
+      }}
+      style={{
+        ...style,
+        willChange: 'transform, opacity',
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// 1st Card: Creator Preview Card (Top-Left Edge)
+function CreatorPreviewCard({
+  name,
+  title,
+  location,
+  color,
+  delay,
+  floatType,
+}: {
+  name: string;
+  title: string;
+  location: string;
+  color: string;
+  delay: number;
+  floatType: 'karthik';
+}) {
+  return (
+    <ElasticEntranceCard delay={delay} floatType={floatType} style={{
+      background: 'white',
+      borderRadius: '16px',
+      padding: '12px 16px',
+      boxShadow: '0 10px 30px rgba(13,44,91,0.12), 0 2px 6px rgba(13,44,91,0.04)',
+      border: '1px solid rgba(13,44,91,0.08)',
+      minWidth: '185px',
+      pointerEvents: 'auto',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+        <div style={{
+          width: '34px',
+          height: '34px',
+          borderRadius: '50%',
+          background: color,
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontWeight: 700,
+          fontFamily: 'var(--font-display)',
+          fontSize: '0.9rem',
+        }}>
+          {name[0]}
+        </div>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--navy)', lineHeight: 1.2 }}>{name}</div>
+          <div style={{ fontSize: '0.72rem', color: 'var(--gray-500)' }}>{title}</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
+        <MapPin size={11} color="var(--gray-400)" />
+        <span style={{ fontSize: '0.7rem', color: 'var(--gray-400)' }}>{location}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+        <span style={{ fontSize: '0.68rem', color: '#F5A623' }}>★★★★★</span>
+        <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--gray-500)', marginLeft: '2px' }}>4.9</span>
+      </div>
+    </ElasticEntranceCard>
+  );
+}
+
+// 2nd Card: Project Opportunity Card (Bottom-Right Edge)
+function ProjectPreviewCard({
+  title,
+  budget,
+  category,
+  proposals = '8 proposals',
+  delay,
+  floatType,
+}: {
+  title: string;
+  budget: string;
+  category: string;
+  proposals?: string;
+  delay: number;
+  floatType: 'project';
+}) {
+  return (
+    <ElasticEntranceCard delay={delay} floatType={floatType} style={{
+      background: 'white',
+      borderRadius: '16px',
+      padding: '12px 16px',
+      boxShadow: '0 10px 30px rgba(13,44,91,0.12), 0 2px 6px rgba(13,44,91,0.04)',
+      border: '1px solid rgba(13,44,91,0.08)',
+      minWidth: '210px',
+      maxWidth: '235px',
+      pointerEvents: 'auto',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+        <span style={{
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          padding: '2px 8px',
+          borderRadius: '100px',
+          background: 'rgba(0,181,200,0.1)',
+          color: 'var(--cyan)',
+        }}>
+          {category}
+        </span>
+        <div style={{ fontSize: '0.68rem', color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+          Open
+        </div>
+      </div>
+      <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--navy)', marginBottom: '6px', lineHeight: 1.3 }}>
+        {title}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--navy)', fontSize: '0.9rem' }}>{budget}</span>
+        <span style={{ fontSize: '0.68rem', color: 'var(--gray-500)', fontWeight: 500 }}>{proposals}</span>
+      </div>
+    </ElasticEntranceCard>
+  );
+}
 
 // Animated connection thread (SVG)
 function ConnectionThread() {
@@ -116,8 +288,6 @@ function TNSilhouette() {
     </div>
   );
 }
-
-
 
 // Stats pill
 function StatPill({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string; label: string; color: string; delay: number }) {
@@ -254,49 +424,79 @@ export default function Hero() {
               </motion.span>
             </h1>
 
-            {/* Supporting text */}
+            {/* Sub-headline */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="text-body-lg"
-              style={{ color: 'var(--gray-600)', maxWidth: '540px', marginBottom: '32px' }}
+              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                fontSize: 'clamp(1rem, 1.2vw, 1.125rem)',
+                lineHeight: 1.6,
+                color: 'var(--gray-600)',
+                maxWidth: '560px',
+                marginBottom: '36px',
+              }}
             >
-              A free community for designers, video editors, photographers, filmmakers and AI creators. Share your creativity, participate in competitions, showcase your work and grow together.
+              A free community for designers, video editors, photographers,
+              filmmakers and AI creators. Share your creativity, participate in competitions, showcase your work and grow together.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '36px' }}
+              transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '16px',
+                alignItems: 'center',
+                marginBottom: '20px',
+              }}
             >
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                <Link
-                  href="/community/auth?mode=register"
-                  className="btn btn-primary btn-lg"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                >
-                  <span>JOIN THE COMMUNITY</span>
-                  <ArrowRight size={18} />
-                </Link>
-                <Link href="#about" className="btn btn-secondary btn-lg" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  <span>EXPLORE TNCC</span>
-                  <ArrowUpRight size={18} />
-                </Link>
-              </div>
-              <p style={{ fontSize: '0.825rem', color: 'var(--gray-500)', fontWeight: 500, margin: '4px 0 0' }}>
-                A space for every creative mind.
-              </p>
+              <Link
+                href="/community/auth?mode=register"
+                className="btn btn-primary btn-lg"
+                style={{
+                  boxShadow: '0 8px 24px rgba(232,64,32,0.35)',
+                }}
+              >
+                JOIN THE COMMUNITY
+                <ArrowRight size={18} style={{ marginLeft: '8px' }} />
+              </Link>
+              <Link
+                href="#about"
+                className="btn btn-secondary btn-lg"
+              >
+                EXPLORE TNCC
+                <ArrowUpRight size={16} style={{ marginLeft: '6px' }} />
+              </Link>
             </motion.div>
 
-            {/* Stats pills */}
+            {/* Sub-tagline */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--gray-400)',
+                marginBottom: '40px',
+              }}
+            >
+              A space for every creative mind.
+            </motion.p>
+
+            {/* Stat pills row */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '12px',
+              }}
             >
               <StatPill icon={Users} value="1,240+" label="Active creators" color="var(--cyan)" delay={0.7} />
               <StatPill icon={Briefcase} value="48+" label="Creative challenges" color="var(--orange)" delay={0.8} />
@@ -304,11 +504,11 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right: Interactive 3D Tamil Nadu Logo */}
+          {/* Right: Interactive 3D Tamil Nadu Logo with Layered Edge Floating Cards */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: 'relative',
               width: '100%',
@@ -318,7 +518,52 @@ export default function Hero() {
             }}
             className="hero-3d-wrapper"
           >
-            <Hero3DLogo />
+            {/* Top-Left Floating Creator Card (Edge Layered) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '-8px',
+                zIndex: 20,
+                pointerEvents: 'none',
+              }}
+              className="hidden sm:block"
+            >
+              <CreatorPreviewCard
+                name="Karthik"
+                title="Brand Designer"
+                location="Chennai"
+                color="var(--navy)"
+                delay={150}
+                floatType="karthik"
+              />
+            </div>
+
+            {/* Central 3D Logo Canvas (Never Cut Off) */}
+            <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }}>
+              <Hero3DLogo />
+            </div>
+
+            {/* Bottom-Right Floating Project Card (Edge Layered) */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '20px',
+                right: '-8px',
+                zIndex: 20,
+                pointerEvents: 'none',
+              }}
+              className="hidden sm:block"
+            >
+              <ProjectPreviewCard
+                title="Brand Identity for Organic Startup"
+                budget="₹15K–25K"
+                category="Graphic Design"
+                proposals="8 proposals"
+                delay={300}
+                floatType="project"
+              />
+            </div>
           </motion.div>
         </div>
       </div>
@@ -359,7 +604,7 @@ export default function Hero() {
         }
         @media (min-width: 768px) {
           .hero-3d-wrapper {
-            height: 540px;
+            height: 520px;
             min-height: 480px;
           }
         }
@@ -369,18 +614,18 @@ export default function Hero() {
             gap: 32px !important;
           }
           .hero-3d-wrapper {
-            height: 660px !important;
-            min-height: 600px !important;
+            height: 640px !important;
+            min-height: 580px !important;
           }
         }
         @media (min-width: 1280px) {
           .hero-grid {
-            grid-template-columns: 1fr 1.12fr !important;
+            grid-template-columns: 1fr 1.1fr !important;
             gap: 40px !important;
           }
           .hero-3d-wrapper {
-            height: 720px !important;
-            min-height: 660px !important;
+            height: 700px !important;
+            min-height: 640px !important;
           }
         }
       `}</style>
