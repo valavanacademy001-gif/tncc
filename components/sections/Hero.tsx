@@ -350,26 +350,37 @@ export default function Hero() {
 
       <style jsx>{`
         .hero-3d-wrapper {
-          height: 380px;
-          min-height: 340px;
+          height: 440px;
+          min-height: 400px;
           display: flex;
           align-items: center;
-          justifyContent: center;
+          justify-content: center;
+          position: relative;
         }
         @media (min-width: 768px) {
           .hero-3d-wrapper {
-            height: 460px;
-            min-height: 420px;
+            height: 540px;
+            min-height: 480px;
           }
         }
         @media (min-width: 1024px) {
           .hero-grid {
-            grid-template-columns: 1.05fr 0.95fr !important;
+            grid-template-columns: 1fr 1.05fr !important;
+            gap: 32px !important;
+          }
+          .hero-3d-wrapper {
+            height: 660px !important;
+            min-height: 600px !important;
+          }
+        }
+        @media (min-width: 1280px) {
+          .hero-grid {
+            grid-template-columns: 1fr 1.12fr !important;
             gap: 40px !important;
           }
           .hero-3d-wrapper {
-            height: 540px !important;
-            min-height: 500px !important;
+            height: 720px !important;
+            min-height: 660px !important;
           }
         }
       `}</style>

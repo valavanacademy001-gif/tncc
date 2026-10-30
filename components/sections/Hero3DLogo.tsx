@@ -24,15 +24,15 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     let isVisible = true;
 
     // Dimensions
-    let width = container.clientWidth || 480;
-    let height = container.clientHeight || 480;
+    let width = container.clientWidth || 560;
+    let height = container.clientHeight || 560;
 
     // Scene
     const scene = new THREE.Scene();
 
     // Camera with natural perspective
     const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 50);
-    camera.position.set(0, 0, 3.8);
+    camera.position.set(0, 0, 3.25);
 
     // Renderer with transparency & high-fidelity color management
     const renderer = new THREE.WebGLRenderer({
@@ -44,28 +44,33 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0); // Transparent
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.appendChild(renderer.domElement);
 
     // Studio Lighting setup to accentuate the 4 solid colors & 3D relief
-    // 1. Soft Ambient Light for balanced base illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    // 1. Ambient Light for balanced base illumination
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
     scene.add(ambientLight);
 
     // 2. Key Directional Light (upper right)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
-    keyLight.position.set(3.5, 4.0, 4.5);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(4.0, 4.5, 4.5);
     scene.add(keyLight);
 
-    // 3. Fill Light (lower left) with soft warmth to soften shadows
-    const fillLight = new THREE.DirectionalLight(0xfff7ed, 1.2);
-    fillLight.position.set(-3.5, -1.5, 3.0);
-    scene.add(fillLight);
+    // 3. Left Fill Light (to illuminate left side when turning left)
+    const leftFillLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    leftFillLight.position.set(-4.0, 2.0, 3.5);
+    scene.add(leftFillLight);
 
-    // 4. Subtle Back / Rim Light for edge separation
-    const rimLight = new THREE.DirectionalLight(0x00B5C8, 0.7);
-    rimLight.position.set(0, 3.0, -3.5);
+    // 4. Warm Bottom Fill Light
+    const bottomFillLight = new THREE.DirectionalLight(0xfff7ed, 1.1);
+    bottomFillLight.position.set(0, -3.0, 2.5);
+    scene.add(bottomFillLight);
+
+    // 5. Subtle Rim Light for edge separation
+    const rimLight = new THREE.DirectionalLight(0x00B5C8, 0.9);
+    rimLight.position.set(0, 3.5, -3.5);
     scene.add(rimLight);
 
     // Group for mouse rotation & auto-centering
@@ -81,16 +86,20 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     loader.setDRACOLoader(dracoLoader);
 
     // Target and current rotations (in radians)
-    // Horizontal rotation: -15° to +15° (~0.26 rad)
-    // Vertical rotation: -8° to +8° (~0.14 rad)
-    const MAX_ROT_Y = 15 * (Math.PI / 180);
-    const MAX_ROT_X = 8 * (Math.PI / 180);
+    // Horizontal Yaw: -26° to +26° (~0.45 rad) - smooth, visible turn without rotating 360
+    // Vertical Pitch: -14° to +14° (~0.24 rad)
+    const MAX_ROT_Y = 26 * (Math.PI / 180);
+    const MAX_ROT_X = 14 * (Math.PI / 180);
+    const MAX_ROT_Z = 3.5 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
+    let targetRotZ = 0;
     let currentRotX = 0;
     let currentRotY = 0;
-    let isHovered = false;
+    let currentRotZ = 0;
+    let isInteracting = false;
+    let lastInteractionTime = performance.now();
 
     // Check if device is primarily touch-based
     const isTouchDevice =
@@ -98,9 +107,9 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       (window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
         'ontouchstart' in window);
 
-    // Load Model
+    // Load Model (regional_map_logo (3).glb)
     loader.load(
-      '/regional_map_logo.glb',
+      '/regional_map_logo.glb?v=3',
       (gltf) => {
         if (isDisposed) return;
 
@@ -115,8 +124,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
             if (mesh.material) {
               const mat = mesh.material as THREE.MeshStandardMaterial;
               // Preserve original colors & textures while providing subtle premium sheen
-              mat.roughness = Math.min(Math.max(mat.roughness ?? 0.35, 0.25), 0.6);
-              mat.metalness = Math.min(mat.metalness ?? 0.08, 0.25);
+              mat.roughness = Math.min(Math.max(mat.roughness ?? 0.32, 0.22), 0.55);
+              mat.metalness = Math.min(mat.metalness ?? 0.08, 0.22);
               mat.needsUpdate = true;
             }
           }
@@ -131,10 +140,10 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
         model.position.y = -center.y;
         model.position.z = -center.z;
 
-        // Auto-scale to fit comfortably inside the viewport with ample whitespace
+        // Auto-scale to fill the right hero section prominently like the reference image
         const maxDim = Math.max(size.x, size.y, size.z) || 1;
-        // On desktop/tablet, height 2.0 maps to scale ~ 1.05
-        const baseScale = 2.15 / maxDim;
+        // Large, commanding presence
+        const baseScale = 2.92 / maxDim;
         logoGroup.scale.set(baseScale, baseScale, baseScale);
 
         logoGroup.add(model);
@@ -150,54 +159,63 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       }
     );
 
-    // Mouse Interaction
+    // Mouse Interaction across the ENTIRE Hero Section
+    const heroSection = container.closest('section') || container;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (isTouchDevice) return;
-      const rect = container.getBoundingClientRect();
-      // Mouse position normalized from -1 (left/top) to +1 (right/bottom)
+      const rect = heroSection.getBoundingClientRect();
+      
+      // Normalized coordinate from -1 to +1 across the whole hero section
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
 
-      const clampedX = Math.max(-1.1, Math.min(1.1, nx));
-      const clampedY = Math.max(-1.1, Math.min(1.1, ny));
+      // Clamp slightly past bounds for continuous responsiveness
+      const clampedX = Math.max(-1.12, Math.min(1.12, nx));
+      const clampedY = Math.max(-1.12, Math.min(1.12, ny));
 
-      // Right mouse -> rotates right (+Y rotation)
-      // Left mouse -> rotates left (-Y rotation)
+      // Right mouse -> model turns right (+Y)
+      // Left mouse -> model turns left (-Y)
       targetRotY = clampedX * MAX_ROT_Y;
 
-      // Up mouse -> tilts up (-X rotation)
-      // Down mouse -> tilts down (+X rotation)
+      // Up mouse -> model tilts slightly up (-X)
+      // Down mouse -> model tilts slightly down (+X)
       targetRotX = -clampedY * MAX_ROT_X;
-      isHovered = true;
+
+      // Subtle roll tilt on Z
+      targetRotZ = -clampedX * MAX_ROT_Z;
+
+      isInteracting = true;
+      lastInteractionTime = performance.now();
     };
 
     const handleMouseLeave = () => {
-      // Smoothly return to original front-facing position
       targetRotX = 0;
       targetRotY = 0;
-      isHovered = false;
+      targetRotZ = 0;
+      isInteracting = false;
     };
 
-    // Attach mouse events to container and window for smooth exit tracking
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    // Attach to the entire hero section so moving anywhere turns the 3D logo
+    heroSection.addEventListener('mousemove', handleMouseMove);
+    heroSection.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('blur', handleMouseLeave);
 
     // Responsive Resize Handler with ResizeObserver
     const handleResize = () => {
       if (!container || isDisposed) return;
-      width = container.clientWidth || 400;
-      height = container.clientHeight || 400;
+      width = container.clientWidth || 440;
+      height = container.clientHeight || 440;
 
       camera.aspect = width / height;
 
-      // Adjust camera distance for mobile / tablet screens to prevent clipping
+      // Adjust camera distance dynamically for different viewports
       if (width < 640) {
-        camera.position.z = 4.2;
+        camera.position.z = 3.65;
       } else if (width < 1024) {
-        camera.position.z = 3.9;
+        camera.position.z = 3.4;
       } else {
-        camera.position.z = 3.7;
+        camera.position.z = 3.25;
       }
 
       camera.updateProjectionMatrix();
@@ -229,19 +247,22 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       if (!isVisible || document.hidden) return;
 
-      const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // Smooth interpolation (lerp factor ~ 0.055)
-      currentRotX += (targetRotX - currentRotX) * 0.055;
-      currentRotY += (targetRotY - currentRotY) * 0.055;
+      // Smooth interpolation (lerp factor ~ 0.045 for silky easing)
+      currentRotX += (targetRotX - currentRotX) * 0.045;
+      currentRotY += (targetRotY - currentRotY) * 0.045;
+      currentRotZ += (targetRotZ - currentRotZ) * 0.045;
 
-      // Subtle organic breathing float when idle
-      const idleFloatY = isHovered ? 0 : Math.sin(time * 0.8) * 0.035;
-      const idleFloatX = isHovered ? 0 : Math.cos(time * 0.6) * 0.018;
+      // When idle, add a gentle organic floating motion
+      const now = performance.now();
+      const idleBlend = Math.min(1, Math.max(0, (now - lastInteractionTime - 1200) / 1000));
+      const idleFloatY = Math.sin(time * 0.75) * 0.04 * idleBlend;
+      const idleFloatX = Math.cos(time * 0.55) * 0.02 * idleBlend;
 
       logoGroup.rotation.y = currentRotY + idleFloatY;
       logoGroup.rotation.x = currentRotX + idleFloatX;
+      logoGroup.rotation.z = currentRotZ;
 
       renderer.render(scene, camera);
     };
@@ -253,8 +274,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       isDisposed = true;
       cancelAnimationFrame(animationFrameId);
 
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
+      heroSection.removeEventListener('mousemove', handleMouseMove);
+      heroSection.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('blur', handleMouseLeave);
 
       resizeObserver.disconnect();
@@ -287,16 +308,16 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       ref={containerRef}
       className={`relative w-full h-full flex items-center justify-center select-none ${className}`}
       style={{
-        minHeight: '380px',
-        cursor: 'grab',
+        minHeight: '440px',
+        cursor: 'default',
         ...style,
       }}
-      title="TNCC 3D Tamil Nadu Logo — Move cursor to inspect"
+      title="TNCC 3D Tamil Nadu Logo — Move cursor across hero to turn"
     >
       {/* Loading Skeleton */}
       {isLoading && !loadError && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none animate-pulse">
-          <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full border-2 border-dashed border-[#00B5C8]/30 flex items-center justify-center">
+          <div className="w-56 h-56 sm:w-72 sm:h-72 rounded-full border-2 border-dashed border-[#00B5C8]/30 flex items-center justify-center">
             <div className="w-10 h-10 rounded-full border-2 border-[#E84020] border-t-transparent animate-spin" />
           </div>
           <span className="text-xs font-bold tracking-wider uppercase text-gray-400">
