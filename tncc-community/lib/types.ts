@@ -5,6 +5,8 @@ export interface CommunityMember {
   member_id: string; // e.g. TNCC-2026-018
   username: string;
   full_name: string;
+  email?: string;
+  password?: string;
   avatar_url: string;
   cover_url: string;
   bio: string;

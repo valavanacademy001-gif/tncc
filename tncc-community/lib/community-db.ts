@@ -13,6 +13,7 @@ import {
   MemberRole,
 } from './types';
 import { xpEngine } from './xp-engine';
+import { checkIsAdmin } from './admin-config';
 
 // Initial realistic seed members across Tamil Nadu
 export const INITIAL_MEMBERS: CommunityMember[] = [
@@ -970,6 +971,142 @@ export class CommunityDatabase {
     saveToStorage('posts', this.posts);
 
     return newMember;
+  }
+
+  // --- Authentication & User Management ---
+  public registerMember(data: {
+    full_name: string;
+    username: string;
+    email: string;
+    password?: string;
+    location?: string;
+    skills?: string[];
+  }): CommunityMember {
+    const cleanEmail = data.email.trim().toLowerCase();
+    const isAdmin = checkIsAdmin(cleanEmail);
+
+    // Check if member with this email or username already exists
+    const existingIndex = this.members.findIndex(
+      (m) =>
+        (m.email && m.email.toLowerCase() === cleanEmail) ||
+        m.username.toLowerCase() === data.username.toLowerCase().trim()
+    );
+
+    if (existingIndex !== -1) {
+      // Update existing
+      this.members[existingIndex] = {
+        ...this.members[existingIndex],
+        full_name: data.full_name.trim(),
+        username: data.username.trim(),
+        email: cleanEmail,
+        password: data.password || this.members[existingIndex].password,
+        location: data.location?.trim() || this.members[existingIndex].location,
+        skills: data.skills && data.skills.length > 0 ? data.skills : this.members[existingIndex].skills,
+        role: isAdmin ? 'admin' : 'member',
+      };
+      this.currentMemberId = this.members[existingIndex].id;
+      saveToStorage('members', this.members);
+      saveToStorage('currentMemberId', this.currentMemberId);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('tncc_active_user_email', cleanEmail);
+      }
+      return this.members[existingIndex];
+    }
+
+    const newMemberId = `mem-user-${Date.now()}`;
+    const newMember: CommunityMember = {
+      id: newMemberId,
+      member_id: `TNCC-2026-${String(this.members.length + 1).padStart(3, '0')}`,
+      username: data.username.trim().replace(/^@/, ''),
+      full_name: data.full_name.trim(),
+      email: cleanEmail,
+      password: data.password,
+      avatar_url: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80`,
+      cover_url: `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80`,
+      bio: 'Tamil Nadu creator crafting impactful visuals and stories.',
+      location: data.location?.trim() || 'Chennai, Tamil Nadu',
+      skills: data.skills && data.skills.length > 0 ? data.skills : ['Graphic Design', 'Creator'],
+      total_xp: isAdmin ? 990 : 50,
+      role: isAdmin ? 'admin' : 'member',
+      created_at: new Date().toISOString(),
+      posts_count: 0,
+      wins_count: 0,
+      challenges_count: 0,
+      followers_count: 0,
+      following_count: 0,
+    };
+
+    this.members = [newMember, ...this.members];
+    this.currentMemberId = newMember.id;
+    saveToStorage('members', this.members);
+    saveToStorage('currentMemberId', this.currentMemberId);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tncc_active_user_email', cleanEmail);
+    }
+    return newMember;
+  }
+
+  public loginMember(
+    emailOrUsername: string,
+    password?: string
+  ): { success: boolean; member?: CommunityMember; error?: string } {
+    const clean = emailOrUsername.trim().toLowerCase();
+    const isAdmin = checkIsAdmin(clean);
+
+    // Look for existing member
+    let member = this.members.find(
+      (m) =>
+        (m.email && m.email.toLowerCase() === clean) ||
+        m.username.toLowerCase() === clean ||
+        m.username.toLowerCase() === clean.replace(/^@/, '')
+    );
+
+    // If logging in with the authorized admin email (suganeshsugu07@gmail.com) and not in list yet:
+    if (!member && isAdmin) {
+      member = this.registerMember({
+        full_name: 'Suganesh',
+        username: 'suganesh_admin',
+        email: 'suganeshsugu07@gmail.com',
+        password: password || 'admin123',
+        location: 'Tamil Nadu',
+        skills: ['Community Administrator', 'Creative Direction'],
+      });
+    }
+
+    if (!member) {
+      return {
+        success: false,
+        error: 'No creator account found with this email. Please click "Create Free Member Profile" below to sign up.',
+      };
+    }
+
+    // Verify password if one was set during registration
+    if (member.password && password && member.password !== password) {
+      return {
+        success: false,
+        error: 'Incorrect password. Please verify your credentials and try again.',
+      };
+    }
+
+    // Synchronize role with admin authorization
+    const roleIsAdmin = checkIsAdmin(member.email || clean);
+    member.role = roleIsAdmin ? 'admin' : 'member';
+    if (!member.email && clean.includes('@')) {
+      member.email = clean;
+    }
+
+    this.currentMemberId = member.id;
+    saveToStorage('members', this.members);
+    saveToStorage('currentMemberId', this.currentMemberId);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tncc_active_user_email', member.email || clean);
+      localStorage.removeItem('tncc_admin_demo');
+    }
+
+    return {
+      success: true,
+      member,
+    };
   }
 
   // --- Follow System ---

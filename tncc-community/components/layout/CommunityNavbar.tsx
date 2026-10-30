@@ -40,8 +40,10 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
         localStorage.removeItem('tncc_user');
         localStorage.removeItem('tncc_session');
         localStorage.removeItem('tncc_admin_demo');
+        localStorage.removeItem('tncc_active_user_email');
+        localStorage.removeItem('tncc_current_member_id');
       }
-      router.push('/login');
+      router.push('/community/auth');
     }
   };
 
@@ -254,24 +256,16 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                   </Link>
                 </div>
 
-                {/* Demo Admin Toggle Action */}
-                <div className="border-t border-gray-100 py-1">
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      toggleAdminMode(!isAdmin);
-                    }}
-                    className="w-full flex items-center justify-between px-4 py-1.5 text-xs text-amber-800 hover:bg-amber-50 text-left font-bold transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
+                {/* Verified Admin Status Indicator */}
+                {isAdmin && (
+                  <div className="border-t border-amber-100 bg-amber-50/70 px-4 py-2 text-[11px] text-amber-900 font-bold flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-                      <span>{isAdmin ? 'Switch to User View' : 'Enable Demo Admin'}</span>
+                      <span>Admin Access Active</span>
                     </div>
-                    <span className="text-[10px] text-amber-600 font-semibold">
-                      {isAdmin ? 'Active' : 'Off'}
-                    </span>
-                  </button>
-                </div>
+                    <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-extrabold">VERIFIED</span>
+                  </div>
+                )}
 
                 {/* Sign Out */}
                 <div className="border-t border-gray-100 pt-1">

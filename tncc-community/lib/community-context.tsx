@@ -70,6 +70,17 @@ interface CommunityContextType {
   toggleFollow: (memberIdOrUsername: string) => void;
   dismissToast: (id: string) => void;
   refreshData: () => void;
+  // --- Authentication Methods ---
+  registerMember: (data: {
+    full_name: string;
+    username: string;
+    email: string;
+    password?: string;
+    location?: string;
+    skills?: string[];
+  }) => CommunityMember;
+  loginMember: (emailOrUsername: string, password?: string) => { success: boolean; member?: CommunityMember; error?: string };
+  signOutMember: () => void;
   // --- Admin Methods ---
   addResource: (data: Omit<CommunityResource, 'id'>) => void;
   updateResource: (id: string, data: Partial<CommunityResource>) => void;
@@ -128,12 +139,11 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     setJobs(communityDb.getJobs());
     setEvents(communityDb.getEvents());
 
-    // Check admin status
+    // Strict Admin check: strictly suganeshsugu07@gmail.com
     if (typeof window !== 'undefined') {
-      const demoFlag = localStorage.getItem('tncc_admin_demo') === 'true';
-      const isRoleAdmin = curr?.role === 'admin';
-      const hasEmailAuth = checkIsAdmin(curr?.username ? `${curr.username}@gmail.com` : undefined, demoFlag || isRoleAdmin);
-      setIsAdmin(hasEmailAuth);
+      const activeEmail = localStorage.getItem('tncc_active_user_email') || curr?.email || (curr?.username ? `${curr.username}@gmail.com` : undefined);
+      const isAuthorized = checkIsAdmin(activeEmail);
+      setIsAdmin(isAuthorized);
     }
   };
 
@@ -142,26 +152,68 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     loadAll();
   }, []);
 
-  const toggleAdminMode = (enable?: boolean) => {
-    const newVal = enable !== undefined ? enable : !isAdmin;
-    setIsAdmin(newVal);
+  const registerMember = (data: {
+    full_name: string;
+    username: string;
+    email: string;
+    password?: string;
+    location?: string;
+    skills?: string[];
+  }) => {
+    const newMember = communityDb.registerMember(data);
+    loadAll();
+    addToast({
+      type: 'success',
+      title: 'Welcome to TNCC!',
+      message: `Account created successfully for ${newMember.full_name}`,
+    });
+    return newMember;
+  };
+
+  const loginMember = (emailOrUsername: string, password?: string) => {
+    const res = communityDb.loginMember(emailOrUsername, password);
+    if (res.success && res.member) {
+      loadAll();
+      addToast({
+        type: 'success',
+        title: res.member.role === 'admin' ? '🛡️ Admin Authenticated' : 'Welcome Back!',
+        message: `Signed in as ${res.member.full_name}`,
+      });
+    }
+    return res;
+  };
+
+  const signOutMember = () => {
     if (typeof window !== 'undefined') {
-      if (newVal) {
-        localStorage.setItem('tncc_admin_demo', 'true');
-        communityDb.updateMemberRole(currentMember.id, 'admin');
-      } else {
-        localStorage.removeItem('tncc_admin_demo');
-        communityDb.updateMemberRole(currentMember.id, 'member');
-      }
+      localStorage.removeItem('tncc_current_member_id');
+      localStorage.removeItem('tncc_active_user_email');
+      localStorage.removeItem('tncc_admin_demo');
+      localStorage.removeItem('tncc_user');
+      localStorage.removeItem('tncc_session');
     }
     loadAll();
     addToast({
       type: 'info',
-      title: newVal ? '🛡️ Admin Access Active' : 'User Mode Restored',
-      message: newVal
-        ? 'Full administrator editing privileges unlocked across TNCC.'
-        : 'Viewing TNCC as standard creator.',
+      title: 'Signed Out',
+      message: 'You have been signed out.',
     });
+  };
+
+  const toggleAdminMode = (enable?: boolean) => {
+    if (typeof window !== 'undefined') {
+      const activeEmail = localStorage.getItem('tncc_active_user_email') || currentMember?.email;
+      if (!checkIsAdmin(activeEmail)) {
+        addToast({
+          type: 'error',
+          title: 'Access Restricted',
+          message: 'Admin access is strictly restricted to suganeshsugu07@gmail.com.',
+        });
+        return;
+      }
+    }
+    const newVal = enable !== undefined ? enable : !isAdmin;
+    setIsAdmin(newVal);
+    loadAll();
   };
 
   const updateProfile = (data: Partial<CommunityMember>) => {
@@ -500,6 +552,10 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         toggleFollow,
         dismissToast,
         refreshData: loadAll,
+        // Auth
+        registerMember,
+        loginMember,
+        signOutMember,
         // Admin
         addResource,
         updateResource,

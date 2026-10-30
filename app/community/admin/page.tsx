@@ -334,9 +334,37 @@ export default function AdminDashboardPage() {
     );
   });
 
+  if (!isAdmin) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+        <div className="w-16 h-16 rounded-3xl bg-amber-100 flex items-center justify-center mb-4 text-amber-700 shadow-inner">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-extrabold text-[#0D2C5B]">Administrator Access Restricted</h2>
+        <p className="text-xs sm:text-sm text-gray-500 max-w-md mt-2">
+          This management workspace is strictly restricted to authorized administrative personnel (<span className="font-semibold text-gray-700">suganeshsugu07@gmail.com</span>).
+        </p>
+        <div className="mt-6 flex items-center gap-3">
+          <Link
+            href="/community/auth?mode=login"
+            className="px-5 py-2.5 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer"
+          >
+            Sign In as Admin
+          </Link>
+          <Link
+            href="/community"
+            className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#0D2C5B] rounded-xl text-xs font-bold transition-all cursor-pointer"
+          >
+            Back to Community Feed
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in pb-16">
-      {/* Top Banner & Mode Toggle */}
+      {/* Top Banner & Verified Admin Badge */}
       <div className="bg-gradient-to-r from-[#0D2C5B] via-[#1B3F7E] to-[#0D2C5B] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-radial pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -355,17 +383,10 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => toggleAdminMode(!isAdmin)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm ${
-                isAdmin
-                  ? 'bg-amber-500 hover:bg-amber-600 text-[#0D2C5B]'
-                  : 'bg-white/20 hover:bg-white/30 text-white'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>{isAdmin ? 'Admin Mode: ACTIVE' : 'Enable Admin'}</span>
-            </button>
+            <div className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-400 text-[#0D2C5B] flex items-center gap-2 shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-[#0D2C5B]" />
+              <span>Admin: suganeshsugu07@gmail.com</span>
+            </div>
             <Link
               href="/community"
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center gap-1.5"
