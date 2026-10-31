@@ -65,95 +65,104 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
           </div>
         </div>
 
-        <div className="p-6 sm:p-8 -mt-16 sm:-mt-20 relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-5">
-            <img
-              src={member.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
-              alt={member.full_name}
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white shadow-xl bg-white shrink-0"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
-              }}
-            />
-            <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] leading-tight">
-                {member.full_name}
-              </h1>
-              <p className="text-xs font-semibold text-gray-400">
-                @{member.username} · {member.location}
-              </p>
-              <div className="flex items-center gap-3 pt-1 text-xs">
-                <div className="flex items-center gap-1">
-                  <span className="font-extrabold text-[#0D2C5B]">
-                    {member.followers_count ?? 320}
-                  </span>
-                  <span className="text-gray-500 font-medium">Followers</span>
-                </div>
-                <span className="text-gray-300">·</span>
-                <div className="flex items-center gap-1">
-                  <span className="font-extrabold text-[#0D2C5B]">
-                    {member.following_count ?? 78}
-                  </span>
-                  <span className="text-gray-500 font-medium">Following</span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {member.skills?.map((skill, i) => (
-                  <span key={i} className="text-[10px] font-semibold bg-[#F8F6F1] text-gray-700 px-2.5 py-0.5 rounded-md border border-gray-100">
-                    {skill}
-                  </span>
-                ))}
-              </div>
+        <div className="px-6 sm:px-8 pb-6 sm:pb-8 relative z-10">
+          {/* Top Row: Avatar overlapping the banner, and Action buttons on the right */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-16 mb-5">
+            <div className="relative inline-block">
+              <img
+                src={member.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
+                alt={member.full_name}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white shadow-xl bg-white shrink-0"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+                }}
+              />
+            </div>
+
+            {/* Action & External Links */}
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+              {currentMember?.username !== member.username && (
+                <button
+                  type="button"
+                  onClick={() => toggleFollow(member.username)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5 active:scale-95 ${
+                    isFollowing(member.username)
+                      ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
+                      : 'bg-[#0D2C5B] hover:bg-[#E84020] text-white'
+                  }`}
+                >
+                  <span>{isFollowing(member.username) ? 'Following' : '+ Follow'}</span>
+                </button>
+              )}
+              {member.behance_url && (
+                <a
+                  href={member.behance_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-[#0D2C5B] hover:bg-[#E84020] text-white rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5"
+                >
+                  <span>Behance Profile</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+              {member.instagram_url && (
+                <a
+                  href={member.instagram_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 bg-[#F8F6F1] hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200"
+                  title="Instagram"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
 
-          {/* Action & External Links */}
-          <div className="flex items-center gap-2">
-            {currentMember?.username !== member.username && (
-              <button
-                type="button"
-                onClick={() => toggleFollow(member.username)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5 active:scale-95 ${
-                  isFollowing(member.username)
-                    ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
-                    : 'bg-[#0D2C5B] hover:bg-[#E84020] text-white'
-                }`}
-              >
-                <span>{isFollowing(member.username) ? 'Following' : '+ Follow'}</span>
-              </button>
-            )}
-            {member.behance_url && (
-              <a
-                href={member.behance_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-[#0D2C5B] hover:bg-[#E84020] text-white rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5"
-              >
-                <span>Behance Profile</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
-            {member.instagram_url && (
-              <a
-                href={member.instagram_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 bg-[#F8F6F1] hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200"
-                title="Instagram"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
-          </div>
-        </div>
+          {/* Creator Information - 100% cleanly on White Card with optimal contrast */}
+          <div className="space-y-3">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] leading-tight">
+                {member.full_name}
+              </h1>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500 mt-1">
+                @{member.username} · {member.location}
+              </p>
+            </div>
 
-        {member.bio && (
-          <div className="px-6 sm:px-8 pb-6 border-t border-gray-100 pt-4">
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed max-w-4xl">
-              {member.bio}
-            </p>
+            <div className="flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1">
+                <span className="font-extrabold text-[#0D2C5B] text-sm">
+                  {member.followers_count ?? 320}
+                </span>
+                <span className="text-gray-500 font-medium">Followers</span>
+              </div>
+              <span className="text-gray-300">·</span>
+              <div className="flex items-center gap-1">
+                <span className="font-extrabold text-[#0D2C5B] text-sm">
+                  {member.following_count ?? 78}
+                </span>
+                <span className="text-gray-500 font-medium">Following</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {member.skills?.map((skill, i) => (
+                <span key={i} className="text-xs font-semibold bg-[#F8F6F1] text-gray-700 px-3 py-1 rounded-lg border border-gray-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
-        )}
+
+          {member.bio && (
+            <div className="pt-4 mt-5 border-t border-gray-100">
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed max-w-4xl">
+                {member.bio}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Projects Showcase Header */}
