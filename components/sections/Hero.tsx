@@ -331,6 +331,7 @@ function StatPill({ icon: Icon, value, label, color, delay }: { icon: React.Elem
 export default function Hero() {
   return (
     <section
+      className="hero-section"
       style={{
         position: 'relative',
         minHeight: '100vh',
@@ -338,7 +339,6 @@ export default function Hero() {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        paddingTop: '80px',
       }}
     >
       {/* Background grid */}
@@ -369,32 +369,29 @@ export default function Hero() {
         TN
       </div>
 
-      <div className="container" style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '60px' }}>
+      <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
         <div className="hero-grid">
 
           {/* Left: Text content */}
-          <div style={{ maxWidth: '620px' }}>
+          <div className="hero-text-col" style={{ maxWidth: '620px' }}>
             {/* Label */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="section-label" style={{ marginBottom: '24px' }}>
+              <div className="section-label hero-badge">
                 TAMIL NADU&apos;S CREATOR COMMUNITY
               </div>
             </motion.div>
 
             {/* Headline - 3 lines */}
             <h1
+              className="hero-title"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.1rem, 4.2vw, 3.5rem)',
                 fontWeight: 800,
-                lineHeight: 1.08,
-                letterSpacing: '-0.01em',
                 color: 'var(--navy)',
-                marginBottom: '24px',
               }}
             >
               <motion.span
@@ -431,12 +428,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-desc"
               style={{
-                fontSize: 'clamp(1rem, 1.2vw, 1.125rem)',
-                lineHeight: 1.6,
                 color: 'var(--gray-600)',
                 maxWidth: '560px',
-                marginBottom: '36px',
               }}
             >
               A free community for designers, video editors, photographers,
@@ -448,17 +443,16 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-ctas"
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '16px',
                 alignItems: 'center',
-                marginBottom: '20px',
               }}
             >
               <Link
                 href="/community/auth?mode=register"
-                className="btn btn-primary btn-lg"
+                className="btn btn-primary btn-lg hero-btn-primary"
                 style={{
                   boxShadow: '0 8px 24px rgba(232,64,32,0.35)',
                 }}
@@ -468,7 +462,7 @@ export default function Hero() {
               </Link>
               <Link
                 href="#about"
-                className="btn btn-secondary btn-lg"
+                className="btn btn-secondary btn-lg hero-btn-secondary"
               >
                 EXPLORE TNCC
                 <ArrowUpRight size={16} style={{ marginLeft: '6px' }} />
@@ -480,10 +474,9 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
+              className="hero-subtagline"
               style={{
-                fontSize: '0.8rem',
                 color: 'var(--gray-400)',
-                marginBottom: '40px',
               }}
             >
               A space for every creative mind.
@@ -494,10 +487,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-stats-row"
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '12px',
               }}
             >
               <StatPill icon={Users} value="1,240+" label="Active creators" color="var(--cyan)" delay={0.7} />
@@ -523,12 +516,10 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                top: '15%',
-                left: '12px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
-              className="hidden sm:block"
+              className="hidden sm:block hero-floating-top"
             >
               <CreatorPreviewCard
                 name="Karthik"
@@ -549,12 +540,10 @@ export default function Hero() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '15%',
-                right: '4px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
-              className="hidden sm:block"
+              className="hidden sm:block hero-floating-bottom"
             >
               <ProjectPreviewCard
                 title="Brand Identity for Organic Startup"
@@ -574,9 +563,9 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.6 }}
+        className="hero-scroll-hint"
         style={{
           position: 'absolute',
-          bottom: '32px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',

@@ -1280,6 +1280,60 @@ body {
   }
 }
 
+.hero-section {
+  padding-top: 72px;
+}
+
+.hero-container {
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+
+.hero-badge {
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+}
+
+.hero-desc {
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.hero-ctas {
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.hero-subtagline {
+  font-size: 0.8rem;
+  margin-bottom: 30px;
+}
+
+.hero-stats-row {
+  gap: 12px;
+}
+
+.hero-floating-top {
+  top: 14%;
+  left: 12px;
+}
+
+.hero-floating-bottom {
+  bottom: 14%;
+  right: 4px;
+}
+
+.hero-scroll-hint {
+  bottom: 28px;
+}
+
 .hero-3d-wrapper {
   position: relative;
   width: 100%;
@@ -1291,21 +1345,151 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 660px;
-    min-height: 620px;
+    height: 640px;
+    min-height: 580px;
   }
 }
 
 @media (min-width: 1280px) {
   .hero-3d-wrapper {
-    height: 720px;
-    min-height: 680px;
+    height: 680px;
+    min-height: 620px;
   }
 }
 
 @media (min-width: 1536px) {
   .hero-3d-wrapper {
-    height: 760px;
-    min-height: 720px;
+    height: 720px;
+    min-height: 660px;
   }
 }
+
+/* ==========================================================================
+   Laptop Display Adaptations (e.g. 1366x768, 1080p with 125%/150% scaling)
+   Prevents hero content from overflowing or being pushed into the taskbar
+   ========================================================================== */
+@media (min-width: 1024px) and (max-height: 860px) {
+  .hero-section {
+    padding-top: 66px;
+  }
+
+  .hero-container {
+    padding-top: 12px !important;
+    padding-bottom: 18px !important;
+  }
+
+  .hero-badge {
+    margin-bottom: 12px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.85rem, 3.2vw, 2.75rem) !important;
+    line-height: 1.08 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .hero-desc {
+    font-size: 0.94rem !important;
+    line-height: 1.48 !important;
+    margin-bottom: 18px !important;
+    max-width: 520px !important;
+  }
+
+  .hero-ctas {
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-ctas .btn {
+    padding: 10px 22px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .hero-subtagline {
+    font-size: 0.75rem !important;
+    margin-bottom: 16px !important;
+  }
+
+  .hero-stats-row {
+    gap: 8px !important;
+  }
+
+  .hero-3d-wrapper {
+    height: clamp(430px, 58vh, 520px) !important;
+    min-height: 430px !important;
+  }
+
+  .hero-floating-top {
+    top: 8% !important;
+    left: 8px !important;
+  }
+
+  .hero-floating-bottom {
+    bottom: 8% !important;
+    right: 4px !important;
+  }
+
+  .hero-scroll-hint {
+    display: none !important;
+  }
+}
+
+/* Ultra-compact laptops (e.g. 1366x768 or high scaling) */
+@media (min-width: 1024px) and (max-height: 720px) {
+  .hero-section {
+    padding-top: 62px;
+  }
+
+  .hero-container {
+    padding-top: 6px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .hero-badge {
+    margin-bottom: 8px !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.65rem, 2.8vw, 2.35rem) !important;
+    line-height: 1.06 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.42 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .hero-ctas {
+    gap: 10px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-ctas .btn {
+    padding: 8px 18px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .hero-subtagline {
+    font-size: 0.72rem !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-3d-wrapper {
+    height: 380px !important;
+    min-height: 360px !important;
+  }
+
+  .hero-floating-top {
+    top: 4% !important;
+    left: 4px !important;
+  }
+
+  .hero-floating-bottom {
+    bottom: 4% !important;
+    right: 2px !important;
+  }
+}
+
