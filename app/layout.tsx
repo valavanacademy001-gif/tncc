@@ -66,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${displayFont.variable} h-full`}>
       <head>
-        <link rel="preload" href="/regional_map_logo.glb?v=3" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/regional_map_logo.glb?v=4" as="fetch" crossOrigin="anonymous" />
         <link rel="preload" href="/draco/draco_decoder.wasm" as="fetch" crossOrigin="anonymous" />
       </head>
       <body className="min-h-full antialiased" style={{ fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)" }}>

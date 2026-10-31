@@ -7,6 +7,37 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // Module-level in-memory cache to make subsequent renders instant
 let cachedGLTF: any = null;
+let loadPromise: Promise<any> | null = null;
+
+function preloadModel() {
+  if (typeof window === 'undefined' || cachedGLTF || loadPromise) return;
+
+  loadPromise = new Promise((resolve, reject) => {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/');
+
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
+    loader.load(
+      '/regional_map_logo.glb?v=4',
+      (gltf) => {
+        cachedGLTF = gltf;
+        resolve(gltf);
+      },
+      undefined,
+      (error) => {
+        console.error('Error preloading 3D logo:', error);
+        reject(error);
+      }
+    );
+  });
+}
+
+// Trigger early loading as soon as this bundle evaluates
+if (typeof window !== 'undefined') {
+  preloadModel();
+}
 
 interface Hero3DLogoProps {
   className?: string;
@@ -41,6 +72,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       antialias: true,
       alpha: true,
       powerPreference: 'high-performance',
+      preserveDrawingBuffer: true,
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -132,7 +164,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
       const baseScale = 1.55 / maxDim;
       logoGroup.scale.set(baseScale, baseScale, baseScale);
-      logoGroup.position.set(0.20, 0, 0);
+      logoGroup.position.set(0.46, 0, 0);
 
       logoGroup.add(model);
       setIsReady(true);
@@ -142,26 +174,38 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     if (cachedGLTF) {
       setupModel(cachedGLTF);
     } else {
-      const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('/draco/');
+      preloadModel();
+      if (loadPromise) {
+        loadPromise
+          .then((gltf) => setupModel(gltf))
+          .catch((error) => {
+            console.error('Error loading 3D logo:', error);
+            if (!isDisposed) {
+              setIsReady(true);
+            }
+          });
+      } else {
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('/draco/');
 
-      const loader = new GLTFLoader();
-      loader.setDRACOLoader(dracoLoader);
+        const loader = new GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
 
-      loader.load(
-        '/regional_map_logo.glb?v=3',
-        (gltf) => {
-          cachedGLTF = gltf;
-          setupModel(gltf);
-        },
-        undefined,
-        (error) => {
-          console.error('Error loading 3D logo:', error);
-          if (!isDisposed) {
-            setIsReady(true);
+        loader.load(
+          '/regional_map_logo.glb?v=4',
+          (gltf) => {
+            cachedGLTF = gltf;
+            setupModel(gltf);
+          },
+          undefined,
+          (error) => {
+            console.error('Error loading 3D logo:', error);
+            if (!isDisposed) {
+              setIsReady(true);
+            }
           }
-        }
-      );
+        );
+      }
     }
 
     // Mouse Interaction across the ENTIRE Hero Section
@@ -222,7 +266,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
         logoGroup.position.x = 0.05; // center more on mobile / narrow viewports
       } else {
         camera.position.z = 3.25;
-        logoGroup.position.x = 0.20; // shift right to fill right spacing on desktop
+        logoGroup.position.x = 0.46; // shift right to fill right spacing on desktop
       }
 
       camera.updateProjectionMatrix();

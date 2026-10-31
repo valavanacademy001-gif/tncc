@@ -148,7 +148,7 @@ export default function FAQ() {
           alignItems: 'start',
         }} className="faq-grid">
           {/* Header */}
-          <div style={{ position: 'sticky', top: '96px' }}>
+          <div className="faq-header">
             <div className="section-label" style={{ marginBottom: '16px' }}>Got questions?</div>
             <h2 className="text-display-md" style={{ color: 'var(--navy)', marginBottom: '16px', maxWidth: '380px' }}>
               FREQUENTLY ASKED QUESTIONS.
@@ -174,9 +174,16 @@ export default function FAQ() {
       </div>
 
       <style jsx>{`
+        .faq-header {
+          position: static;
+        }
         @media (min-width: 768px) {
           .faq-grid {
             grid-template-columns: 1fr 2fr !important;
+          }
+          .faq-header {
+            position: sticky !important;
+            top: 96px !important;
           }
         }
       `}</style>

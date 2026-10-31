@@ -67,7 +67,7 @@ const stackingCards: StackingCardData[] = [
     title: 'Free Tools, Curated Assets & Verified Portfolio.',
     description:
       'Access useful fonts, design tools, AI websites, tutorials, and recorded sessions. Share your creative works with the community to automatically build your permanent showcase portfolio.',
-    ctaText: 'SHOWCASE YOUR WORK – JOIN FREE',
+    ctaText: 'SHOWCASE YOUR WORK',
     ctaLink: '/community/auth?mode=register',
     bgColor: '#EEF2FF', // TNCC Brand Navy/Periwinkle Tint
     accentColor: '#0D2C5B',
@@ -155,83 +155,92 @@ export default function StackingCards() {
   return (
     <section
       id="stacking-overview"
-      ref={trackRef}
       style={{
         background: '#FAF9F6',
         position: 'relative',
         width: '100%',
-        height: '280vh', // Controlled scroll distance for smooth progressive animation
-        padding: '0 0 40px',
+        padding: '72px 0 0',
       }}
     >
-      {/* Sticky Viewport Stage */}
-      <div
-        style={{
-          position: 'sticky',
-          top: '72px',
-          width: '100%',
-          minHeight: 'calc(100vh - 80px)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          padding: '24px 0 32px',
-          overflow: 'visible',
-        }}
-      >
-        {/* Full-width container */}
-        <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '0 24px' }}>
-          {/* Section Header */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div
-              className="section-label"
-              style={{
-                justifyContent: 'center',
-                marginBottom: '12px',
-              }}
-            >
-              How Collaboration Happens
-            </div>
-            <h2
-              className="text-display-md"
-              style={{
-                color: 'var(--navy)',
-                maxWidth: '760px',
-                margin: '0 auto 12px',
-                lineHeight: 1.05,
-              }}
-            >
-              Built for creators and brands ready to build together.
-            </h2>
-            <p
-              style={{
-                color: 'var(--gray-500)',
-                fontSize: '1.05rem',
-                maxWidth: '580px',
-                margin: '0 auto',
-                lineHeight: 1.5,
-              }}
-            >
-              A seamless, transparent pathway from project discovery to high-impact delivered work.
-            </p>
-          </div>
-
-          {/* =========================================================================
-              DECK STAGE (Relative frame holding all 3 absolute stacked cards)
-              Base card position is at top: 48px.
-              Card 0 shifts to -48px -> top: 0px (exposed top: 24px)
-              Card 1 shifts to -24px -> top: 24px (exposed top: 24px)
-              Card 2 stays at 0px -> top: 48px (full front card)
-              ========================================================================= */}
+      {/* Section Header - Scrolls naturally with page (not sticky) */}
+      <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '0 24px 44px' }}>
+        <div style={{ textAlign: 'center' }}>
           <div
-            className="stacking-stage"
+            className="section-label"
             style={{
-              position: 'relative',
-              width: '100%',
-              minHeight: '560px',
-              height: '570px',
+              justifyContent: 'center',
+              marginBottom: '12px',
             }}
           >
+            How Collaboration Happens
+          </div>
+          <h2
+            className="text-display-md"
+            style={{
+              color: 'var(--navy)',
+              maxWidth: '760px',
+              margin: '0 auto 12px',
+              lineHeight: 1.05,
+            }}
+          >
+            Built for creators and brands ready to build together.
+          </h2>
+          <p
+            style={{
+              color: 'var(--gray-500)',
+              fontSize: '1.05rem',
+              maxWidth: '580px',
+              margin: '0 auto',
+              lineHeight: 1.5,
+            }}
+          >
+            A seamless, transparent pathway from project discovery to high-impact delivered work.
+          </p>
+        </div>
+      </div>
+
+      {/* Scroll Track: Sticky stacking starts directly from the 1st card box */}
+      <div
+        ref={trackRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '280vh',
+          paddingBottom: '40px',
+        }}
+      >
+        {/* Sticky Viewport Stage */}
+        <div
+          style={{
+            position: 'sticky',
+            top: '80px',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            padding: '8px 0 32px',
+            overflow: 'visible',
+          }}
+        >
+          {/* Full-width container */}
+          <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '0 24px' }}>
+            {/* =========================================================================
+                DECK STAGE (Relative frame holding all 3 absolute stacked cards)
+                Base card position is at top: 48px.
+                Card 0 shifts to -48px -> top: 0px (exposed top: 24px)
+                Card 1 shifts to -24px -> top: 24px (exposed top: 24px)
+                Card 2 stays at 0px -> top: 48px (full front card)
+                ========================================================================= */}
+            <div
+              className="stacking-stage"
+              style={{
+                position: 'relative',
+                width: '100%',
+                minHeight: '560px',
+                height: '570px',
+              }}
+            >
             {/* ================= CARD 1 (Cyan - Digital Transformation) ================= */}
             <div
               className="stacking-card-slot"
@@ -288,8 +297,9 @@ export default function StackingCards() {
                       justifyContent: 'center',
                     }}
                   >
-                    <div style={{ marginBottom: '16px' }}>
+                    <div className="stacking-card-tag-wrap" style={{ marginBottom: '16px' }}>
                       <span
+                        className="stacking-card-tag"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -310,6 +320,7 @@ export default function StackingCards() {
                       </span>
                     </div>
                     <h3
+                      className="stacking-card-title"
                       style={{
                         fontFamily: 'var(--font-display)',
                         fontWeight: 800,
@@ -322,13 +333,13 @@ export default function StackingCards() {
                     >
                       {stackingCards[0].title}
                     </h3>
-                    <p style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
                       {stackingCards[0].description}
                     </p>
-                    <div>
+                    <div className="stacking-card-btn-wrap">
                       <Link
                         href={stackingCards[0].ctaLink}
-                        className="btn"
+                        className="btn stacking-card-btn"
                         style={{
                           background: stackingCards[0].ctaBg,
                           color: stackingCards[0].ctaColor,
@@ -400,8 +411,9 @@ export default function StackingCards() {
                       justifyContent: 'center',
                     }}
                   >
-                    <div style={{ marginBottom: '16px' }}>
+                    <div className="stacking-card-tag-wrap" style={{ marginBottom: '16px' }}>
                       <span
+                        className="stacking-card-tag"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -422,6 +434,7 @@ export default function StackingCards() {
                       </span>
                     </div>
                     <h3
+                      className="stacking-card-title"
                       style={{
                         fontFamily: 'var(--font-display)',
                         fontWeight: 800,
@@ -434,13 +447,13 @@ export default function StackingCards() {
                     >
                       {stackingCards[1].title}
                     </h3>
-                    <p style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
                       {stackingCards[1].description}
                     </p>
-                    <div>
+                    <div className="stacking-card-btn-wrap">
                       <Link
                         href={stackingCards[1].ctaLink}
-                        className="btn"
+                        className="btn stacking-card-btn"
                         style={{
                           background: stackingCards[1].ctaBg,
                           color: stackingCards[1].ctaColor,
@@ -521,8 +534,9 @@ export default function StackingCards() {
                     justifyContent: 'center',
                   }}
                 >
-                  <div style={{ marginBottom: '16px' }}>
+                  <div className="stacking-card-tag-wrap" style={{ marginBottom: '16px' }}>
                     <span
+                      className="stacking-card-tag"
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -543,6 +557,7 @@ export default function StackingCards() {
                     </span>
                   </div>
                   <h3
+                    className="stacking-card-title"
                     style={{
                       fontFamily: 'var(--font-display)',
                       fontWeight: 800,
@@ -555,13 +570,13 @@ export default function StackingCards() {
                   >
                     {stackingCards[2].title}
                   </h3>
-                  <p style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                  <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
                     {stackingCards[2].description}
                   </p>
-                  <div>
+                  <div className="stacking-card-btn-wrap">
                     <Link
                       href={stackingCards[2].ctaLink}
-                      className="btn"
+                      className="btn stacking-card-btn"
                       style={{
                         background: stackingCards[2].ctaBg,
                         color: stackingCards[2].ctaColor,
@@ -586,24 +601,68 @@ export default function StackingCards() {
           </div>
         </div>
       </div>
+    </div>
 
       <style jsx>{`
         @media (max-width: 960px) {
           .stacking-stage {
-            height: auto !important;
-            min-height: 520px !important;
+            height: 530px !important;
+            min-height: 530px !important;
           }
           .stacking-card-box {
+            display: flex !important;
             flex-direction: column !important;
             height: auto !important;
-            min-height: 500px !important;
+            min-height: 480px !important;
+            border-radius: 24px !important;
           }
           .stacking-card-media {
-            height: 220px !important;
+            order: 1 !important;
+            height: 165px !important;
             flex: none !important;
           }
           .stacking-card-content {
-            padding: 28px 24px !important;
+            order: 2 !important;
+            padding: 18px 20px 22px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justifyContent: flex-start !important;
+          }
+          .stacking-card-tag-wrap {
+            margin-bottom: 8px !important;
+          }
+          .stacking-card-tag {
+            font-size: 0.7rem !important;
+            padding: 4px 10px !important;
+          }
+          .stacking-card-title {
+            font-size: clamp(1.15rem, 4.2vw, 1.4rem) !important;
+            line-height: 1.15 !important;
+            margin-bottom: 8px !important;
+            letter-spacing: -0.01em !important;
+          }
+          .stacking-card-desc {
+            font-size: 0.82rem !important;
+            line-height: 1.4 !important;
+            margin-bottom: 16px !important;
+            color: #4b5563 !important;
+          }
+          .stacking-card-btn-wrap {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-top: auto !important;
+          }
+          .stacking-card-btn {
+            width: auto !important;
+            padding: 10px 24px !important;
+            font-size: 0.82rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 auto !important;
           }
         }
       `}</style>

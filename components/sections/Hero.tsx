@@ -369,11 +369,11 @@ export default function Hero() {
         TN
       </div>
 
-      <div className="container-wide" style={{ position: 'relative', zIndex: 10, padding: '80px 24px 60px', maxWidth: '1460px' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '60px' }}>
         <div className="hero-grid">
 
           {/* Left: Text content */}
-          <div style={{ maxWidth: '720px' }}>
+          <div style={{ maxWidth: '620px' }}>
             {/* Label */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -514,18 +514,17 @@ export default function Hero() {
             style={{
               position: 'relative',
               width: '100%',
-              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            className="hero-3d-wrapper"
+            className="hero-3d-wrapper hidden lg:flex lg:translate-x-6 xl:translate-x-12"
           >
             {/* Top-Left Floating Creator Card (Layered Over 3D Logo) */}
             <div
               style={{
                 position: 'absolute',
                 top: '15%',
-                left: '20px',
+                left: '12px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}
@@ -551,7 +550,7 @@ export default function Hero() {
               style={{
                 position: 'absolute',
                 bottom: '15%',
-                right: '20px',
+                right: '4px',
                 zIndex: 25,
                 pointerEvents: 'none',
               }}

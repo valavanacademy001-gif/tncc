@@ -416,6 +416,7 @@ export default function CommunityStory() {
                   <div>
                     {/* Number (with subtle low opacity) & Category row */}
                     <div
+                      className="pillar-top-row"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -424,6 +425,7 @@ export default function CommunityStory() {
                       }}
                     >
                       <div
+                        className="pillar-number"
                         style={{
                           fontFamily: 'var(--font-display)',
                           fontWeight: 800,
@@ -437,6 +439,7 @@ export default function CommunityStory() {
                       </div>
 
                       <div
+                        className="pillar-category"
                         style={{
                           padding: '5px 14px',
                           borderRadius: '100px',
@@ -457,6 +460,7 @@ export default function CommunityStory() {
 
                     {/* Big Title */}
                     <h3
+                      className="pillar-word"
                       style={{
                         fontFamily: 'var(--font-display)',
                         fontWeight: 800,
@@ -472,6 +476,7 @@ export default function CommunityStory() {
 
                     {/* Location / Scope badge */}
                     <div
+                      className="pillar-location"
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -488,6 +493,7 @@ export default function CommunityStory() {
 
                     {/* Hairline Divider */}
                     <div
+                      className="pillar-divider"
                       style={{
                         height: '1px',
                         background: 'rgba(255, 255, 255, 0.2)',
@@ -498,6 +504,7 @@ export default function CommunityStory() {
 
                     {/* Tagline Lead (bold) */}
                     <p
+                      className="pillar-tagline"
                       style={{
                         color: '#FFFFFF',
                         fontFamily: 'var(--font-display)',
@@ -512,6 +519,7 @@ export default function CommunityStory() {
 
                     {/* Full Detail Paragraph */}
                     <p
+                      className="pillar-detail"
                       style={{
                         color: 'rgba(255, 255, 255, 0.82)',
                         fontSize: '0.92rem',
@@ -525,6 +533,7 @@ export default function CommunityStory() {
 
                     {/* Feature Chips */}
                     <div
+                      className="pillar-chips"
                       style={{
                         display: 'flex',
                         flexWrap: 'wrap',
@@ -534,6 +543,7 @@ export default function CommunityStory() {
                       {p.chips.map((chip) => (
                         <span
                           key={chip}
+                          className="pillar-chip"
                           style={{
                             padding: '5px 12px',
                             borderRadius: '8px',
@@ -552,6 +562,7 @@ export default function CommunityStory() {
 
                   {/* Bottom Metric & CTA Row */}
                   <div
+                    className="pillar-bottom-row"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -711,7 +722,7 @@ export default function CommunityStory() {
             height: 64px !important;
           }
           .tncc-accordion-card.is-expanded {
-            height: 480px !important;
+            height: 410px !important;
           }
           .card-spine {
             width: 100% !important;
@@ -724,7 +735,50 @@ export default function CommunityStory() {
             transform: none !important;
           }
           .card-expanded-content {
-            padding: 24px 20px !important;
+            padding: 20px 18px !important;
+          }
+          .pillar-top-row {
+            margin-bottom: 8px !important;
+          }
+          .pillar-number {
+            font-size: 1.85rem !important;
+          }
+          .pillar-category {
+            padding: 4px 12px !important;
+            font-size: 0.68rem !important;
+          }
+          .pillar-word {
+            font-size: 1.65rem !important;
+            margin-bottom: 4px !important;
+            line-height: 1.1 !important;
+          }
+          .pillar-location {
+            font-size: 0.8rem !important;
+            margin-bottom: 10px !important;
+          }
+          .pillar-divider {
+            margin-bottom: 10px !important;
+          }
+          .pillar-tagline {
+            font-size: 0.92rem !important;
+            line-height: 1.4 !important;
+            margin-bottom: 12px !important;
+          }
+          /* Minimized content for mobile: Hide verbose detail paragraph */
+          .pillar-detail {
+            display: none !important;
+          }
+          .pillar-chips {
+            gap: 6px !important;
+            margin-bottom: 8px !important;
+          }
+          .pillar-chip {
+            padding: 4px 9px !important;
+            font-size: 0.72rem !important;
+          }
+          .pillar-bottom-row {
+            padding-top: 12px !important;
+            margin-top: 8px !important;
           }
         }
       `}</style>

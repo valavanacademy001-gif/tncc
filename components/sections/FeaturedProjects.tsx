@@ -41,7 +41,6 @@ const popupVariants: Variants = {
 };
 
 export default function FeaturedProjects() {
-  const [activeCenterTab, setActiveCenterTab] = useState<'showcase' | 'challenges'>('showcase');
   const [aiPrompt, setAiPrompt] = useState('Find senior video editors in Coimbatore and brand identity designers in Chennai');
 
   return (
@@ -175,7 +174,7 @@ export default function FeaturedProjects() {
 
           {/* ============================================================
               COLUMN 2 (CENTER) - TALL CARD (Spans Rows 1 & 2)
-              Tamil Nadu Creator Showcase (Theme: Navy & Cyan)
+              Tamil Nadu Creator Showcase - Full Visual Image
               ============================================================ */}
           <motion.div
             custom={0.18}
@@ -185,155 +184,32 @@ export default function FeaturedProjects() {
             variants={popupVariants}
             whileHover={{ y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-center-item"
+            style={{
+              padding: 0,
+              overflow: 'hidden',
+              position: 'relative',
+              minHeight: '440px',
+              height: '100%',
+            }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '100px', background: '#EEF2FF', color: 'var(--navy)' }}>
-                    Creative Showcase
-                  </span>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 8px', borderRadius: '100px', background: '#10B981', color: 'white' }}>
-                    Live Briefs & Works
-                  </span>
-                </div>
-
-                <h3 className="bento-box-title">Tamil Nadu Creator Showcase</h3>
-                <p className="bento-box-text">
-                  Explore verified design projects, cinematic video edits, and active creative bounties from creators across Chennai, Coimbatore, Madurai, and beyond.
-                </p>
-
-                {/* Minimal Segmented Pills */}
-                <div className="segmented-pill-container">
-                  <button
-                    type="button"
-                    onClick={() => setActiveCenterTab('showcase')}
-                    className={`segmented-pill-button ${activeCenterTab === 'showcase' ? 'active' : ''}`}
-                  >
-                    Verified Works
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveCenterTab('challenges')}
-                    className={`segmented-pill-button ${activeCenterTab === 'challenges' ? 'active' : ''}`}
-                  >
-                    Live Challenges
-                  </button>
-                </div>
-              </div>
-
-              {/* Peeking Mockup Window */}
-              <div className="mockup-frame">
-                {/* Mockup Header */}
-                <div className="mockup-topbar">
-                  <div className="mockup-dots-row">
-                    <span className="dot dot-red" />
-                    <span className="dot dot-yellow" />
-                    <span className="dot dot-green" />
-                  </div>
-                  <div className="mockup-domain-pill">
-                    <Globe size={11} />
-                    <span>{activeCenterTab === 'showcase' ? 'tncc.in/community/portfolio' : 'tncc.in/community/challenges'}</span>
-                  </div>
-                  <div style={{ width: '40px' }} />
-                </div>
-
-                {/* Mockup Screen Content */}
-                <div className="mockup-screen-body">
-                  <AnimatePresence mode="wait">
-                    {activeCenterTab === 'showcase' ? (
-                      <motion.div
-                        key="showcase"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {/* Search Bar */}
-                        <div className="mockup-search-box">
-                          <Search size={12} />
-                          <span>Search 350+ logos, motion reels, 3D renders...</span>
-                        </div>
-
-                        {/* Data Rows Table */}
-                        <div className="mockup-table">
-                          <div className="mockup-table-header">
-                            <span>Project & Creator</span>
-                            <span>Discipline</span>
-                            <span style={{ textAlign: 'right' }}>Status</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Kavery Heritage · Karthik S.</span>
-                            <span>Brand Identity</span>
-                            <span className="mockup-status-green">⚡ 840 XP · Featured</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Western Ghats · Ananya R.</span>
-                            <span>Color Grading</span>
-                            <span className="mockup-status-blue">⚡ 720 XP · Top 1%</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Madurai Folk · Sundar M.</span>
-                            <span>AI Art & 3D</span>
-                            <span className="mockup-status-purple">⚡ 610 XP · Verified</span>
-                          </div>
-                        </div>
-
-                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span>12 verified creators active this week</span>
-                          <Link href="/community/portfolio" style={{ color: 'var(--cyan)', fontWeight: 700, textDecoration: 'none' }}>
-                            Explore Directory →
-                          </Link>
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="challenges"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {/* Search Bar */}
-                        <div className="mockup-search-box">
-                          <Search size={12} />
-                          <span>Search weekly creative challenges & cash bounties...</span>
-                        </div>
-
-                        <div className="mockup-table">
-                          <div className="mockup-table-header">
-                            <span>Challenge Brief</span>
-                            <span>Category</span>
-                            <span style={{ textAlign: 'right' }}>Reward</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Tamil Brand Mascot</span>
-                            <span>Logo & Mascot</span>
-                            <span className="mockup-status-orange">₹15,000 Bounty</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Regional Tourism Reel</span>
-                            <span>Video Editing</span>
-                            <span className="mockup-status-green">₹25,000 Bounty</span>
-                          </div>
-                          <div className="mockup-table-row">
-                            <span style={{ fontWeight: 600 }}>Heritage Festival App</span>
-                            <span>UI/UX Design</span>
-                            <span className="mockup-status-blue">₹20,000 Bounty</span>
-                          </div>
-                        </div>
-
-                        <div style={{ fontSize: '0.68rem', color: '#8A94A6', marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span>Powered by Valavan Academy</span>
-                          <Link href="/community/challenges" style={{ color: 'var(--cyan)', fontWeight: 700, textDecoration: 'none' }}>
-                            View Challenges →
-                          </Link>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
+            <Link
+              href="/community/portfolio"
+              style={{
+                display: 'block',
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: 'inherit',
+              }}
+            >
+              <img
+                src="/tncc-showcase-meet.png"
+                alt="Tamil Nadu Creator Showcase Community"
+                className="bento-center-img"
+                loading="lazy"
+              />
+            </Link>
           </motion.div>
 
           {/* ============================================================
@@ -715,9 +591,10 @@ export default function FeaturedProjects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          style={{ display: 'flex', justifyContent: 'center' }}
         >
           <Link href="/community/auth?mode=register" className="btn btn-primary btn-lg">
-            SHOWCASE YOUR WORK – JOIN FREE
+            SHOWCASE YOUR WORK
             <ArrowRight size={18} />
           </Link>
         </motion.div>
