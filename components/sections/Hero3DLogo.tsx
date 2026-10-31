@@ -112,11 +112,12 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
     scene.add(logoGroup);
 
     // Target and current rotations (in radians)
-    // Horizontal Yaw: -18° to +18° (~0.31 rad) - smooth, visible turn
-    // Vertical Pitch: -6.5° to +6.5° (~0.11 rad) - calibrated so top/bottom never cut off
-    const MAX_ROT_Y = 18 * (Math.PI / 180);
-    const MAX_ROT_X = 6.0 * (Math.PI / 180);
-    const MAX_ROT_Z = 1.8 * (Math.PI / 180);
+    // Horizontal Yaw: -32° to +32° (~0.56 rad) - visible, expressive 3D turning
+    // Vertical Pitch: -22° to +22° (~0.38 rad) - responsive up/down tilt tracking
+    // Subtle Roll: -5.5° to +5.5° (~0.096 rad) - natural dynamic banking
+    const MAX_ROT_Y = 32 * (Math.PI / 180);
+    const MAX_ROT_X = 22 * (Math.PI / 180);
+    const MAX_ROT_Z = 5.5 * (Math.PI / 180);
 
     let targetRotX = 0;
     let targetRotY = 0;
@@ -208,28 +209,37 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       }
     }
 
-    // Mouse Interaction across the ENTIRE Hero Section
+    // Mouse Interaction across the ENTIRE Hero Section & Window
     const heroSection = container.closest('section') || container;
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (isTouchDevice) return;
+      if (isTouchDevice || !isVisible) return;
       const rect = heroSection.getBoundingClientRect();
+
+      // Only track when cursor is within or near the hero section vertically
+      if (e.clientY < rect.top - 80 || e.clientY > rect.bottom + 80) {
+        targetRotX = 0;
+        targetRotY = 0;
+        targetRotZ = 0;
+        isInteracting = false;
+        return;
+      }
       
       // Normalized coordinate from -1 to +1 across the whole hero section
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
 
       // Clamp slightly past bounds for continuous responsiveness
-      const clampedX = Math.max(-1.12, Math.min(1.12, nx));
-      const clampedY = Math.max(-1.12, Math.min(1.12, ny));
+      const clampedX = Math.max(-1.18, Math.min(1.18, nx));
+      const clampedY = Math.max(-1.18, Math.min(1.18, ny));
 
       // Right mouse -> model turns right (+Y)
       // Left mouse -> model turns left (-Y)
       targetRotY = clampedX * MAX_ROT_Y;
 
-      // Up mouse -> model tilts slightly up (-X)
-      // Down mouse -> model tilts slightly down (+X)
-      targetRotX = -clampedY * MAX_ROT_X;
+      // Up mouse -> model tilts up (-X)
+      // Down mouse -> model tilts down (+X)
+      targetRotX = clampedY * MAX_ROT_X;
 
       // Subtle roll tilt on Z
       targetRotZ = -clampedX * MAX_ROT_Z;
@@ -245,8 +255,8 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       isInteracting = false;
     };
 
-    // Attach to the entire hero section so moving anywhere turns the 3D logo
-    heroSection.addEventListener('mousemove', handleMouseMove);
+    // Attach to window so moving anywhere over hero elements turns the 3D logo
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     heroSection.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('blur', handleMouseLeave);
 
@@ -300,10 +310,10 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
 
       const time = clock.getElapsedTime();
 
-      // Smooth interpolation (lerp factor ~ 0.045 for silky easing)
-      currentRotX += (targetRotX - currentRotX) * 0.045;
-      currentRotY += (targetRotY - currentRotY) * 0.045;
-      currentRotZ += (targetRotZ - currentRotZ) * 0.045;
+      // Smooth interpolation (lerp factor ~ 0.07 for silky responsive tracking)
+      currentRotX += (targetRotX - currentRotX) * 0.07;
+      currentRotY += (targetRotY - currentRotY) * 0.07;
+      currentRotZ += (targetRotZ - currentRotZ) * 0.07;
 
       // When idle, add a gentle organic floating motion
       const now = performance.now();
@@ -325,7 +335,7 @@ export default function Hero3DLogo({ className = '', style }: Hero3DLogoProps) {
       isDisposed = true;
       cancelAnimationFrame(animationFrameId);
 
-      heroSection.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
       heroSection.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('blur', handleMouseLeave);
 
