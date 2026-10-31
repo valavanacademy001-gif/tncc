@@ -818,15 +818,13 @@ body {
   height: 100%;
   min-height: 100%;
   object-fit: cover;
-  object-position: center 32%;
+  object-position: center 48%;
   display: block;
-  transform: scale(1.10);
-  transform-origin: center 32%;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .bento-box-item.bento-center-item:hover .bento-center-img {
-  transform: scale(1.22);
+  transform: scale(1.06);
 }
 
 /* AI Wide Card with Light Theme Soft Gradient */

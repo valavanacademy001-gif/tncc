@@ -204,7 +204,7 @@ export default function FeaturedProjects() {
               }}
             >
               <img
-                src="/tncc-showcase-meet.png"
+                src="/tncc-showcase-meet.jpg"
                 alt="Tamil Nadu Creator Showcase Community"
                 className="bento-center-img"
                 loading="lazy"
