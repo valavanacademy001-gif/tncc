@@ -123,7 +123,12 @@ export default function StackingCards() {
   const card1SlideY = useTransform(
     scrollYProgress,
     [0, 0.1, 0.42, 1],
-    ['110%', '110%', '0%', '0%']
+    [1000, 1000, 0, 0]
+  );
+  const card1Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.14, 1],
+    [0, 0, 1, 1]
   );
   const card1Scale = useTransform(
     scrollYProgress,
@@ -143,14 +148,22 @@ export default function StackingCards() {
 
   // =========================================================================
   // CARD 2 (3rd Card - Navy) ANIMATIONS
-  // Slides up from bottom (110% -> 0%) between 0.52 and 0.84.
+  // Slides up from bottom (1000px -> 0px) between 0.52 and 0.84.
   // Stays at full scale 1.0 and 0px offset through completion (0.84 to 1.00).
+  // Kept hidden (opacity: 0) while Card 1 is active so it never peeks below!
   // =========================================================================
   const card2SlideY = useTransform(
     scrollYProgress,
     [0, 0.52, 0.84, 1],
-    ['110%', '110%', '0%', '0%']
+    [1000, 1000, 0, 0]
   );
+  const card2Opacity = useTransform(
+    scrollYProgress,
+    [0, 0.5, 0.56, 1],
+    [0, 0, 1, 1]
+  );
+  const card1PointerEvents = useTransform(card1Opacity, (v) => (v > 0.1 ? 'auto' : 'none'));
+  const card2PointerEvents = useTransform(card2Opacity, (v) => (v > 0.1 ? 'auto' : 'none'));
 
   return (
     <section
@@ -372,6 +385,8 @@ export default function StackingCards() {
                 left: 0,
                 right: 0,
                 y: card1SlideY,
+                opacity: card1Opacity,
+                pointerEvents: card1PointerEvents,
                 zIndex: 2,
                 width: '100%',
               }}
@@ -495,6 +510,8 @@ export default function StackingCards() {
                 left: 0,
                 right: 0,
                 y: card2SlideY,
+                opacity: card2Opacity,
+                pointerEvents: card2PointerEvents,
                 zIndex: 3,
                 width: '100%',
               }}
