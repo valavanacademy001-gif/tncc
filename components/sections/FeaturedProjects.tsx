@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import Link from 'next/link';
@@ -19,29 +19,51 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-// Dramatic, bouncy spring popup animation variants ("perisavey popup")
+// Popup animation variants: instantaneous on mobile, expressive spring on desktop
 const popupVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 90,
-    scale: 0.65,
+  hidden: (custom: any) => {
+    const isMob = typeof custom === 'object' ? custom?.isMobile : false;
+    return {
+      opacity: isMob ? 0.95 : 0,
+      y: isMob ? 6 : 70,
+      scale: isMob ? 1 : 0.75,
+    };
   },
-  visible: (customDelay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: 'spring',
-      stiffness: 220,
-      damping: 14,
-      mass: 0.8,
-      delay: customDelay,
-    },
-  }),
+  visible: (custom: any) => {
+    const isMob = typeof custom === 'object' ? custom?.isMobile : false;
+    const delay = isMob ? 0 : (typeof custom === 'object' ? custom?.delay ?? 0 : custom ?? 0);
+    return {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: isMob
+        ? {
+            duration: 0.1,
+            ease: 'easeOut',
+          }
+        : {
+            type: 'spring',
+            stiffness: 220,
+            damping: 15,
+            mass: 0.8,
+            delay,
+          },
+    };
+  },
 };
 
 export default function FeaturedProjects() {
   const [aiPrompt, setAiPrompt] = useState('Find senior video editors in Coimbatore and brand identity designers in Chennai');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section
@@ -65,10 +87,10 @@ export default function FeaturedProjects() {
         }}
       >
         <motion.div
-          initial={{ opacity: 0, y: 25, scale: 0.95 }}
+          initial={isMobile ? { opacity: 0.9, y: 10 } : { opacity: 0, y: 25, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: isMobile ? '120px 0px 0px 0px' : '-60px' }}
+          transition={{ duration: isMobile ? 0.15 : 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
             textAlign: 'center',
           }}
@@ -133,12 +155,12 @@ export default function FeaturedProjects() {
               Theme: Orange (Graphic Design)
               ============================================================ */}
           <motion.div
-            custom={0.05}
+            custom={{ delay: 0.05, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-left-1"
           >
             <Link
@@ -177,12 +199,12 @@ export default function FeaturedProjects() {
               Tamil Nadu Creator Showcase - Full Visual Image
               ============================================================ */}
           <motion.div
-            custom={0.18}
+            custom={{ delay: 0.18, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-center-item"
             style={{
               padding: 0,
@@ -217,12 +239,12 @@ export default function FeaturedProjects() {
               Theme: Orange (Motion)
               ============================================================ */}
           <motion.div
-            custom={0.31}
+            custom={{ delay: 0.31, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-right-1"
           >
             <Link
@@ -261,12 +283,12 @@ export default function FeaturedProjects() {
               Theme: Yellow / Amber (Social Media)
               ============================================================ */}
           <motion.div
-            custom={0.44}
+            custom={{ delay: 0.44, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-left-2"
           >
             <Link
@@ -305,12 +327,12 @@ export default function FeaturedProjects() {
               Theme: Cyan (UI/UX)
               ============================================================ */}
           <motion.div
-            custom={0.57}
+            custom={{ delay: 0.57, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-right-2"
           >
             <Link
@@ -349,12 +371,12 @@ export default function FeaturedProjects() {
               Theme: Coral / Amber
               ============================================================ */}
           <motion.div
-            custom={0.70}
+            custom={{ delay: 0.70, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-item bento-left-3"
           >
             <Link
@@ -393,12 +415,12 @@ export default function FeaturedProjects() {
               Theme: Soft Indigo / Violet / Cyan Ambient Gradient
               ============================================================ */}
           <motion.div
-            custom={0.83}
+            custom={{ delay: 0.83, isMobile }}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, margin: isMobile ? '140px 0px 0px 0px' : '0px', amount: isMobile ? 0 : 0.15 }}
             variants={popupVariants}
-            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-ai-wide"
             style={{
               background: 'linear-gradient(135deg, #EFF6FF 0%, #FAF5FF 50%, #F5F3FF 100%)',
