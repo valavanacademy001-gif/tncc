@@ -36,8 +36,8 @@ function AuthContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [location, setLocation] = useState('Chennai, Tamil Nadu');
-  const [skills, setSkills] = useState('Graphic Design, Typography');
+  const [location, setLocation] = useState('');
+  const [skills, setSkills] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -213,7 +213,7 @@ function AuthContent() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Your Name"
+                    placeholder="Enter your name"
                     className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -227,7 +227,7 @@ function AuthContent() {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="your_username"
+                    placeholder="Enter your username"
                     className="w-full text-xs sm:text-sm pl-8 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -241,7 +241,7 @@ function AuthContent() {
                     type="text"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    placeholder="e.g. Chennai, Tamil Nadu"
+                    placeholder="Enter your location (e.g. Chennai, Tamil Nadu)"
                     className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -255,7 +255,7 @@ function AuthContent() {
                     type="text"
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
-                    placeholder="UI/UX, 3D Art, Video Editing"
+                    placeholder="Enter your skills (e.g. Graphic Design, UI/UX, 3D Art)"
                     className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -274,7 +274,7 @@ function AuthContent() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="yourname@example.com"
+                placeholder={mode === 'signup' ? 'Enter your email' : 'Enter your email or username'}
                 className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
               />
             </div>
@@ -304,7 +304,7 @@ function AuthContent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   className="w-full text-xs sm:text-sm pl-9 pr-10 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                 />
                 <button
