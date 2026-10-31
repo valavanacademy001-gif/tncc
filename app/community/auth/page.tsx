@@ -213,7 +213,7 @@ function AuthContent() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Suganesh S"
+                    placeholder="e.g. Your Name"
                     className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -227,7 +227,7 @@ function AuthContent() {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="sugu_creator"
+                    placeholder="your_username"
                     className="w-full text-xs sm:text-sm pl-8 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -274,7 +274,7 @@ function AuthContent() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={mode === 'signup' ? 'yourname@example.com' : 'suganeshsugu07@gmail.com'}
+                placeholder="yourname@example.com"
                 className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
               />
             </div>
