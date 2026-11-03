@@ -1,0 +1,129 @@
+# TNCC — Feature Status Classification & Audit Breakdown
+
+**Status Legend:**
+- **COMPLETED** — Fully implemented, verified against backend and database.
+- **PARTIALLY COMPLETED** — UI and client interactions work, but relies on mock data or lacks backend persistence.
+- **NOT STARTED** — Feature defined in specification but has no functional implementation.
+- **BUG** — Feature has a defect, broken link, or security vulnerability.
+- **BLOCKED** — Cannot proceed without external dependencies or infrastructure.
+- **NEEDS VERIFICATION** — Requires external live services / production keys.
+
+---
+
+## A. Public Website
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **Header Navigation** | PARTIALLY COMPLETED | Brand logo, desktop & mobile menu, anchor navigation, search trigger | Search routes to old mock data directory | Anchor `#about` fails to scroll to section | P1 | Low |
+| **Hero Section** | COMPLETED | Responsive typography, CTA button, elastic animated cards, responsive offsets | None | None | P3 | Low |
+| **Interactive 3D Logo** | COMPLETED | WebGL Three.js render, DRACO compression, mouse yaw/pitch tracking, smooth idle drift | Model optimization could reduce initial load | None | P2 | Medium |
+| **About TNCC Section** | BUG | High-impact interactive pillar tabs, stats, Valavan Academy mission statement | Missing proper HTML anchor id | Missing `id="about"` (currently `id="pillars"`), causing navbar clicks to fail | P1 | Low |
+| **Organizer Section (Valavan Academy)** | COMPLETED | Integrated into About & Footer sections with verified branding | None | None | P3 | Low |
+| **How It Works** | COMPLETED | 4-step progressive timeline with responsive layout | None | None | P3 | Low |
+| **Community Activities** | COMPLETED | Category cards, creative discipline tags, interactive hover effects | None | None | P3 | Low |
+| **Creator Showcase** | PARTIALLY COMPLETED | Bento layout, high-res auditorium photo, project preview cards | Dynamic feed data from database | Currently reads static mock projects | P2 | Medium |
+| **Creative Challenges Preview** | PARTIALLY COMPLETED | Visual challenge preview card | Live challenge data from Supabase | None | P2 | Medium |
+| **Benefits & Stacking Cards** | COMPLETED | Smooth scroll-triggered card stacking, GPU acceleration, mobile instant popup | None | None | P2 | Medium |
+| **XP Introduction** | COMPLETED | Embedded in How It Works, Stacking Cards, and FAQ | None | None | P3 | Low |
+| **Opportunities** | COMPLETED | Creative Network section, role cards, location badges | Live job postings feed | None | P2 | Medium |
+| **Community Guidelines** | COMPLETED | Card in Stacking Cards with anchor `id="community-guidelines"` | Expandable dedicated policy page | None | P3 | Low |
+| **FAQ** | COMPLETED | Accordion animation via Framer Motion, 11 accurate community Q&As | None | None | P3 | Low |
+| **Final CTA** | COMPLETED | Radial hover glow, dynamic cursor spring, direct link to join free | None | None | P3 | Low |
+| **Footer & Legal Links** | BUG | Logo, disclaimer, social links, copyright | Legal pages missing | `/privacy` and `/terms` return 404 Not Found | P1 | Low |
+
+---
+
+## B. Authentication System
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **Member Registration** | PARTIALLY COMPLETED | Form validation, welcome screen, automatic redirect | Supabase Auth user creation (`auth.users`), RLS mapping | Stored only in browser `localStorage` | P0 | High |
+| **Member Login** | PARTIALLY COMPLETED | Email/username input, credential checking, role resolution | Supabase Auth sign-in, server-side session cookies | Hardcoded credentials, plain-text validation | P0 | High |
+| **Admin Login** | BUG / SECURITY | Restricts access to authorized email (`suganeshsugu07@gmail.com`) | Server-side role check, JWT validation | Password leaked in error message; bypassable via `localStorage` | P0 | High |
+| **Forgot Password** | NOT STARTED | UI form renders in `/community/auth` | Email dispatch, token generation, reset callback | Simulated with a 2.5s timeout; no email sent | P1 | Medium |
+| **Password Reset** | NOT STARTED | UI placeholder in legacy `/(auth)/forgot-password` | Supabase auth callback handling for community users | Disconnected from community accounts | P1 | Medium |
+| **Email Validation** | PARTIALLY COMPLETED | Basic frontend regex / string checks | Supabase email verification confirmation loop | Unverified emails permitted in mock DB | P2 | Low |
+| **Session Persistence** | PARTIALLY COMPLETED | Persists across tab reloads via `localStorage` | Secure HTTP-only cookies, Supabase session refresh | State lost if user opens private window or clears storage | P0 | High |
+| **Protected Routes** | BUG | `/app` and `/onboarding` redirected by middleware | Middleware protection for `/community/admin` and member pages | `/community/admin` returns 200 to raw unauthenticated requests | P0 | Medium |
+| **Member Onboarding** | PARTIALLY COMPLETED | Community registration captures skills & location | Avatar upload, multi-step profile builder | Onboarding skipped directly into feed | P2 | Medium |
+
+---
+
+## C. Member Dashboard (`/community/*`)
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **Community Feed** | PARTIALLY COMPLETED | Post stream rendering, author metadata, category pills | Live Supabase database query, real-time subscription | Operates strictly in client `localStorage` | P0 | High |
+| **Post Creation** | PARTIALLY COMPLETED | Caption, category, aspect ratio, hashtag inputs | Image/video file upload to Supabase Storage | Only accepts external string URLs; no file chooser | P0 | High |
+| **Image Uploads (Limit 1 MB)** | NOT STARTED | Preset image selector | File input, client-side 1 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
+| **Video Uploads (Limit 50 MB)** | NOT STARTED | Video aspect ratio options | File input, client-side 50 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
+| **Google Drive Links** | PARTIALLY COMPLETED | Can paste URL in input | URL regex validator, thumbnail generator, file permission tips | Raw link treated as generic string | P2 | Medium |
+| **Likes & Anti-Self-Like** | COMPLETED (Client) | Like toggle, counter, anti-self-like prevention | Supabase `community_post_likes` table sync | Resets when localStorage cleared | P1 | Low |
+| **Comments** | COMPLETED (Client) | Modal, comment list, author attribution, timestamps | Supabase `community_post_comments` table sync | Resets when localStorage cleared | P1 | Low |
+| **Saved Posts** | COMPLETED (Client) | Bookmark toggle, 'Saved' filter tab | Supabase `community_saved_posts` table sync | Resets when localStorage cleared | P1 | Low |
+| **Search & Filters** | COMPLETED (Client) | Search by text/author/tag, filter by category & tab | Full-text PostgreSQL search | Searches only in-memory mock posts | P2 | Low |
+| **Resources Directory** | PARTIALLY COMPLETED | Category filters, download counts, search, external links | Supabase `community_resources` sync, real download tracking | In-memory data only | P1 | Medium |
+| **Challenges Directory** | PARTIALLY COMPLETED | Active, upcoming, closed badges, prizes, countdown | Supabase `community_challenges` sync | In-memory data only | P1 | Medium |
+| **Challenge Submissions** | PARTIALLY COMPLETED | Modal with format selector (Image, Video, PDF, GDrive, Portfolio) | File upload, duplicate entry lock, deadline enforcement | Allows duplicate submissions; no deadline validation | P1 | Medium |
+| **Portfolio Showcase** | PARTIALLY COMPLETED | Automatic mapping of `is_showcase` posts into creator portfolio | Persistence in Supabase `community_portfolio_projects` | In-memory data only | P1 | Low |
+| **Creative Jobs Board** | PARTIALLY COMPLETED | Job cards, filter by category, work mode, WhatsApp apply link | Supabase `community_job_offers` sync, employer posting | In-memory data only | P2 | Low |
+| **Community Events** | PARTIALLY COMPLETED | Event cards, online/offline indicators, registration link | Supabase `community_events` sync, attendee RSVP tracking | In-memory data only | P2 | Low |
+| **Leaderboard** | PARTIALLY COMPLETED | Ranks members by `total_xp`, badges, podium | Server-side aggregate view / cron recalculation | Client-side sort on in-memory array | P1 | Low |
+| **Profile Editing** | PARTIALLY COMPLETED | Bio, location, skills, social links, cover photo | Supabase `community_members` update, avatar storage upload | Updates only local browser state | P1 | Low |
+
+---
+
+## D. XP System
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **XP Calculation Engine** | COMPLETED (Client) | Post creation (+10), Like (+2), Challenge (+15), Winner bonuses (+100/+60/+30) | Server-side validation via PostgreSQL triggers or Edge Functions | Any user can modify total XP via DevTools console | P0 | High |
+| **Duplicate XP Prevention** | COMPLETED (Client) | Checks `isDuplicateTransaction` against existing transaction IDs | PostgreSQL database UNIQUE constraints | Enforced only in local browser memory | P0 | Medium |
+| **Self-Like XP Prevention** | COMPLETED (Client) | Checks `canEarnLikeXP(authorId, likerId)` | Server-side RLS enforcement | Client-only check | P0 | Low |
+| **Winner Bonus XP** | COMPLETED (Client) | Automatically awarded when admin picks 1st, 2nd, 3rd place | Server-side atomic transaction | Client-only | P1 | Medium |
+| **XP Transaction History** | COMPLETED (Client) | Detailed audit log with reason, date, and reference ID | Supabase `community_xp_transactions` persistence | Local memory only | P1 | Low |
+| **Leaderboard Calculation** | COMPLETED (Client) | Real-time sorting and level badges | Database index & materialized view for high scale | Client-side sort | P2 | Low |
+
+---
+
+## E. Admin Dashboard (`/community/admin`)
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **Admin Authentication** | BUG / SECURITY | Checks authorized email (`suganeshsugu07@gmail.com`) | Server-side middleware, Supabase JWT role verification | Client-only check; password printed in error; bypassable via localStorage | P0 | High |
+| **Role-Based Permissions** | BUG / SECURITY | Shows warning screen to non-admin users | API route authorization, database RLS policies | Unprotected route returns 200; client state spoofable | P0 | High |
+| **Admin Reports** | PARTIALLY COMPLETED | Total members, posts, challenges, submissions, active jobs | Real database aggregates | Aggregates in-memory mock data | P2 | Low |
+| **User Management** | PARTIALLY COMPLETED | Member search, role promotion (`member` <-> `admin`), member deletion | Supabase database mutations | Mutates only local browser state | P1 | Medium |
+| **Resource Management** | PARTIALLY COMPLETED | Create, edit, delete creative resources with category & GDrive flag | Supabase `community_resources` sync | Local state only | P1 | Medium |
+| **Challenge Management** | PARTIALLY COMPLETED | Create challenges, edit prizes, set deadlines, pick winners | Supabase `community_challenges` sync | Local state only | P1 | Medium |
+| **Submission Hub** | PARTIALLY COMPLETED | View submissions per challenge, inspect links, pick podium places | Supabase `community_challenge_submissions` sync | Local state only | P1 | Medium |
+| **Event Management** | PARTIALLY COMPLETED | Add, edit, delete online/offline community events | Supabase `community_events` sync | Local state only | P2 | Low |
+| **Job Management** | PARTIALLY COMPLETED | Add, edit, delete job listings and application links | Supabase `community_job_offers` sync | Local state only | P2 | Low |
+| **Bonus XP Awarding** | PARTIALLY COMPLETED | Modal to grant custom XP and custom reason to any member | Supabase `community_xp_transactions` sync | Local state only | P1 | Low |
+
+---
+
+## F. Media System
+
+| Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
+|---|---|---|---|---|---|---|
+| **Image Upload (Limit 1 MB)** | NOT STARTED | None in community feed | File input, client-side size check (1 MB), Supabase Storage upload | Feed only accepts URLs | P0 | Medium |
+| **Video Upload (Limit 50 MB)** | NOT STARTED | None in community feed | File input, client-side size check (50 MB), Supabase Storage upload | Feed only accepts URLs | P0 | High |
+| **MIME Type Validation** | NOT STARTED | Allowed types exist in legacy `ImageUpload.tsx` | MIME type enforcement in community feed | Direct URL bypasses MIME validation | P1 | Low |
+| **Google Drive URL Validation**| NOT STARTED | External URL field accepts text | Regex checking `drive.google.com/file/d/` or `/open?id=`, sharing permission guide | Any invalid text accepted | P2 | Low |
+| **External Link Previews** | NOT STARTED | Basic image thumbnail preview for direct image URLs | OpenGraph metadata fetcher API for websites/Behance | No rich link card generation | P2 | Medium |
+| **Image Optimization** | COMPLETED | Next.js `<Image />` component with WebP/AVIF formats on static assets | Applied to user-uploaded dynamic media | External URLs bypass Next.js image optimization | P2 | Low |
+| **Video Playback** | PARTIALLY COMPLETED | `<video controls>` renders if URL is provided | Streaming video player, HLS, or YouTube/Vimeo embed support | Raw video tags used without transcoding | P2 | Medium |
+
+---
+
+## G. Security & Compliance
+
+| Security Area | Current Status | Findings & Vulnerabilities | Recommended Fix | Priority |
+|---|---|---|---|---|
+| **Supabase RLS** | PARTIALLY COMPLETED | `002_community_platform.sql` has `SELECT` policies only; NO `INSERT`, `UPDATE`, `DELETE` policies defined | Write explicit RLS policies for all operations with auth user bindings | P0 |
+| **Admin Authorization** | CRITICAL VULNERABILITY | Client-side-only check in React component; no server-side middleware protection | Add Next.js Middleware route guard for `/community/admin` and verify server JWT | P0 |
+| **Credential Storage** | CRITICAL VULNERABILITY | Plain-text passwords and leakage in error message (`Suganesh@tncc`, `Test001@gmail.com`) | Remove all hardcoded passwords; enforce Supabase Auth bcrypt hashing | P0 |
+| **XP Ledger Security** | CRITICAL VULNERABILITY | XP is modified in client `localStorage` with no database ledger | Migrate XP transactions to PostgreSQL with row-level security and RPC functions | P0 |
+| **File Upload Security** | NOT STARTED | Direct file uploads not enabled on community platform | Configure authenticated Supabase Storage bucket with strict file size & MIME limits | P1 |
+| **Environment Variables** | COMPLETED | No secret keys exposed in client code; only public anon keys defined | Maintain strict separation of service role keys | P3 |
