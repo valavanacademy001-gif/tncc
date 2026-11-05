@@ -171,7 +171,9 @@ export async function POST(
 
     if (!insertError && insertedComment) {
       // Increment comment count on post
-      await supabase.rpc('increment_post_comments_count', { p_post_id: postId }).catch(() => {});
+      try {
+        await supabase.rpc('increment_post_comments_count', { p_post_id: postId });
+      } catch {}
 
       const formatted: PostComment = {
         id: insertedComment.id,

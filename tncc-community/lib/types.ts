@@ -2,6 +2,7 @@ export type MemberRole = 'member' | 'admin';
 
 export interface CommunityMember {
   id: string;
+  user_id?: string;
   member_id: string; // e.g. TNCC-2026-018
   username: string;
   full_name: string;
