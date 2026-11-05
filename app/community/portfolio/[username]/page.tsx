@@ -3,6 +3,7 @@
 import React, { use } from 'react';
 import Link from 'next/link';
 import { useCommunity } from '@/tncc-community/lib/community-context';
+import SocialLinks from '@/tncc-community/components/common/SocialLinks';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -94,28 +95,7 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
                   <span>{isFollowing(member.username) ? 'Following' : '+ Follow'}</span>
                 </button>
               )}
-              {member.behance_url && (
-                <a
-                  href={member.behance_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-[#0D2C5B] hover:bg-[#E84020] text-white rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5"
-                >
-                  <span>Behance Profile</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              )}
-              {member.instagram_url && (
-                <a
-                  href={member.instagram_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-[#F8F6F1] hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200"
-                  title="Instagram"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              )}
+              <SocialLinks member={member} size="sm" showLabels={true} />
             </div>
           </div>
 
@@ -162,6 +142,15 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
               </p>
             </div>
           )}
+
+          {/* Connected Creator Socials & Portfolios (profile keela) */}
+          <div className="pt-4 mt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F8F6F1]/70 p-4 rounded-2xl border border-gray-100">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-[#0D2C5B] uppercase tracking-wide">Creator Social Profiles:</span>
+              <span className="text-xs text-gray-400 hidden sm:inline">· Verified Handles</span>
+            </div>
+            <SocialLinks member={member} size="md" showLabels={true} />
+          </div>
         </div>
       </div>
 

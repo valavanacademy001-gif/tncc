@@ -75,7 +75,7 @@ This document serves as the operational guide for developers continuing work on 
 |---|---|---|
 | Direct File Upload (1 MB / 50 MB) | Storage Bucket Migration (`ISSUE-04`) | Cannot upload files until Supabase Storage bucket `community-media` is provisioned and secured with RLS. |
 | Multi-Device Community Feed Sync | Unified Supabase Auth (`ISSUE-03`) & RLS (`ISSUE-04`) | Posts cannot be inserted to PostgreSQL until real authenticated user sessions are established. |
-| Live Admin Challenge & Winner Announcements | Admin Route Middleware (`ISSUE-02`) & RLS (`ISSUE-04`) | Admin database mutations require verified admin token claims. |
+| Live Admin Challenge & Winner Announcements | Admin Route Middleware (`ISSUE-02`) & RLS (`ISSUE-04`) | **COMPLETED in Issue #10**: Middleware route guard and server API routes `/api/community/admin/*` operational with 401/403 authorization; Migration `003_community_admin_and_rls.sql` prepared for database execution. |
 
 ---
 
@@ -91,3 +91,4 @@ flowchart LR
     Step6 --> Step7["7. Live Challenges & Admin Sync (ISSUE-08, ISSUE-09, ISSUE-10)"]
     Step7 --> Step8["8. 3D Asset Optimization & Playwright E2E (ISSUE-11, ISSUE-12)"]
 ```
+

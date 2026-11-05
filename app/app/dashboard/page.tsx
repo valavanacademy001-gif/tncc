@@ -101,7 +101,7 @@ export default function FreelancerDashboard() {
             <div style={{ fontSize: '0.8rem', color: 'var(--gray-600)' }}>2 of 2 free bids left this month</div>
           </div>
         </div>
-        <Link href="/#pricing" className="btn btn-yellow btn-sm">
+        <Link href="/community/freelancing" className="btn btn-yellow btn-sm">
           Upgrade for more
         </Link>
       </motion.div>

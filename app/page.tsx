@@ -8,7 +8,6 @@ import HowItWorks from '@/components/sections/HowItWorks';
 import StackingCards from '@/components/sections/StackingCards';
 import CommunityStory from '@/components/sections/CommunityStory';
 import Testimonials from '@/components/sections/Testimonials';
-import PricingSection from '@/components/sections/PricingSection';
 import FAQ from '@/components/sections/FAQ';
 import FinalCTA from '@/components/sections/FinalCTA';
 
@@ -24,7 +23,6 @@ export default function HomePage() {
       <StackingCards />
       <CommunityStory />
       <Testimonials />
-      <PricingSection />
       <FAQ />
       <FinalCTA />
       <Footer />

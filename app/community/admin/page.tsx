@@ -24,6 +24,10 @@ import {
   Filter,
   Eye,
   RefreshCw,
+  Check,
+  X,
+  MessageSquare,
+  Loader2,
 } from 'lucide-react';
 import {
   CommunityResource,
@@ -57,6 +61,7 @@ export default function AdminDashboardPage() {
     updateChallenge,
     deleteChallenge,
     pickChallengeWinner,
+    reviewSubmission,
     getAllSubmissions,
     updateMemberRole,
     deleteMember,
@@ -92,6 +97,11 @@ export default function AdminDashboardPage() {
   const [xpTargetMember, setXpTargetMember] = useState<any>(null);
   const [xpAmount, setXpAmount] = useState('50');
   const [xpReason, setXpReason] = useState('Staff Merit Award');
+
+  // Async loading & feedback states
+  const [isSaving, setIsSaving] = useState(false);
+  const [activeFeedbackId, setActiveFeedbackId] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState('');
 
   // Resource Form State
   const [resForm, setResForm] = useState<{
@@ -1009,23 +1019,68 @@ export default function AdminDashboardPage() {
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`Delete challenge "${chal.title}"? This action cannot be undone.`)) {
+                            deleteChallenge(chal.id);
+                          }
+                        }}
+                        className="p-2 text-gray-500 hover:text-red-600 rounded-lg border border-gray-200 transition-colors"
+                        title="Delete Challenge"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
 
                   {/* Declared Winners Display if available */}
-                  {chal.winners?.first && (
-                    <div className="mt-4 p-3 bg-amber-50/80 rounded-xl border border-amber-200 flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center font-extrabold text-xs text-[#0D2C5B]">
-                        👑
-                      </div>
-                      <div className="text-xs">
-                        <span className="font-bold text-[#0D2C5B]">
-                          1st Place Winner: {chal.winners.first.member.full_name}
-                        </span>
-                        <span className="text-gray-500 block text-[11px]">
-                          Awarded +{chal.winners.first.xp_bonus} XP · Work: {chal.winners.first.submitted_work_url}
-                        </span>
-                      </div>
+                  {(chal.winners?.first || chal.winners?.second || chal.winners?.third) && (
+                    <div className="mt-4 space-y-2">
+                      {chal.winners?.first && (
+                        <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200 flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center font-extrabold text-xs text-[#0D2C5B]">
+                            👑
+                          </div>
+                          <div className="text-xs">
+                            <span className="font-bold text-[#0D2C5B]">
+                              1st Place: {chal.winners.first.member.full_name} (@{chal.winners.first.member.username})
+                            </span>
+                            <span className="text-gray-500 block text-[11px]">
+                              Awarded +{chal.winners.first.xp_bonus} XP · Work: {chal.winners.first.submitted_work_url}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {chal.winners?.second && (
+                        <div className="p-3 bg-slate-100 rounded-xl border border-slate-200 flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-slate-300 flex items-center justify-center font-extrabold text-xs text-slate-800">
+                            🥈
+                          </div>
+                          <div className="text-xs">
+                            <span className="font-bold text-slate-800">
+                              2nd Place: {chal.winners.second.member.full_name} (@{chal.winners.second.member.username})
+                            </span>
+                            <span className="text-gray-500 block text-[11px]">
+                              Awarded +{chal.winners.second.xp_bonus} XP · Work: {chal.winners.second.submitted_work_url}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {chal.winners?.third && (
+                        <div className="p-3 bg-amber-50/40 rounded-xl border border-amber-200/60 flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-amber-200 flex items-center justify-center font-extrabold text-xs text-amber-900">
+                            🥉
+                          </div>
+                          <div className="text-xs">
+                            <span className="font-bold text-amber-900">
+                              3rd Place: {chal.winners.third.member.full_name} (@{chal.winners.third.member.username})
+                            </span>
+                            <span className="text-gray-500 block text-[11px]">
+                              Awarded +{chal.winners.third.xp_bonus} XP · Work: {chal.winners.third.submitted_work_url}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1435,69 +1490,193 @@ export default function AdminDashboardPage() {
                 No submissions entered yet for this challenge.
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {allSubmissions
                   .filter((s) => s.challenge_id === selectedChallengeForSubmissions.id)
-                  .map((sub, idx) => (
-                    <div
-                      key={sub.id}
-                      className="p-3.5 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FDFCFB]"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs text-gray-500">
-                          #{idx + 1}
-                        </div>
-                        <div>
-                          <p className="font-bold text-xs text-[#0D2C5B]">{sub.title}</p>
-                          <p className="text-[11px] text-gray-400">
-                            By {sub.author?.full_name} (@{sub.author?.username}) · {sub.submission_type}
-                          </p>
-                        </div>
-                      </div>
+                  .map((sub, idx) => {
+                    const status = sub.status || 'pending';
+                    const isWinner =
+                      selectedChallengeForSubmissions.winners?.first?.member.id === sub.member_id
+                        ? '1st Place Winner'
+                        : selectedChallengeForSubmissions.winners?.second?.member.id === sub.member_id
+                        ? '2nd Place Winner'
+                        : selectedChallengeForSubmissions.winners?.third?.member.id === sub.member_id
+                        ? '3rd Place Winner'
+                        : null;
 
-                      <div className="flex items-center gap-2 self-end sm:self-center">
-                        <a
-                          href={sub.submission_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-2.5 py-1 text-[11px] font-semibold text-[#00B5C8] hover:bg-cyan-50 rounded-lg flex items-center gap-1"
-                        >
-                          <Eye className="w-3 h-3" />
-                          <span>View Work</span>
-                        </a>
+                    return (
+                      <div
+                        key={sub.id}
+                        className="p-4 rounded-xl border border-gray-200 bg-[#FDFCFB] space-y-3"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs text-gray-500 shrink-0 mt-0.5">
+                              #{idx + 1}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="font-bold text-xs text-[#0D2C5B]">{sub.title}</p>
+                                <span
+                                  className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                                    status === 'approved'
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : status === 'rejected'
+                                      ? 'bg-red-100 text-red-800'
+                                      : 'bg-amber-100 text-amber-800'
+                                  }`}
+                                >
+                                  {status}
+                                </span>
+                                {isWinner && (
+                                  <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-amber-400 text-[#0D2C5B]">
+                                    🏆 {isWinner}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-gray-400 mt-0.5">
+                                By {sub.author?.full_name} (@{sub.author?.username}) · {sub.submission_type}
+                              </p>
+                              {sub.admin_feedback && (
+                                <p className="text-[11px] text-gray-600 bg-gray-100/80 px-2 py-1 rounded-md mt-1.5 border border-gray-200 inline-block">
+                                  💬 <strong>Reviewer Feedback:</strong> {sub.admin_feedback}
+                                </p>
+                              )}
+                            </div>
+                          </div>
 
-                        {/* Declare Winner buttons */}
-                        <button
-                          onClick={() => {
-                            if (confirm(`Award 1st Place to ${sub.author?.full_name}?`)) {
-                              pickChallengeWinner(
-                                selectedChallengeForSubmissions.id,
-                                'first',
-                                sub.id
-                              );
-                              setSelectedChallengeForSubmissions(null);
-                            }
-                          }}
-                          className="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-[#0D2C5B] font-extrabold text-[11px] rounded-lg shadow-sm"
-                        >
-                          🏆 1st Winner
-                        </button>
-                        <button
-                          onClick={() => {
-                            pickChallengeWinner(
-                              selectedChallengeForSubmissions.id,
-                              'second',
-                              sub.id
-                            );
-                            setSelectedChallengeForSubmissions(null);
-                          }}
-                          className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold text-[10px] rounded-lg"
-                        >
-                          🥈 2nd
-                        </button>
+                          <div className="flex items-center gap-1.5 flex-wrap self-end sm:self-center">
+                            <a
+                              href={sub.submission_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2 py-1 text-[11px] font-semibold text-[#00B5C8] hover:bg-cyan-50 rounded-lg flex items-center gap-1"
+                              title="Inspect submitted creative artifact"
+                            >
+                              <Eye className="w-3 h-3" />
+                              <span>View</span>
+                            </a>
+
+                            {/* Approve / Reject buttons */}
+                            <button
+                              onClick={() => reviewSubmission(sub.id, 'approved', feedbackText || sub.admin_feedback)}
+                              className={`px-2 py-1 text-[10px] font-bold rounded-lg border transition-all flex items-center gap-1 ${
+                                status === 'approved'
+                                  ? 'bg-emerald-500 text-white border-emerald-500'
+                                  : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border-emerald-200'
+                              }`}
+                              title="Approve Submission"
+                            >
+                              <Check className="w-3 h-3" />
+                              <span>Approve</span>
+                            </button>
+                            <button
+                              onClick={() => reviewSubmission(sub.id, 'rejected', feedbackText || sub.admin_feedback)}
+                              className={`px-2 py-1 text-[10px] font-bold rounded-lg border transition-all flex items-center gap-1 ${
+                                status === 'rejected'
+                                  ? 'bg-red-500 text-white border-red-500'
+                                  : 'text-red-700 bg-red-50 hover:bg-red-100 border-red-200'
+                              }`}
+                              title="Reject Submission"
+                            >
+                              <X className="w-3 h-3" />
+                              <span>Reject</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setActiveFeedbackId(activeFeedbackId === sub.id ? null : sub.id);
+                                setFeedbackText(sub.admin_feedback || '');
+                              }}
+                              className="px-2 py-1 text-[10px] font-bold rounded-lg border border-gray-200 hover:bg-gray-100 text-gray-700 flex items-center gap-1"
+                              title="Add/Edit Admin Feedback"
+                            >
+                              <MessageSquare className="w-3 h-3" />
+                              <span>Feedback</span>
+                            </button>
+
+                            {/* Declare Winner buttons */}
+                            <button
+                              onClick={() => {
+                                if (confirm(`Award 1st Place (+${selectedChallengeForSubmissions.bonus_xp_first} XP) to ${sub.author?.full_name}?`)) {
+                                  pickChallengeWinner(
+                                    selectedChallengeForSubmissions.id,
+                                    'first',
+                                    sub.id
+                                  );
+                                  setSelectedChallengeForSubmissions(null);
+                                }
+                              }}
+                              className="px-2 py-1 bg-amber-400 hover:bg-amber-500 text-[#0D2C5B] font-extrabold text-[10px] rounded-lg shadow-sm"
+                              title="Declare 1st Place Winner"
+                            >
+                              🏆 1st
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (confirm(`Award 2nd Place (+${selectedChallengeForSubmissions.bonus_xp_second} XP) to ${sub.author?.full_name}?`)) {
+                                  pickChallengeWinner(
+                                    selectedChallengeForSubmissions.id,
+                                    'second',
+                                    sub.id
+                                  );
+                                  setSelectedChallengeForSubmissions(null);
+                                }
+                              }}
+                              className="px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-[10px] rounded-lg"
+                              title="Declare 2nd Place Winner"
+                            >
+                              🥈 2nd
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (confirm(`Award 3rd Place (+${selectedChallengeForSubmissions.bonus_xp_third} XP) to ${sub.author?.full_name}?`)) {
+                                  pickChallengeWinner(
+                                    selectedChallengeForSubmissions.id,
+                                    'third',
+                                    sub.id
+                                  );
+                                  setSelectedChallengeForSubmissions(null);
+                                }
+                              }}
+                              className="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] rounded-lg"
+                              title="Declare 3rd Place Winner"
+                            >
+                              🥉 3rd
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Inline Feedback Drawer if active */}
+                        {activeFeedbackId === sub.id && (
+                          <div className="pt-2 border-t border-gray-200 flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={feedbackText}
+                              onChange={(e) => setFeedbackText(e.target.value)}
+                              placeholder="Write admin review note or feedback..."
+                              className="flex-1 px-3 py-1.5 border rounded-lg text-xs"
+                            />
+                            <button
+                              onClick={() => {
+                                reviewSubmission(sub.id, (sub.status as any) || 'pending', feedbackText);
+                                setActiveFeedbackId(null);
+                              }}
+                              className="px-3 py-1.5 bg-[#0D2C5B] text-white rounded-lg text-xs font-bold hover:bg-[#1B3F7E]"
+                            >
+                              Save Feedback
+                            </button>
+                            <button
+                              onClick={() => setActiveFeedbackId(null)}
+                              className="px-2 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
               </div>
             )}
 

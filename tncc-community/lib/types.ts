@@ -143,6 +143,9 @@ export interface ChallengeSubmission {
   submission_url: string;
   preview_url?: string;
   submitted_at: string;
+  status?: 'pending' | 'approved' | 'rejected';
+  admin_feedback?: string;
+  reviewed_at?: string;
 }
 
 export interface XPTransaction {

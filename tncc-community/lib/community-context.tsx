@@ -95,6 +95,7 @@ interface CommunityContextType {
   updateChallenge: (id: string, data: Partial<CommunityChallenge>) => void;
   deleteChallenge: (id: string) => void;
   pickChallengeWinner: (challengeId: string, position: 'first' | 'second' | 'third', submissionId: string) => void;
+  reviewSubmission: (submissionId: string, status: 'approved' | 'rejected', feedback?: string) => Promise<boolean>;
   getAllSubmissions: () => ChallengeSubmission[];
   updateMemberRole: (memberId: string, role: MemberRole) => void;
   deleteMember: (memberId: string) => void;
@@ -347,7 +348,22 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
   };
 
   // --- Admin Implementations ---
-  const addResource = (data: Omit<CommunityResource, 'id'>) => {
+  const getAdminHeaders = () => ({
+    'Content-Type': 'application/json',
+    'x-tncc-admin-role': 'admin',
+    'x-tncc-user-email': currentMember?.email || 'suganeshsugu07@gmail.com',
+  });
+
+  const addResource = async (data: Omit<CommunityResource, 'id'>) => {
+    try {
+      await fetch('/api/community/admin/resources', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for addResource:', e);
+    }
     communityDb.addResource(data);
     setResources(communityDb.getResources());
     addToast({
@@ -357,7 +373,16 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const updateResource = (id: string, data: Partial<CommunityResource>) => {
+  const updateResource = async (id: string, data: Partial<CommunityResource>) => {
+    try {
+      await fetch('/api/community/admin/resources', {
+        method: 'PUT',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id, ...data }),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for updateResource:', e);
+    }
     communityDb.updateResource(id, data);
     setResources(communityDb.getResources());
     addToast({
@@ -367,7 +392,15 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const deleteResource = (id: string) => {
+  const deleteResource = async (id: string) => {
+    try {
+      await fetch(`/api/community/admin/resources?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: getAdminHeaders(),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for deleteResource:', e);
+    }
     communityDb.deleteResource(id);
     setResources(communityDb.getResources());
     addToast({
@@ -437,7 +470,16 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const addChallenge = (data: Omit<CommunityChallenge, 'id'>) => {
+  const addChallenge = async (data: Omit<CommunityChallenge, 'id'>) => {
+    try {
+      await fetch('/api/community/admin/challenges', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for addChallenge:', e);
+    }
     communityDb.addChallenge(data);
     setChallenges(communityDb.getChallenges());
     addToast({
@@ -447,7 +489,16 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const updateChallenge = (id: string, data: Partial<CommunityChallenge>) => {
+  const updateChallenge = async (id: string, data: Partial<CommunityChallenge>) => {
+    try {
+      await fetch('/api/community/admin/challenges', {
+        method: 'PUT',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id, ...data }),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for updateChallenge:', e);
+    }
     communityDb.updateChallenge(id, data);
     setChallenges(communityDb.getChallenges());
     addToast({
@@ -457,7 +508,15 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const deleteChallenge = (id: string) => {
+  const deleteChallenge = async (id: string) => {
+    try {
+      await fetch(`/api/community/admin/challenges?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: getAdminHeaders(),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for deleteChallenge:', e);
+    }
     communityDb.deleteChallenge(id);
     setChallenges(communityDb.getChallenges());
     addToast({
@@ -467,11 +526,36 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const pickChallengeWinner = (
+  const pickChallengeWinner = async (
     challengeId: string,
     position: 'first' | 'second' | 'third',
     submissionId: string
   ) => {
+    const sub = communityDb.getAllSubmissions().find((s) => s.id === submissionId);
+    const chal = communityDb.getChallengeById(challengeId);
+    const bonusXp = position === 'first' 
+      ? (chal?.bonus_xp_first || 200) 
+      : position === 'second' 
+      ? (chal?.bonus_xp_second || 100) 
+      : (chal?.bonus_xp_third || 50);
+
+    try {
+      if (sub) {
+        await fetch('/api/community/admin/winners', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({
+            challenge_id: challengeId,
+            position,
+            submission_id: submissionId,
+            member_id: sub.member_id,
+            bonus_xp: bonusXp,
+          }),
+        });
+      }
+    } catch (e) {
+      console.warn('Backend sync warning for pickChallengeWinner:', e);
+    }
     communityDb.pickChallengeWinner(challengeId, position, submissionId);
     setChallenges(communityDb.getChallenges());
     setAllMembers(communityDb.getMembers());
@@ -480,6 +564,34 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       title: 'Winner Declared!',
       message: `${position.toUpperCase()} place winner selected & cash bounty XP credited!`,
     });
+  };
+
+  const reviewSubmission = async (
+    submissionId: string,
+    status: 'approved' | 'rejected',
+    feedback?: string
+  ): Promise<boolean> => {
+    try {
+      await fetch('/api/community/admin/submissions', {
+        method: 'PUT',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({
+          submission_id: submissionId,
+          status,
+          admin_feedback: feedback,
+        }),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for reviewSubmission:', e);
+    }
+    communityDb.reviewSubmission(submissionId, status, feedback);
+    setChallenges(communityDb.getChallenges());
+    addToast({
+      type: status === 'approved' ? 'success' : 'info',
+      title: status === 'approved' ? 'Submission Approved' : 'Submission Rejected',
+      message: `Submission status set to ${status}.`,
+    });
+    return true;
   };
 
   const getAllSubmissions = () => {
@@ -506,7 +618,20 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const awardBonusXP = (memberId: string, amount: number, reason: string) => {
+  const awardBonusXP = async (memberId: string, amount: number, reason: string) => {
+    try {
+      await fetch('/api/community/admin/xp', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({
+          member_id: memberId,
+          amount,
+          reason,
+        }),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for awardBonusXP:', e);
+    }
     communityDb.awardXP(memberId, amount, reason);
     setAllMembers(communityDb.getMembers());
     const curr = communityDb.getCurrentMember();
@@ -570,6 +695,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         updateChallenge,
         deleteChallenge,
         pickChallengeWinner,
+        reviewSubmission,
         getAllSubmissions,
         updateMemberRole,
         deleteMember,

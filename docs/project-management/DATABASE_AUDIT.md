@@ -5,6 +5,7 @@
 **Active Migration Files:**
 1. `supabase/migrations/001_initial_schema.sql` (Initial Marketplace / Agency Schema)
 2. `supabase/migrations/002_community_platform.sql` (Member Community Platform Schema)
+3. `supabase/migrations/003_community_admin_and_rls.sql` (Admin Dashboard, Atomic RPC Functions & Community RLS Write Policies)
 
 ---
 
@@ -188,3 +189,4 @@ erDiagram
 | **HIGH** | `community_saved_posts` | Missing SELECT policy; if RLS is enabled without SELECT, members cannot read bookmarks. | Add policy `auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id)`. |
 | **HIGH** | `community_members` | Role can theoretically be set to `'admin'` if INSERT/UPDATE policies are not restricted. | Add CHECK constraint or trigger preventing non-admins from writing `role = 'admin'`. |
 | **MEDIUM** | Storage Buckets | No migration for Supabase Storage buckets (`community-media`, `challenge-submissions`). | Add storage schema and RLS policies in migration. |
+

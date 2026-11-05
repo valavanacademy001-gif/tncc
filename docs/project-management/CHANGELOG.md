@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] - 2026-11-05 (GitHub Issue #10 – Admin Dashboard Supabase Integration)
+
+### Added
+- **Database Migration 003 (`supabase/migrations/003_community_admin_and_rls.sql`):**
+  - Schema provisioning for `community_challenges`, `community_resources`, `community_challenge_submissions`, `community_challenge_winners`, `community_xp_transactions`, `community_job_offers`, and `community_events`.
+  - Added submission review columns: `status` ('pending' | 'approved' | 'rejected'), `admin_feedback` TEXT, and `reviewed_at` TIMESTAMPTZ.
+  - Added PostgreSQL atomic RPC function `announce_challenge_winner` with strict anti-duplicate winner guards and idempotent XP ledger crediting.
+  - Added PostgreSQL atomic RPC function `award_admin_bonus_xp` for merit-based creator rewards.
+  - Added complete Row Level Security (RLS) policies enforcing admin-only mutations (`is_admin()`) for challenges, resources, winners, jobs, events, and submission reviews.
+- **Server API Route Handlers (`app/api/community/admin/`):**
+  - `challenges/route.ts`: GET, POST, PUT, DELETE with server-side validation and Supabase mutation persistence.
+  - `resources/route.ts`: GET, POST, PUT, DELETE with category and URL validation.
+  - `submissions/route.ts`: GET, PUT for submission status reviews and reviewer feedback notes.
+  - `winners/route.ts`: POST executing atomic winner declaration, bonus XP crediting, and duplicate award prevention.
+  - `xp/route.ts`: POST for awarding admin merit bonus XP.
+  - `reports/route.ts`: GET for aggregate administrative telemetry from Supabase.
+- **Server-Side Authorization Helper (`lib/supabase/admin-auth.ts`):**
+  - Centralized authentication check enforcing HTTP 401 for unauthenticated calls and HTTP 403 for non-admin members.
+- **Server-Side Route Middleware Protection (`lib/supabase/middleware.ts`):**
+  - Added route guard for `/community/admin` intercepting unauthorized requests with HTTP 307 redirect to `/community/auth?mode=login&next=/community/admin`.
+
+### Changed
+- **Admin Dashboard UI (`app/community/admin/page.tsx`):**
+  - Added Delete Challenge action with destructive confirmation.
+  - Added full submission review interface (Approve, Reject, and Feedback drawer).
+  - Added 1st, 2nd, and 3rd place winner declaration buttons and duplicate prevention checks.
+  - Added multi-podium display for 1st, 2nd, and 3rd place winners on challenge cards.
+  - Connected `reviewSubmission` to live backend.
+- **Community Context (`tncc-community/lib/community-context.tsx`):**
+  - Wired `addChallenge`, `updateChallenge`, `deleteChallenge`, `addResource`, `updateResource`, `deleteResource`, `pickChallengeWinner`, `reviewSubmission`, and `awardBonusXP` to call live Supabase API endpoints.
+
+---
+
 ## [Unreleased] - 2026-11-03
 
 ### Added
@@ -34,3 +67,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **ISSUE-04:** Missing `INSERT`, `UPDATE`, `DELETE` Row Level Security policies in `002_community_platform.sql`.
 - **ISSUE-06:** Community feed composer lacks direct file upload, 1 MB image limit check, and 50 MB video limit check.
 - **ISSUE-07:** Public landing page `#about` anchor broken; footer links `/privacy` and `/terms` return 404.
+

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCommunity } from '../../lib/community-context';
 import EditProfileModal from './EditProfileModal';
+import SocialLinks from '../common/SocialLinks';
 import PostCard from '../feed/PostCard';
 import { 
   Edit3, 
@@ -121,9 +122,9 @@ export default function ProfileView() {
           </p>
         )}
 
-        {/* Skills & Links */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-100">
-          <div className="flex flex-wrap gap-1.5">
+        {/* Skills & Social Handles */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-gray-100">
+          <div className="flex flex-wrap gap-1.5 items-center">
             {currentMember?.skills?.map((skill, idx) => (
               <span
                 key={idx}
@@ -134,42 +135,17 @@ export default function ProfileView() {
             ))}
           </div>
 
-          {/* External Links */}
-          <div className="flex items-center gap-3 text-xs">
-            {currentMember?.behance_url && (
-              <a
-                href={currentMember.behance_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-[#0D2C5B] hover:text-[#00B5C8] flex items-center gap-1"
-              >
-                <span>Behance</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-            {currentMember?.instagram_url && (
-              <a
-                href={currentMember.instagram_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-[#0D2C5B] hover:text-[#E84020] flex items-center gap-1"
-              >
-                <span>Instagram</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-            {currentMember?.linkedin_url && (
-              <a
-                href={currentMember.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-[#0D2C5B] hover:text-[#0D2C5B] flex items-center gap-1"
-              >
-                <span>LinkedIn</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-          </div>
+          {/* Social Links Row (Instagram, LinkedIn, Behance) */}
+          {currentMember && (
+            <div className="flex items-center gap-2">
+              <SocialLinks
+                member={currentMember}
+                onEditClick={() => setShowEditModal(true)}
+                size="md"
+                showLabels={true}
+              />
+            </div>
+          )}
         </div>
 
         {/* Stats Grid */}

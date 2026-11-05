@@ -129,11 +129,11 @@ export default function CommunitySidebar() {
         <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F8F6F1] to-[#FFF8EC] border border-orange-100">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-[#0D2C5B]">Creator Rank</span>
-            <span className="text-[11px] font-extrabold text-[#E84020]">
+            <span className="text-[11px] font-extrabold text-[#E84020]" suppressHydrationWarning>
               Lvl {memberLevel.level}
             </span>
           </div>
-          <p className="text-[11px] font-semibold text-gray-600 mb-2 truncate">
+          <p className="text-[11px] font-semibold text-gray-600 mb-2 truncate" suppressHydrationWarning>
             {memberLevel.title}
           </p>
           <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
@@ -143,8 +143,8 @@ export default function CommunitySidebar() {
             />
           </div>
           <div className="flex justify-between items-center text-[10px] text-gray-400 mt-1.5">
-            <span>{currentMember?.total_xp} XP</span>
-            <span>Next: {memberLevel.nextLevelXp} XP</span>
+            <span suppressHydrationWarning>{currentMember?.total_xp} XP</span>
+            <span suppressHydrationWarning>Next: {memberLevel.nextLevelXp} XP</span>
           </div>
         </div>
 

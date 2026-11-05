@@ -18,7 +18,7 @@
 | **TEST-06** | Challenges | `/community/challenges`, `[id]` | **PARTIAL** | Challenge details, submission modal, podium render; deadline unenforced |
 | **TEST-07** | XP & Leaderboard | `/community/leaderboard`, `xp-engine` | **PASS (CLIENT)** | Anti-self-like, anti-duplicate XP work; stored in localStorage |
 | **TEST-08** | Portfolio | `/community/portfolio`, `[username]` | **PASS (CLIENT)** | Automatic mapping from showcase posts to portfolio works |
-| **TEST-09** | Admin Access | `/community/admin` | **FAIL (SECURITY)** | Admin workspace restricted client-side only; missing server middleware |
+| **TEST-09** | Admin Access | `/community/admin` | **PASS (RESOLVED in Issue #10)** | Server middleware returns 307 redirect when unauthenticated; API routes return 401 unauthenticated / 403 non-admin |
 | **TEST-10** | Jobs & Events | `/community/jobs`, `/events` | **PASS (CLIENT)** | Job cards, application links, event badges render accurately |
 | **TEST-11** | Responsive Layouts| All Breakpoints (1440px - 360px) | **PASS** | CSS grids, flex wraps, and mobile menus behave cleanly |
 
@@ -160,3 +160,4 @@
   - **Mobile (390px):** Fullscreen search overlay, stacked single-column feed, bottom navigation tabs, touch-friendly buttons. (PASS)
   - **Small Mobile (360px):** Tested zero horizontal scrolling (`overflow-x: hidden`), modal dialogs fill viewport with padding. (PASS)
 - **Verdict:** **PASS**.
+

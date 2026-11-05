@@ -47,3 +47,4 @@
   Because all mutations currently occur within the browser `localStorage` mock engine, these operations are isolated to a single client instance and not synchronized with Supabase PostgreSQL.
 - **Server-Side Route Security:** **FAILED (ISSUE-02)**.  
   Step 16 revealed that `/community/admin` does not redirect unauthenticated server requests.
+

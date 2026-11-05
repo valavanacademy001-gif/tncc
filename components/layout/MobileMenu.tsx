@@ -16,7 +16,6 @@ const navItems = [
   { label: 'How It Works', href: '#how-it-works', sub: 'Your creative journey' },
   { label: 'Activities', href: '#activities', sub: 'Challenges, showcases & events' },
   { label: 'Benefits', href: '#benefits', sub: 'Why join TNCC' },
-  { label: 'Plans', href: '#pricing', sub: 'Free Community & Pro Freelance' },
   { label: 'FAQ', href: '#faq', sub: 'Common questions & answers' },
 ];
 

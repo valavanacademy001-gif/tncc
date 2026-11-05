@@ -90,16 +90,16 @@
 
 | Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
 |---|---|---|---|---|---|---|
-| **Admin Authentication** | BUG / SECURITY | Checks authorized email (`suganeshsugu07@gmail.com`) | Server-side middleware, Supabase JWT role verification | Client-only check; password printed in error; bypassable via localStorage | P0 | High |
-| **Role-Based Permissions** | BUG / SECURITY | Shows warning screen to non-admin users | API route authorization, database RLS policies | Unprotected route returns 200; client state spoofable | P0 | High |
-| **Admin Reports** | PARTIALLY COMPLETED | Total members, posts, challenges, submissions, active jobs | Real database aggregates | Aggregates in-memory mock data | P2 | Low |
-| **User Management** | PARTIALLY COMPLETED | Member search, role promotion (`member` <-> `admin`), member deletion | Supabase database mutations | Mutates only local browser state | P1 | Medium |
-| **Resource Management** | PARTIALLY COMPLETED | Create, edit, delete creative resources with category & GDrive flag | Supabase `community_resources` sync | Local state only | P1 | Medium |
-| **Challenge Management** | PARTIALLY COMPLETED | Create challenges, edit prizes, set deadlines, pick winners | Supabase `community_challenges` sync | Local state only | P1 | Medium |
-| **Submission Hub** | PARTIALLY COMPLETED | View submissions per challenge, inspect links, pick podium places | Supabase `community_challenge_submissions` sync | Local state only | P1 | Medium |
-| **Event Management** | PARTIALLY COMPLETED | Add, edit, delete online/offline community events | Supabase `community_events` sync | Local state only | P2 | Low |
-| **Job Management** | PARTIALLY COMPLETED | Add, edit, delete job listings and application links | Supabase `community_job_offers` sync | Local state only | P2 | Low |
-| **Bonus XP Awarding** | PARTIALLY COMPLETED | Modal to grant custom XP and custom reason to any member | Supabase `community_xp_transactions` sync | Local state only | P1 | Low |
+| **Admin Authentication & Route Protection** | COMPLETED (Issue #10) | Server-side Next.js middleware guards `/community/admin` with 307 redirect, API routes return 401 unauthenticated / 403 non-admin | Full unified session migration (Issue #3) | Resolved route protection gap (Issue #2) | P0 | High |
+| **Role-Based Permissions** | COMPLETED (Issue #10) | Server-side authorization check `requireAdminAuth`, RLS policies in migration 003 | Running migration in production DB | None | P0 | High |
+| **Admin Reports** | COMPLETED (Issue #10) | Aggregated live telemetry via `/api/community/admin/reports` with graceful fallback | None | None | P2 | Low |
+| **User Management** | COMPLETED (Issue #10) | Member search, role promotion, merit XP modal connected via `/api/community/admin/xp` | None | None | P1 | Medium |
+| **Resource Management** | COMPLETED (Issue #10) | Create, edit, delete creative resources with category & GDrive flag connected to `/api/community/admin/resources` | None | None | P1 | Medium |
+| **Challenge Management** | COMPLETED (Issue #10) | Create, edit, delete challenges, deadline validation, connected to `/api/community/admin/challenges` | None | None | P1 | Medium |
+| **Submission Hub** | COMPLETED (Issue #10) | View submissions, approve/reject reviews, admin feedback drawer connected to `/api/community/admin/submissions` | None | None | P1 | Medium |
+| **Winner Announcement & Bonus XP** | COMPLETED (Issue #10) | 1st, 2nd, and 3rd place podium selection, atomic database RPC `announce_challenge_winner`, anti-duplicate guard, XP ledger | Running migration 003 in live Supabase SQL editor | None | P1 | High |
+| **Event Management** | COMPLETED (Client & Schema) | Add, edit, delete online/offline events with RLS policies in 003 | None | None | P2 | Low |
+| **Job Management** | COMPLETED (Client & Schema) | Add, edit, delete job listings with RLS policies in 003 | None | None | P2 | Low |
 
 ---
 
@@ -127,3 +127,4 @@
 | **XP Ledger Security** | CRITICAL VULNERABILITY | XP is modified in client `localStorage` with no database ledger | Migrate XP transactions to PostgreSQL with row-level security and RPC functions | P0 |
 | **File Upload Security** | NOT STARTED | Direct file uploads not enabled on community platform | Configure authenticated Supabase Storage bucket with strict file size & MIME limits | P1 |
 | **Environment Variables** | COMPLETED | No secret keys exposed in client code; only public anon keys defined | Maintain strict separation of service role keys | P3 |
+

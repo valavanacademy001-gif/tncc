@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { CommunityMember } from '../../lib/types';
 import { useCommunity } from '../../lib/community-context';
+import SocialLinks from '../common/SocialLinks';
 import { MapPin, Sparkles, ExternalLink, Award } from 'lucide-react';
 
 interface CreatorCardProps {
@@ -96,21 +97,9 @@ export default function CreatorCard({ member, rank }: CreatorCardProps) {
           </div>
         </div>
 
-        {/* Footer Actions - compact margin directly under the 3 points */}
-        <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
-          {member.behance_url ? (
-            <a
-              href={member.behance_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[11px] font-bold text-[#0D2C5B] hover:text-[#00B5C8] flex items-center gap-1 transition-colors"
-            >
-              <span>Behance</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          ) : (
-            <span className="text-[11px] text-gray-400">TNCC Verified</span>
-          )}
+        {/* Footer Actions - Socials & View Portfolio */}
+        <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
+          <SocialLinks member={member} showLabels={false} size="sm" />
 
           <Link
             href={`/community/portfolio/${member.username}`}

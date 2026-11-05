@@ -92,10 +92,16 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
               ⚡
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-[11px] font-extrabold leading-none text-[#FFF8EC] group-hover:text-white">
+              <span 
+                className="text-[11px] font-extrabold leading-none text-[#FFF8EC] group-hover:text-white"
+                suppressHydrationWarning
+              >
                 {currentMember?.total_xp || 0} XP
               </span>
-              <span className="text-[9px] font-medium text-gray-300 leading-tight">
+              <span 
+                className="text-[9px] font-medium text-gray-300 leading-tight"
+                suppressHydrationWarning
+              >
                 {memberLevel.title}
               </span>
             </div>

@@ -243,7 +243,6 @@ export default function Navbar() {
                 { label: 'How It Works', href: '#how-it-works' },
                 { label: 'Activities', href: '#activities' },
                 { label: 'Benefits', href: '#benefits' },
-                { label: 'Plans', href: '#pricing' },
                 { label: 'FAQ', href: '#faq' },
               ].map(item => (
                 <Link

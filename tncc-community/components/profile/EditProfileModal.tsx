@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { CommunityMember } from '../../lib/types';
-import { X, Save, Upload, Link as LinkIcon, Camera } from 'lucide-react';
+import { InstagramIcon, LinkedinIcon, BehanceIcon } from '../common/SocialLinks';
+import { X, Save, Upload, Link as LinkIcon, Camera, Globe } from 'lucide-react';
 
 interface EditProfileModalProps {
   onClose: () => void;
@@ -151,10 +152,13 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
 
           {/* Social Links */}
           <div className="pt-2 border-t border-gray-100">
-            <h4 className="text-xs font-bold text-[#0D2C5B] mb-3">Portfolio & Social Links</h4>
+            <h4 className="text-xs font-bold text-[#0D2C5B] mb-3">Portfolio & Social Handles</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Behance Portfolio</label>
+                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0057FF] mb-1">
+                  <BehanceIcon className="w-3.5 h-3.5" />
+                  <span>Behance Portfolio</span>
+                </label>
                 <input
                   type="url"
                   value={behanceUrl}
@@ -165,7 +169,10 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Instagram URL</label>
+                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#E1306C] mb-1">
+                  <InstagramIcon className="w-3.5 h-3.5" />
+                  <span>Instagram Profile</span>
+                </label>
                 <input
                   type="url"
                   value={instagramUrl}
@@ -176,7 +183,10 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">LinkedIn Profile</label>
+                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0A66C2] mb-1">
+                  <LinkedinIcon className="w-3.5 h-3.5" />
+                  <span>LinkedIn Profile</span>
+                </label>
                 <input
                   type="url"
                   value={linkedinUrl}
@@ -187,7 +197,10 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Personal Website</label>
+                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0D2C5B] mb-1">
+                  <Globe className="w-3.5 h-3.5 text-[#00B5C8]" />
+                  <span>Personal Website</span>
+                </label>
                 <input
                   type="url"
                   value={websiteUrl}

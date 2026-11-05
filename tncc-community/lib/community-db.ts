@@ -29,6 +29,9 @@ export const INITIAL_MEMBERS: CommunityMember[] = [
     skills: ['Community Administrator', 'Creative Direction', 'UI/UX'],
     email: 'suganeshsugu07@gmail.com',
     password: 'Suganesh@tncc',
+    instagram_url: 'https://instagram.com/suganesh_creator',
+    linkedin_url: 'https://linkedin.com/in/suganeshsugu07',
+    behance_url: 'https://behance.net/suganesh',
     total_xp: 1500,
     role: 'admin',
     created_at: '2026-01-01T00:00:00Z',
@@ -50,6 +53,9 @@ export const INITIAL_MEMBERS: CommunityMember[] = [
     skills: ['Graphic Design', 'Motion Design', 'Video Editing'],
     email: 'test001@gmail.com',
     password: 'Test001@gmail.com',
+    instagram_url: 'https://instagram.com/test001_creator',
+    linkedin_url: 'https://linkedin.com/in/test001-creator',
+    behance_url: 'https://behance.net/test001',
     total_xp: 350,
     role: 'member',
     created_at: '2026-02-01T00:00:00Z',
@@ -926,7 +932,9 @@ export class CommunityDatabase {
   private followingIds: string[] = ['mem-1', 'mem-2'];
 
   constructor() {
-    this.init();
+    // Do not call init() in constructor! Calling it eagerly during module import
+    // reads localStorage before hydration, causing hydration mismatch with SSR.
+    // Initialization is called inside useEffect via CommunityProvider.loadAll().
   }
 
   public init() {
@@ -977,6 +985,9 @@ export class CommunityDatabase {
       admin.password = 'Suganesh@tncc';
       admin.role = 'admin';
       admin.email = 'suganeshsugu07@gmail.com';
+      if (!admin.instagram_url) admin.instagram_url = 'https://instagram.com/suganesh_creator';
+      if (!admin.linkedin_url) admin.linkedin_url = 'https://linkedin.com/in/suganeshsugu07';
+      if (!admin.behance_url) admin.behance_url = 'https://behance.net/suganesh';
       membersUpdated = true;
     }
 
@@ -992,6 +1003,9 @@ export class CommunityDatabase {
     } else {
       testUser.password = 'Test001@gmail.com';
       testUser.email = 'test001@gmail.com';
+      if (!testUser.instagram_url) testUser.instagram_url = 'https://instagram.com/test001_creator';
+      if (!testUser.linkedin_url) testUser.linkedin_url = 'https://linkedin.com/in/test001-creator';
+      if (!testUser.behance_url) testUser.behance_url = 'https://behance.net/test001';
       membersUpdated = true;
     }
 
@@ -1742,6 +1756,26 @@ export class CommunityDatabase {
     }
 
     return challenge;
+  }
+
+  public reviewSubmission(
+    submissionId: string,
+    status: 'approved' | 'rejected' | 'pending',
+    feedback?: string
+  ): ChallengeSubmission {
+    const subIndex = this.submissions.findIndex((s) => s.id === submissionId);
+    if (subIndex === -1) throw new Error('Submission not found');
+
+    const updated = {
+      ...this.submissions[subIndex],
+      status,
+      admin_feedback: feedback || this.submissions[subIndex].admin_feedback || '',
+      reviewed_at: new Date().toISOString(),
+    };
+
+    this.submissions[subIndex] = updated;
+    saveToStorage('submissions', this.submissions);
+    return updated;
   }
 
   // --- Admin: User & Member Management ---

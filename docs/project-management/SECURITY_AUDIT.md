@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | **SEC-01** | Hardcoded Plain-Text Passwords in Client Bundle | A02: Cryptographic Failures | **CRITICAL (CVSS 9.8)** | Unresolved |
 | **SEC-02** | Credential Leakage in Client Error Response | A07: Identification and Authentication Failures | **CRITICAL (CVSS 9.1)** | Unresolved |
-| **SEC-03** | Missing Server-Side Middleware on Admin Route (`/community/admin`) | A01: Broken Access Control | **CRITICAL (CVSS 9.3)** | Unresolved |
+| **SEC-03** | Missing Server-Side Middleware on Admin Route (`/community/admin`) | A01: Broken Access Control | **CRITICAL (CVSS 9.3)** | Resolved (Issue #10) |
 | **SEC-04** | Client-Side Role Spoofing via `localStorage` | A01: Broken Access Control | **HIGH (CVSS 8.2)** | Unresolved |
 | **SEC-05** | Missing PostgreSQL RLS Mutation Policies | A01: Broken Access Control | **HIGH (CVSS 7.5)** | Unresolved |
 | **SEC-06** | Unverified Client-Side XP Ledger (State Tampering) | A08: Software and Data Integrity Failures | **HIGH (CVSS 7.1)** | Unresolved |
@@ -108,3 +108,4 @@
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Public anonymous API key, governed by RLS (Safe).
 - **Finding:** No private service role keys or database connection strings are exposed in client-accessible variables.
 - **Recommendation:** Maintain this practice; never prefix service role keys with `NEXT_PUBLIC_`.
+
