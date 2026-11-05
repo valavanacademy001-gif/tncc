@@ -251,6 +251,20 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       title: `+${result.xpAwarded} XP Earned!`,
       message: 'Creative post published to TNCC statewide feed.',
     });
+
+    // Sync to server-side verified XP ledger
+    try {
+      fetch('/api/community/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          member_id: curr.id,
+        }),
+      }).catch((e) => console.warn('Server sync warning for post:', e));
+    } catch (e) {
+      console.warn('Server sync error for post:', e);
+    }
   };
 
   const toggleLike = (postId: string) => {
@@ -264,6 +278,18 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
           title: '+2 XP Earned!',
           message: 'Creator received community appreciation.',
         });
+      }
+
+      // Sync to server-side anti-farming like handler
+      try {
+        const curr = communityDb.getCurrentMember();
+        fetch(`/api/community/posts/${postId}/like`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ member_id: curr.id }),
+        }).catch((e) => console.warn('Server sync warning for like:', e));
+      } catch (e) {
+        console.warn('Server sync error for like:', e);
       }
     } catch (e) {
       console.error(e);

@@ -229,3 +229,4 @@ CREATE POLICY "Members update own submission before deadline"
         AND submission_deadline > NOW()
     )
   );
+

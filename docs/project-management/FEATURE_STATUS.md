@@ -58,7 +58,7 @@
 | **Image Uploads (Limit 1 MB)** | NOT STARTED | Preset image selector | File input, client-side 1 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
 | **Video Uploads (Limit 50 MB)** | NOT STARTED | Video aspect ratio options | File input, client-side 50 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
 | **Google Drive Links** | PARTIALLY COMPLETED | Can paste URL in input | URL regex validator, thumbnail generator, file permission tips | Raw link treated as generic string | P2 | Medium |
-| **Likes & Anti-Self-Like** | COMPLETED (Client) | Like toggle, counter, anti-self-like prevention | Supabase `community_post_likes` table sync | Resets when localStorage cleared | P1 | Low |
+| **Likes & Anti-Self-Like** | COMPLETED (Issue #8) | Like toggle, counter, anti-self-like denial, repeated unlike/re-like duplicate prevention, server-side verified +2 XP | None | None | P1 | Low |
 | **Comments** | COMPLETED (Client) | Modal, comment list, author attribution, timestamps | Supabase `community_post_comments` table sync | Resets when localStorage cleared | P1 | Low |
 | **Saved Posts** | COMPLETED (Client) | Bookmark toggle, 'Saved' filter tab | Supabase `community_saved_posts` table sync | Resets when localStorage cleared | P1 | Low |
 | **Search & Filters** | COMPLETED (Client) | Search by text/author/tag, filter by category & tab | Full-text PostgreSQL search | Searches only in-memory mock posts | P2 | Low |
@@ -68,7 +68,7 @@
 | **Portfolio Showcase** | PARTIALLY COMPLETED | Automatic mapping of `is_showcase` posts into creator portfolio | Persistence in Supabase `community_portfolio_projects` | In-memory data only | P1 | Low |
 | **Creative Jobs Board** | PARTIALLY COMPLETED | Job cards, filter by category, work mode, WhatsApp apply link | Supabase `community_job_offers` sync, employer posting | In-memory data only | P2 | Low |
 | **Community Events** | PARTIALLY COMPLETED | Event cards, online/offline indicators, registration link | Supabase `community_events` sync, attendee RSVP tracking | In-memory data only | P2 | Low |
-| **Leaderboard** | PARTIALLY COMPLETED | Ranks members by `total_xp`, badges, podium | Server-side aggregate view / cron recalculation | Client-side sort on in-memory array | P1 | Low |
+| **Leaderboard** | COMPLETED (Issue #8) | Ranks members by `total_xp`, badges, podium, `/api/community/xp/leaderboard` live endpoint | None | None | P1 | Low |
 | **Profile Editing** | PARTIALLY COMPLETED | Bio, location, skills, social links, cover photo | Supabase `community_members` update, avatar storage upload | Updates only local browser state | P1 | Low |
 
 ---
@@ -77,12 +77,12 @@
 
 | Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
 |---|---|---|---|---|---|---|
-| **XP Calculation Engine** | COMPLETED (Client) | Post creation (+10), Like (+2), Challenge (+15), Winner bonuses (+100/+60/+30) | Server-side validation via PostgreSQL triggers or Edge Functions | Any user can modify total XP via DevTools console | P0 | High |
-| **Duplicate XP Prevention** | COMPLETED (Client) | Checks `isDuplicateTransaction` against existing transaction IDs | PostgreSQL database UNIQUE constraints | Enforced only in local browser memory | P0 | Medium |
-| **Self-Like XP Prevention** | COMPLETED (Client) | Checks `canEarnLikeXP(authorId, likerId)` | Server-side RLS enforcement | Client-only check | P0 | Low |
-| **Winner Bonus XP** | COMPLETED (Client) | Automatically awarded when admin picks 1st, 2nd, 3rd place | Server-side atomic transaction | Client-only | P1 | Medium |
-| **XP Transaction History** | COMPLETED (Client) | Detailed audit log with reason, date, and reference ID | Supabase `community_xp_transactions` persistence | Local memory only | P1 | Low |
-| **Leaderboard Calculation** | COMPLETED (Client) | Real-time sorting and level badges | Database index & materialized view for high scale | Client-side sort | P2 | Low |
+| **XP Calculation Engine** | COMPLETED (Issue #8) | Post creation (+10), Like (+2), Challenge (+15), Winner bonuses (+100/+60/+30) verified server-side | None | Resolved via server routes & migration 005 | P0 | High |
+| **Duplicate XP Prevention** | COMPLETED (Issue #8) | Database unique constraint `unique_xp_action UNIQUE (member_id, reason, reference_id)` and server mutex | None | None | P0 | Medium |
+| **Self-Like XP Prevention** | COMPLETED (Issue #8) | Server-side validation rejects self-like XP in `/api/community/posts/[id]/like` and RPC | None | None | P0 | Low |
+| **Winner Bonus XP** | COMPLETED (Issue #8 & #10) | Automatically awarded when admin picks 1st (+100), 2nd (+60), 3rd (+30) place via atomic RPC and serverStore | None | None | P1 | Medium |
+| **XP Transaction History** | COMPLETED (Issue #8) | Detailed audit log with reason, date, and reference ID via `/api/community/xp/history`, direct mutation forbidden (403) | None | None | P1 | Low |
+| **Leaderboard Calculation** | COMPLETED (Issue #8) | Real-time sorting and level badges via `/api/community/xp/leaderboard` and `get_verified_community_leaderboard` | None | None | P2 | Low |
 
 ---
 

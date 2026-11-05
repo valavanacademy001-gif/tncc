@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCommunity } from '../../lib/community-context';
 import { Trophy, Award, Medal, Zap, Sparkles, Filter } from 'lucide-react';
@@ -8,9 +8,22 @@ import { Trophy, Award, Medal, Zap, Sparkles, Filter } from 'lucide-react';
 export default function LeaderboardView() {
   const { allMembers } = useCommunity();
   const [timeFilter, setTimeFilter] = useState<'All Time' | 'Monthly' | 'Weekly'>('All Time');
+  const [serverMembers, setServerMembers] = useState<typeof allMembers | null>(null);
 
-  // Sorted members by XP (real data)
-  const sorted = [...allMembers].sort((a, b) => b.total_xp - a.total_xp);
+  useEffect(() => {
+    fetch('/api/community/xp/leaderboard')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.members) && data.members.length > 0) {
+          setServerMembers(data.members);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const activeMembersList = serverMembers || allMembers;
+  // Sorted members by XP (verified data)
+  const sorted = [...activeMembersList].sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0));
   const first = sorted[0];
   const second = sorted[1];
   const third = sorted[2];

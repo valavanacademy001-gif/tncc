@@ -77,6 +77,7 @@ This document serves as the operational guide for developers continuing work on 
 | Multi-Device Community Feed Sync | Unified Supabase Auth (`ISSUE-03`) & RLS (`ISSUE-04`) | Posts cannot be inserted to PostgreSQL until real authenticated user sessions are established. |
 | Live Admin Challenge & Winner Announcements | Admin Route Middleware (`ISSUE-02`) & RLS (`ISSUE-04`) | **COMPLETED in Issue #10**: Middleware route guard and server API routes `/api/community/admin/*` operational with 401/403 authorization; Migration `003_community_admin_and_rls.sql` prepared for database execution. |
 | Enforce Challenge Submission Rules & Deadlines | Server-side validation (`ISSUE-09`) | **COMPLETED in Issue #9**: Added `/api/community/challenges/submit` with server UTC deadline checks, mutex locking, duplicate prevention, and migration `004_challenge_submissions_and_deadlines.sql`. |
+| Server-Side XP Ledger & Anti-Farming | Server routes & RPC (`ISSUE-08`) | **COMPLETED in Issue #8**: Added `/api/community/xp/*`, `/api/community/posts`, `/api/community/posts/[id]/like`, anti-farming self-like denial, mutex locks, and migration `005_xp_transaction_ledger_and_antifarming.sql`. |
 
 ---
 

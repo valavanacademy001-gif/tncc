@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.4.0] - 2026-11-05 (GitHub Issue #8 – Server-Side XP Ledger & Anti-Farming)
+
+### Added
+- **Database Migration 005 (`supabase/migrations/005_xp_transaction_ledger_and_antifarming.sql`):**
+  - Immutable XP transaction ledger table `community_xp_transactions` with `UNIQUE (member_id, reason, reference_id)` and positive bounds constraint `amount CHECK (amount > 0 AND amount <= 1000)`.
+  - Atomic PostgreSQL RPC functions: `record_xp_reward`, `toggle_post_like_and_award_xp`, `publish_post_with_verified_xp`, and `get_verified_community_leaderboard`.
+  - Strict RLS policies: read access for member's own transactions and admin; all direct client `INSERT`, `UPDATE`, `DELETE` are prohibited.
+- **Server-Side XP Endpoints:**
+  - `GET /api/community/xp/history`: Returns verified XP transactions and member balance; direct `POST`, `PUT`, `DELETE` operations are forbidden (HTTP 403).
+  - `GET /api/community/xp/leaderboard`: Returns verified statewide creator leaderboard ordered strictly by `total_xp DESC`.
+  - `POST /api/community/posts`: Server-side post creation with verified +10 XP credit and anti-duplicate ledger entry.
+  - `POST /api/community/posts/[id]/like`: Server-side like handler with anti-farming protection (blocks self-likes from earning XP, prevents repeat XP on unlike/re-like) and concurrent mutex locking.
+- **Client & Store Integration:**
+  - `lib/supabase/community-server-store.ts`: Added verified in-memory XP ledger, concurrency mutex (`acquireXPLock`), and anti-farming tracking (`like_awards` set).
+  - `ProfileView.tsx`: Connected 'XP History' tab to live server-verified transactions.
+  - `LeaderboardView.tsx`: Dynamic leaderboard mounts with verified server rankings from `/api/community/xp/leaderboard`.
+  - `community-context.tsx`: Dispatches post creations and likes to live server routes with offline fallback.
+
+---
+
 ## [0.3.0] - 2026-11-05 (GitHub Issue #9 – Challenge Submission Rules & Deadlines)
 
 ### Added

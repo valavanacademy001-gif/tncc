@@ -113,12 +113,16 @@
 ### TEST 7 — XP & Leaderboard
 - **Test Objective:** Verify XP calculation, anti-duplicate prevention, self-like denial, transaction history, and leaderboard calculation.
 - **Verification Evidence:**
-  - Post creation awards +10 XP.
-  - Liking another creator's post awards +2 XP to that creator.
-  - Self-like anti-farming check verified: liking one's own post increments like count but awards +0 XP (`canEarnLikeXP` returns false).
-  - Leaderboard on `/community/leaderboard` sorts creators in descending order by `total_xp`.
-  - Level badges (Level 1 Novice to Level 5 Legend) compute dynamically based on XP thresholds.
-- **Verdict:** **PASS (CLIENT-SIDE)** (Backend migration required: ISSUE-08).
+  - Post creation awards +10 XP verified server-side (`POST /api/community/posts`).
+  - Liking another creator's post awards +2 XP to that creator via `/api/community/posts/[id]/like`.
+  - Self-like anti-farming check verified: liking one's own post increments like count but awards +0 XP (`xp_earned: false`).
+  - Repeated unlike and re-like verified: does not re-award duplicate XP.
+  - Challenge participation awards +15 XP verified with duplicate rejection (409 Conflict).
+  - Admin winner bonus awards verified: 1st (+100 XP), 2nd (+60 XP), 3rd (+30 XP) with duplicate winner rejection (409 Conflict).
+  - Client-side tampering denied: direct `POST`/`PUT`/`DELETE` on `/api/community/xp/history` returns `403 Forbidden`.
+  - Leaderboard on `/community/leaderboard` and `/api/community/xp/leaderboard` sorts creators in descending order by verified `total_xp`.
+  - Level badges (Level 1 Novice to Level 5 Legend) compute dynamically based on verified XP thresholds.
+- **Verdict:** **PASS** (Resolved in Issue #8 via `005_xp_transaction_ledger_and_antifarming.sql` & `/api/community/xp/*`).
 
 ---
 

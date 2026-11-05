@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCommunity } from '../../lib/community-context';
 import EditProfileModal from './EditProfileModal';
@@ -28,18 +28,32 @@ export default function ProfileView() {
   const [activeTab, setActiveTab] = useState<'posts' | 'portfolio' | 'challenges' | 'submissions' | 'achievements'>('posts');
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any | null>(null);
+  const [serverTransactions, setServerTransactions] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    if (!currentMember?.id) return;
+    fetch(`/api/community/xp/history?member_id=${currentMember.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.transactions) && data.transactions.length > 0) {
+          setServerTransactions(data.transactions);
+        }
+      })
+      .catch(() => {});
+  }, [currentMember?.id]);
 
   // Derived user data
   const myPosts = posts.filter((p) => p.member_id === currentMember.id);
   const myPortfolio = getPortfolioProjects(currentMember.id);
   const myXPTransactions = getXPTransactions(currentMember.id);
+  const activeXPTransactions = serverTransactions || myXPTransactions;
   const totalLikes = myPosts.reduce((acc, p) => acc + (p.likes_count || 0), 0);
 
   const tabs = [
     { key: 'posts', label: 'My Posts', count: myPosts.length, icon: Layers },
     { key: 'portfolio', label: 'My Portfolio', count: myPortfolio.length, icon: FolderKanban },
     { key: 'challenges', label: 'My Challenges', count: currentMember.challenges_count || 0, icon: Trophy },
-    { key: 'submissions', label: 'XP History', count: myXPTransactions.length, icon: FileCheck },
+    { key: 'submissions', label: 'XP History', count: activeXPTransactions.length, icon: FileCheck },
     { key: 'achievements', label: 'Achievements', count: currentMember.wins_count || 0, icon: Award },
   ] as const;
 
@@ -393,10 +407,10 @@ export default function ProfileView() {
               XP Audit Trail (Anti-Farming Transaction Log)
             </div>
             <div className="divide-y divide-gray-100 text-xs">
-              {myXPTransactions.length === 0 ? (
+              {activeXPTransactions.length === 0 ? (
                 <div className="p-6 text-center text-gray-400">No XP transactions logged yet.</div>
               ) : (
-                myXPTransactions.map((tx) => (
+                activeXPTransactions.map((tx) => (
                   <div key={tx.id} className="p-4 flex items-center justify-between">
                     <div>
                       <p className="font-bold text-gray-800">{tx.reason}</p>

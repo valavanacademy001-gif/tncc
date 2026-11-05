@@ -15,7 +15,7 @@
 | **SEC-03** | Missing Server-Side Middleware on Admin Route (`/community/admin`) | A01: Broken Access Control | **CRITICAL (CVSS 9.3)** | Resolved (Issue #10) |
 | **SEC-04** | Client-Side Role Spoofing via `localStorage` | A01: Broken Access Control | **HIGH (CVSS 8.2)** | Unresolved |
 | **SEC-05** | Missing PostgreSQL RLS Mutation Policies | A01: Broken Access Control | **HIGH (CVSS 7.5)** | Unresolved |
-| **SEC-06** | Unverified Client-Side XP Ledger (State Tampering) | A08: Software and Data Integrity Failures | **HIGH (CVSS 7.1)** | Unresolved |
+| **SEC-06** | Unverified Client-Side XP Ledger (State Tampering) | A08: Software and Data Integrity Failures | **HIGH (CVSS 7.1)** | Resolved (Issue #8) |
 | **SEC-07** | Lack of Server-Side File Upload Limits and MIME Validation | A04: Insecure Design | **MEDIUM (CVSS 6.5)** | Unresolved |
 | **SEC-08** | Missing CSRF / Rate Limiting on Community Auth Forms | A07: Identification and Authentication Failures | **MEDIUM (CVSS 5.3)** | Unresolved |
 | **SEC-09** | Client-Side Deadline & Duplicate Submission Tampering | A01: Broken Access Control / A08: Software and Data Integrity | **HIGH (CVSS 7.4)** | Resolved (Issue #9) |
@@ -75,15 +75,16 @@
 
 ### SEC-06: Client-Side XP Ledger & Score Manipulation
 
-- **Location:** `tncc-community/lib/xp-engine.ts`, `tncc-community/lib/community-db.ts`
+- **Location:** `tncc-community/lib/xp-engine.ts`, `tncc-community/lib/community-db.ts`, `app/api/community/xp/history/route.ts`, `supabase/migrations/005_xp_transaction_ledger_and_antifarming.sql`
 - **Description:**
-  Member XP, levels, and transaction logs are stored directly in browser `localStorage`.
+  Previously, member XP, levels, and transaction logs were stored directly in browser `localStorage`.
 - **Exploitation Scenario:**
-  A member can execute `communityDb.awardXP(currentMember.id, 100000, 'Free XP')` in the browser console, instantly jumping to the top of the statewide leaderboard and obtaining the "Legend" badge without participating in community activities.
-- **Remediation:**
-  1. XP calculation and ledger writing must reside exclusively on the server.
-  2. Create a PostgreSQL stored function `award_member_xp` executable only by server actions or database triggers upon verified actions (e.g. post created, submission approved).
-  3. Prohibit direct client writes to `community_xp_transactions` and the `total_xp` column.
+  A member could execute `communityDb.awardXP(currentMember.id, 100000, 'Free XP')` in the browser console, instantly jumping to the top of the statewide leaderboard and obtaining the "Legend" badge without participating in community activities.
+- **Remediation Implemented (Issue #8):**
+  1. **Server-Side XP Ledger & API:** Deployed `/api/community/xp/history` which rejects direct client `POST`, `PUT`, `DELETE` operations with `HTTP 403 Forbidden`.
+  2. **Database Integrity & RLS:** Added `005_xp_transaction_ledger_and_antifarming.sql` with immutable table constraints, `amount CHECK (amount > 0 AND amount <= 1000)`, `unique_xp_action UNIQUE (member_id, reason, reference_id)`, and atomic RPC `record_xp_reward`.
+  3. **Anti-Farming Enforcement:** Server validates all events before issuing rewards. Self-likes are explicitly blocked (`xp_earned: false`), unliking and re-liking prevents duplicate XP, duplicate post approvals/submissions cannot farm XP, and mutex locking serializes concurrent requests.
+  4. **Verified Leaderboard:** Live ranking served via `/api/community/xp/leaderboard` and `get_verified_community_leaderboard` RPC.
 
 ---
 

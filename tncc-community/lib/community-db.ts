@@ -918,6 +918,73 @@ function saveToStorage<T>(key: string, data: T): void {
   }
 }
 
+export const INITIAL_XP_TRANSACTIONS: XPTransaction[] = [
+  {
+    id: 'xp-init-1',
+    member_id: 'mem-current',
+    amount: 50,
+    reason: 'Welcome Onboarding Bonus',
+    reference_id: 'init_welcome_current',
+    created_at: '2026-03-01T10:00:00Z',
+  },
+  {
+    id: 'xp-init-2',
+    member_id: 'mem-current',
+    amount: 10,
+    reason: 'Published Community Post',
+    reference_id: 'post_post-3',
+    created_at: '2026-03-05T12:00:00Z',
+  },
+  {
+    id: 'xp-init-3',
+    member_id: 'mem-current',
+    amount: 15,
+    reason: 'Challenge Participation',
+    reference_id: 'challenge_part_chal-2',
+    created_at: '2026-03-10T15:30:00Z',
+  },
+  {
+    id: 'xp-init-4',
+    member_id: 'mem-current',
+    amount: 60,
+    reason: 'Challenge Winner (SECOND Place): Minimalist Coffee Brand Identity Challenge',
+    reference_id: 'chal-2',
+    created_at: '2026-03-15T18:00:00Z',
+  },
+  {
+    id: 'xp-init-5',
+    member_id: 'mem-admin-suganesh',
+    amount: 1500,
+    reason: 'Administrator Founder & Platform Launch Merit XP',
+    reference_id: 'init_founder_suganesh',
+    created_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'xp-init-6',
+    member_id: 'mem-1',
+    amount: 840,
+    reason: 'Verified Creative Community Contributions & Showcase Works',
+    reference_id: 'init_karthik_history',
+    created_at: '2026-02-01T00:00:00Z',
+  },
+  {
+    id: 'xp-init-7',
+    member_id: 'mem-2',
+    amount: 620,
+    reason: 'Verified Community Typography & Motion Submissions',
+    reference_id: 'init_anand_history',
+    created_at: '2026-02-15T00:00:00Z',
+  },
+  {
+    id: 'xp-init-8',
+    member_id: 'mem-3',
+    amount: 490,
+    reason: 'Verified 3D Vector & Digital Illustration Awards',
+    reference_id: 'init_kavitha_history',
+    created_at: '2026-02-20T00:00:00Z',
+  },
+];
+
 export class CommunityDatabase {
   private members: CommunityMember[] = INITIAL_MEMBERS;
   private posts: CommunityPost[] = INITIAL_POSTS;
@@ -1020,7 +1087,11 @@ export class CommunityDatabase {
     this.events = loadFromStorage('events', INITIAL_EVENTS);
     this.comments = loadFromStorage('comments', []);
     this.submissions = loadFromStorage('submissions', []);
-    this.xpTransactions = loadFromStorage('xpTransactions', []);
+    this.xpTransactions = loadFromStorage('xpTransactions', INITIAL_XP_TRANSACTIONS);
+    if (!this.xpTransactions || this.xpTransactions.length === 0) {
+      this.xpTransactions = [...INITIAL_XP_TRANSACTIONS];
+      saveToStorage('xpTransactions', this.xpTransactions);
+    }
     this.currentMemberId = loadFromStorage('currentMemberId', 'mem-current');
     this.followingIds = loadFromStorage('followingIds', ['mem-1', 'mem-2']);
   }
@@ -1611,7 +1682,16 @@ export class CommunityDatabase {
   }
 
   // --- XP System & Audit ---
-  public awardXP(memberId: string, amount: number, reason: string, referenceId?: string): void {
+  public awardXP(memberId: string, amount: number, reason: string, referenceId?: string): boolean {
+    if (amount <= 0 || amount > 1000) {
+      return false;
+    }
+
+    // Anti-duplicate idempotency check: (member_id, reason, reference_id)
+    if (xpEngine.isDuplicateTransaction(this.xpTransactions, memberId, reason, referenceId)) {
+      return false;
+    }
+
     const tx: XPTransaction = {
       id: `xp-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       member_id: memberId,
@@ -1630,6 +1710,7 @@ export class CommunityDatabase {
       this.members[memIndex].total_xp += amount;
       saveToStorage('members', this.members);
     }
+    return true;
   }
 
   public getXPTransactionsForMember(memberId: string): XPTransaction[] {

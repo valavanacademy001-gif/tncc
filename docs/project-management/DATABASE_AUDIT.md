@@ -127,12 +127,12 @@ erDiagram
 - **Purpose:** Immutable audit ledger for member XP earnings.
 - **Primary Key:** `id` (UUID)
 - **Foreign Keys:** `member_id` -> `community_members(id)`
-- **Constraints:** `UNIQUE (member_id, reason, reference_id)` (Strict anti-farming protection).
-- **Key Columns:** `amount`, `reason`, `reference_id`, `created_at`.
+- **Constraints:** `UNIQUE (member_id, reason, reference_id)` (Strict anti-farming protection), `amount CHECK (amount > 0 AND amount <= 1000)`.
+- **Key Columns:** `amount`, `reason`, `reference_id`, `transaction_type`, `created_at`.
 - **RLS Status:** ENABLED.
-- **Current Policies:**
-  - None defined in 002.
-  - **GAP:** Needs SELECT policy for member's own records and admin, plus secure system-only INSERT via PostgreSQL function.
+- **Current Policies (Migration 005 - Resolved Issue #8):**
+  - `Members and admin read xp transactions` (FOR SELECT USING member_id = session OR is_admin()).
+  - Direct client `INSERT`, `UPDATE`, `DELETE` are prohibited. Transactions are created only via SECURITY DEFINER functions (`record_xp_reward`, `toggle_post_like_and_award_xp`, `publish_post_with_verified_xp`, `announce_challenge_winner`, `award_admin_bonus_xp`).
 
 ---
 
