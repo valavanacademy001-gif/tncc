@@ -49,9 +49,9 @@ export default function SocialLinks({
   const website = member.website_url;
 
   const sizeClasses = {
-    sm: 'px-2.5 py-1 text-[11px] gap-1.5 rounded-lg',
-    md: 'px-3 py-1.5 text-xs gap-2 rounded-xl',
-    lg: 'px-4 py-2 text-xs sm:text-sm gap-2.5 rounded-xl',
+    sm: showLabels ? 'px-2.5 py-1 text-[11px] gap-1.5 rounded-lg' : 'w-7 h-7 rounded-lg justify-center',
+    md: showLabels ? 'px-3 py-1.5 text-xs gap-2 rounded-xl' : 'w-8 h-8 rounded-xl justify-center',
+    lg: showLabels ? 'px-4 py-2 text-xs sm:text-sm gap-2.5 rounded-xl' : 'w-9 h-9 rounded-xl justify-center',
   };
 
   const iconSizes = {
@@ -69,9 +69,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Instagram (@${member.username})`}
-          className={`group flex items-center font-bold border border-gray-200 bg-white text-gray-700 hover:text-white hover:border-transparent hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] shadow-sm hover:shadow-md transition-all active:scale-95 ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-gray-200 bg-white text-[#E1306C] hover:bg-[#E1306C] hover:text-white hover:border-[#E1306C] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <InstagramIcon className={`${iconSizes[size]} text-[#E1306C] group-hover:text-white transition-colors`} />
+          <InstagramIcon className={iconSizes[size]} />
           {showLabels && <span>Instagram</span>}
         </a>
       ) : onEditClick ? (
@@ -79,7 +79,7 @@ export default function SocialLinks({
           type="button"
           onClick={onEditClick}
           title="Add Instagram link"
-          className={`group flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#E1306C] hover:border-[#E1306C] transition-all ${sizeClasses[size]}`}
+          className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#E1306C] hover:border-[#E1306C] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3" />
           <InstagramIcon className={iconSizes[size]} />
@@ -94,9 +94,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`LinkedIn (@${member.username})`}
-          className={`group flex items-center font-bold border border-gray-200 bg-white text-gray-700 hover:text-white hover:border-transparent hover:bg-[#0A66C2] shadow-sm hover:shadow-md transition-all active:scale-95 ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-gray-200 bg-white text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <LinkedinIcon className={`${iconSizes[size]} text-[#0A66C2] group-hover:text-white transition-colors`} />
+          <LinkedinIcon className={iconSizes[size]} />
           {showLabels && <span>LinkedIn</span>}
         </a>
       ) : onEditClick ? (
@@ -104,7 +104,7 @@ export default function SocialLinks({
           type="button"
           onClick={onEditClick}
           title="Add LinkedIn link"
-          className={`group flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0A66C2] hover:border-[#0A66C2] transition-all ${sizeClasses[size]}`}
+          className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0A66C2] hover:border-[#0A66C2] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3" />
           <LinkedinIcon className={iconSizes[size]} />
@@ -119,9 +119,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Behance Portfolio (@${member.username})`}
-          className={`group flex items-center font-bold border border-gray-200 bg-white text-gray-700 hover:text-white hover:border-transparent hover:bg-[#0057FF] shadow-sm hover:shadow-md transition-all active:scale-95 ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-gray-200 bg-white text-[#0057FF] hover:bg-[#0057FF] hover:text-white hover:border-[#0057FF] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <BehanceIcon className={`${iconSizes[size]} text-[#0057FF] group-hover:text-white transition-colors`} />
+          <BehanceIcon className={iconSizes[size]} />
           {showLabels && <span>Behance</span>}
         </a>
       ) : onEditClick ? (
@@ -129,7 +129,7 @@ export default function SocialLinks({
           type="button"
           onClick={onEditClick}
           title="Add Behance link"
-          className={`group flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0057FF] hover:border-[#0057FF] transition-all ${sizeClasses[size]}`}
+          className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0057FF] hover:border-[#0057FF] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3" />
           <BehanceIcon className={iconSizes[size]} />
@@ -144,9 +144,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Website (${website})`}
-          className={`group flex items-center font-bold border border-gray-200 bg-white text-gray-700 hover:text-white hover:border-transparent hover:bg-[#0D2C5B] shadow-sm hover:shadow-md transition-all active:scale-95 ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-gray-200 bg-white text-[#00B5C8] hover:bg-[#0D2C5B] hover:text-white hover:border-[#0D2C5B] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <Globe className={`${iconSizes[size]} text-[#00B5C8] group-hover:text-white transition-colors`} />
+          <Globe className={iconSizes[size]} />
           {showLabels && <span>Website</span>}
         </a>
       )}

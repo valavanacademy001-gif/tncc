@@ -78,11 +78,11 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
         </div>
 
         {/* Right Action Icons & Member Status */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           {/* XP Badge & Meter */}
           <Link 
             href="/community/leaderboard"
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-sm hover:shadow transition-all group shrink-0"
+            className="h-8.5 sm:h-9 flex items-center gap-1.5 sm:gap-2 px-3 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-xs hover:shadow transition-all group shrink-0"
             title="Your Total Experience Points"
           >
             <div className="w-5 h-5 rounded-full bg-[#E84020] flex items-center justify-center text-xs text-white shrink-0">
@@ -102,7 +102,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {onOpenComposer && (
             <button
               onClick={onOpenComposer}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-full text-xs font-bold transition-all shadow-sm hover:shadow active:scale-95"
+              className="h-8.5 sm:h-9 hidden sm:flex items-center justify-center gap-1.5 px-3.5 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-full text-xs font-bold transition-all shadow-xs hover:shadow active:scale-95 shrink-0 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Post</span>
@@ -113,7 +113,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {isAdmin && (
             <Link
               href="/community/admin"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0D2C5B] font-extrabold text-xs shadow-sm hover:shadow transition-all"
+              className="h-8.5 sm:h-9 hidden md:flex items-center justify-center gap-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0D2C5B] font-extrabold text-xs shadow-xs hover:shadow transition-all shrink-0"
               title="Open TNCC Administration Suite"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -124,7 +124,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {/* Sign Out Button in Header */}
           <button
             onClick={handleSignOut}
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-red-600 px-3 py-1.5 rounded-full hover:bg-red-50/70 border border-transparent hover:border-red-200 transition-all cursor-pointer"
+            className="h-8.5 sm:h-9 hidden sm:flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-red-600 px-3 rounded-full hover:bg-red-50/70 border border-transparent hover:border-red-200 transition-all cursor-pointer shrink-0"
             title="Sign out"
           >
             <LogOut className="w-3.5 h-3.5" />

@@ -215,9 +215,11 @@ export default function PostCard({ post }: PostCardProps) {
 
               {/* Google Drive indicator badge if applicable */}
               {isGoogleDriveUrl(post.media_url) && (
-                <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold flex items-center gap-1 z-10">
-                  <HardDrive className="w-3 h-3 text-emerald-400" />
-                  <span>Drive</span>
+                <div 
+                  className="absolute top-2.5 right-2.5 p-1.5 rounded-md bg-black/60 backdrop-blur-xs text-white z-10"
+                  title="Google Drive"
+                >
+                  <HardDrive className="w-3.5 h-3.5 text-emerald-400" />
                 </div>
               )}
 

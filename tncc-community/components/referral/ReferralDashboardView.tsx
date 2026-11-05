@@ -91,9 +91,12 @@ export default function ReferralDashboardView() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
-            Invite your creative friends to TNCC. Earn{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFB84D] via-[#FF5733] to-[#E84020] font-black drop-shadow-sm">
-              +50 XP
+            Invite your creative friends to TNCC.{' '}
+            <span className="whitespace-nowrap">
+              Earn{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFB84D] via-[#FF5733] to-[#E84020] font-black drop-shadow-sm">
+                +50 XP
+              </span>
             </span>
           </h2>
 
