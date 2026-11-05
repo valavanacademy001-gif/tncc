@@ -506,10 +506,10 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                   ? 'bg-orange-50 text-[#E84020]'
                   : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
               }`}
-              title="Upload Photo (Max 1 MB)"
+              title="Upload Photo"
             >
               <ImageIcon className="w-4 h-4 text-[#E84020]" />
-              <span className="hidden sm:inline">Photo (≤1 MB)</span>
+              <span className="inline">Photo</span>
             </button>
 
             {/* Direct Video File Picker Button */}
@@ -523,10 +523,10 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                   ? 'bg-orange-50 text-[#E84020]'
                   : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
               }`}
-              title="Upload Video (Max 50 MB)"
+              title="Upload Video"
             >
               <Video className="w-4 h-4 text-[#0D2C5B]" />
-              <span className="hidden sm:inline">Video (≤50 MB)</span>
+              <span className="inline">Video</span>
             </button>
 
             {/* Toggle URL / Drive link input */}
