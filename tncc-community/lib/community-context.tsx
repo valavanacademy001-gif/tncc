@@ -144,6 +144,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         if (data.success && Array.isArray(data.posts) && data.posts.length > 0) {
           setPosts(data.posts);
+          communityDb.syncLivePosts(data.posts);
         }
       }
     } catch (err) {
@@ -551,11 +552,23 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     try {
       const curr = communityDb.getCurrentMember();
 
-      // 1. Optimistic toggle
-      const res = communityDb.toggleLike(postId);
-      setPosts(communityDb.getPosts());
+      // 1. Optimistic toggle in React state
+      setPosts((prev) =>
+        prev.map((p) => {
+          if (p.id !== postId) return p;
+          const isNowLiked = !p.is_liked;
+          return {
+            ...p,
+            is_liked: isNowLiked,
+            likes_count: Math.max(0, (p.likes_count || 0) + (isNowLiked ? 1 : -1)),
+          };
+        })
+      );
 
-      // 2. Send to live Supabase backend
+      // 2. Local storage persistence
+      const res = communityDb.toggleLike(postId);
+
+      // 3. Send to live Supabase backend
       const response = await fetch(`/api/community/posts/${postId}/like`, {
         method: 'POST',
         headers: {
@@ -576,7 +589,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
               message: 'Creator received community appreciation.',
             });
           }
-          // Reconcile likes count & liked state
+          // Reconcile likes count & liked state from server
           setPosts((prev) =>
             prev.map((p) =>
               p.id === postId
@@ -585,7 +598,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
             )
           );
         }
-      } else if (res.xpEarned) {
+      } else if (res?.xpEarned) {
         addToast({
           type: 'xp',
           title: '+2 XP Earned!',

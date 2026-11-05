@@ -1414,10 +1414,23 @@ export class CommunityDatabase {
     return true;
   }
 
-  public toggleLike(postId: string): { post: CommunityPost; liked: boolean; xpEarned: boolean } {
+  public syncLivePosts(livePosts: CommunityPost[]): void {
+    if (!Array.isArray(livePosts) || livePosts.length === 0) return;
+    const existingMap = new Map(this.posts.map((p) => [p.id, p]));
+    livePosts.forEach((lp) => {
+      existingMap.set(lp.id, { ...existingMap.get(lp.id), ...lp });
+    });
+    this.posts = Array.from(existingMap.values());
+    saveToStorage('posts', this.posts);
+  }
+
+  public toggleLike(postId: string): { post?: CommunityPost; liked: boolean; xpEarned: boolean } {
     const current = this.getCurrentMember();
     const postIndex = this.posts.findIndex((p) => p.id === postId);
-    if (postIndex === -1) throw new Error('Post not found');
+    if (postIndex === -1) {
+      // Safe fallback: Do not throw unhandled exception when post was loaded live from backend
+      return { liked: true, xpEarned: false };
+    }
 
     const post = this.posts[postIndex];
     const isNowLiked = !post.is_liked;
