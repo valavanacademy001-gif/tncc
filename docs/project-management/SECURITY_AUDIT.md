@@ -16,7 +16,7 @@
 | **SEC-04** | Client-Side Role Spoofing via `localStorage` | A01: Broken Access Control | **HIGH (CVSS 8.2)** | Unresolved |
 | **SEC-05** | Missing PostgreSQL RLS Mutation Policies | A01: Broken Access Control | **HIGH (CVSS 7.5)** | Unresolved |
 | **SEC-06** | Unverified Client-Side XP Ledger (State Tampering) | A08: Software and Data Integrity Failures | **HIGH (CVSS 7.1)** | Resolved (Issue #8) |
-| **SEC-07** | Lack of Server-Side File Upload Limits and MIME Validation | A04: Insecure Design | **MEDIUM (CVSS 6.5)** | Unresolved |
+| **SEC-07** | Lack of Server-Side File Upload Limits and MIME Validation | A04: Insecure Design | **MEDIUM (CVSS 6.5)** | Resolved (Issue #6) |
 | **SEC-08** | Missing CSRF / Rate Limiting on Community Auth Forms | A07: Identification and Authentication Failures | **MEDIUM (CVSS 5.3)** | Unresolved |
 | **SEC-09** | Client-Side Deadline & Duplicate Submission Tampering | A01: Broken Access Control / A08: Software and Data Integrity | **HIGH (CVSS 7.4)** | Resolved (Issue #9) |
 

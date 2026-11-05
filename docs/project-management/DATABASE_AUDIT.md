@@ -7,6 +7,8 @@
 2. `supabase/migrations/002_community_platform.sql` (Member Community Platform Schema)
 3. `supabase/migrations/003_community_admin_and_rls.sql` (Admin Dashboard, Atomic RPC Functions & Community RLS Write Policies)
 4. `supabase/migrations/004_challenge_submissions_and_deadlines.sql` (Challenge Submissions Unique Constraint, Deadlines & Atomic submit_challenge_entry RPC)
+5. `supabase/migrations/005_xp_transaction_ledger_and_antifarming.sql` (XP Transaction Ledger, Anti-Farming & Atomic XP RPC Functions)
+6. `supabase/migrations/006_storage_buckets_and_media.sql` (Supabase Storage Buckets `community-media` & `avatars`, MIME Constraints, File Size Limits & Storage RLS Policies)
 
 ---
 

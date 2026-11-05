@@ -74,7 +74,7 @@ This document serves as the operational guide for developers continuing work on 
 
 | Blocked Task | Required Dependency | Reason |
 |---|---|---|
-| Direct File Upload (1 MB / 50 MB) | Storage Bucket Migration (`ISSUE-04`) | Cannot upload files until Supabase Storage bucket `community-media` is provisioned and secured with RLS. |
+| Direct File Upload (1 MB / 50 MB) | Direct Storage & Auto Preview (`ISSUE-06`) | **COMPLETED in Issue #6**: Added `/api/community/upload` with strict 1 MB image & 50 MB video limits, MIME whitelist, drag-and-drop FeedComposer, Google Drive preview engine, responsive video player with viewport autoplay, and migration `006_storage_buckets_and_media.sql`. |
 | Multi-Device Community Feed Sync | Unified Supabase Auth (`ISSUE-03`) & RLS (`ISSUE-04`) | Posts cannot be inserted to PostgreSQL until real authenticated user sessions are established. |
 | Live Admin Challenge & Winner Announcements | Admin Route Middleware (`ISSUE-02`) & RLS (`ISSUE-04`) | **COMPLETED in Issue #10**: Middleware route guard and server API routes `/api/community/admin/*` operational with 401/403 authorization; Migration `003_community_admin_and_rls.sql` prepared for database execution. |
 | Enforce Challenge Submission Rules & Deadlines | Server-side validation (`ISSUE-09`) | **COMPLETED in Issue #9**: Added `/api/community/challenges/submit` with server UTC deadline checks, mutex locking, duplicate prevention, and migration `004_challenge_submissions_and_deadlines.sql`. |

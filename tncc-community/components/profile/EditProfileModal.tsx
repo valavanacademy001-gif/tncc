@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { CommunityMember } from '../../lib/types';
 import { InstagramIcon, LinkedinIcon, BehanceIcon } from '../common/SocialLinks';
-import { X, Save, Upload, Link as LinkIcon, Camera, Globe } from 'lucide-react';
+import { X, Save, Upload, Link as LinkIcon, Camera, Globe, Loader2, UploadCloud, AlertCircle } from 'lucide-react';
 
 interface EditProfileModalProps {
   onClose: () => void;
@@ -23,6 +23,44 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
   const [instagramUrl, setInstagramUrl] = useState(currentMember?.instagram_url || '');
   const [linkedinUrl, setLinkedinUrl] = useState(currentMember?.linkedin_url || '');
   const [websiteUrl, setWebsiteUrl] = useState(currentMember?.website_url || '');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+
+  const avatarFileRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarUpload = async (file: File) => {
+    setAvatarError(null);
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type.toLowerCase())) {
+      setAvatarError('Avatar must be JPG, PNG, or WebP.');
+      return;
+    }
+    if (file.size > 1 * 1024 * 1024) {
+      setAvatarError(`Avatar size exceeds 1 MB (${(file.size / (1024 * 1024)).toFixed(2)} MB).`);
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'avatars');
+      formData.append('member_id', currentMember?.id || 'anonymous');
+
+      const res = await fetch('/api/community/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to upload avatar.');
+      }
+      setAvatarUrl(data.url || data.publicUrl);
+    } catch (err: any) {
+      setAvatarError(err.message || 'Avatar upload failed.');
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,14 +131,52 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1">Avatar Image URL</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-bold text-gray-700">Avatar Image</label>
+                <button
+                  type="button"
+                  disabled={uploadingAvatar}
+                  onClick={() => avatarFileRef.current?.click()}
+                  className="text-[11px] font-bold text-[#E84020] hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                >
+                  <UploadCloud className="w-3.5 h-3.5" />
+                  <span>Upload (≤1 MB)</span>
+                </button>
+              </div>
+
+              <input
+                ref={avatarFileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleAvatarUpload(e.target.files[0]);
+                  }
+                }}
+              />
+
               <input
                 type="url"
                 value={avatarUrl}
                 onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://..."
+                placeholder="Paste URL or click Upload"
                 className="w-full text-xs sm:text-sm px-3.5 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
               />
+
+              {uploadingAvatar && (
+                <p className="text-[10px] text-[#0D2C5B] font-semibold mt-1 flex items-center gap-1">
+                  <Loader2 className="w-3 h-3 animate-spin text-[#E84020]" />
+                  Uploading photo to storage...
+                </p>
+              )}
+
+              {avatarError && (
+                <p className="text-[10px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3 text-red-500" />
+                  {avatarError}
+                </p>
+              )}
             </div>
 
             <div>

@@ -55,9 +55,9 @@
 |---|---|---|---|---|---|---|
 | **Community Feed** | PARTIALLY COMPLETED | Post stream rendering, author metadata, category pills | Live Supabase database query, real-time subscription | Operates strictly in client `localStorage` | P0 | High |
 | **Post Creation** | PARTIALLY COMPLETED | Caption, category, aspect ratio, hashtag inputs | Image/video file upload to Supabase Storage | Only accepts external string URLs; no file chooser | P0 | High |
-| **Image Uploads (Limit 1 MB)** | NOT STARTED | Preset image selector | File input, client-side 1 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
-| **Video Uploads (Limit 50 MB)** | NOT STARTED | Video aspect ratio options | File input, client-side 50 MB check, Supabase Storage upload | Feature not wired to FeedComposer | P0 | Medium |
-| **Google Drive Links** | PARTIALLY COMPLETED | Can paste URL in input | URL regex validator, thumbnail generator, file permission tips | Raw link treated as generic string | P2 | Medium |
+| **Image Uploads (Limit 1 MB)** | COMPLETED (Issue #6) | Drag-and-drop & file picker in FeedComposer, ChallengeModal & Profile, client & server 1 MB size checks, Supabase Storage `community-media` & `/api/community/upload` | None | Resolved missing file upload & validation (Issue #6) | P0 | Medium |
+| **Video Uploads (Limit 50 MB)** | COMPLETED (Issue #6) | Drag-and-drop & file picker, client & server 50 MB size checks, Supabase Storage `community-media` & `/api/community/upload`, viewport autoplay video player | None | Resolved missing video upload & validation (Issue #6) | P0 | Medium |
+| **Google Drive Links** | COMPLETED (Issue #6) | Link parser (`lib/media/google-drive.ts`), direct thumbnail image preview, responsive video player embed iframe, permission guidance & fallbacks | None | Resolved Google Drive preview & embed (Issue #6) | P2 | Medium |
 | **Likes & Anti-Self-Like** | COMPLETED (Issue #8) | Like toggle, counter, anti-self-like denial, repeated unlike/re-like duplicate prevention, server-side verified +2 XP | None | None | P1 | Low |
 | **Comments** | COMPLETED (Client) | Modal, comment list, author attribution, timestamps | Supabase `community_post_comments` table sync | Resets when localStorage cleared | P1 | Low |
 | **Saved Posts** | COMPLETED (Client) | Bookmark toggle, 'Saved' filter tab | Supabase `community_saved_posts` table sync | Resets when localStorage cleared | P1 | Low |

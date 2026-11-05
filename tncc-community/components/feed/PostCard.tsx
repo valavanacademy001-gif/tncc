@@ -7,6 +7,8 @@ import { CommunityPost } from '../../lib/types';
 import { useCommunity } from '../../lib/community-context';
 import CommentsModal from './CommentsModal';
 import ShareModal from './ShareModal';
+import FeedVideoPlayer from './FeedVideoPlayer';
+import { resolvePreviewImageUrl, isGoogleDriveUrl } from '@/lib/media/google-drive';
 import { 
   Heart, 
   MessageCircle, 
@@ -14,7 +16,8 @@ import {
   Share2, 
   Sparkles, 
   MoreHorizontal, 
-  ExternalLink 
+  ExternalLink,
+  HardDrive
 } from 'lucide-react';
 
 interface PostCardProps {
@@ -136,48 +139,75 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      {/* 2. Media Container (constrained to accurate ratio and max height, with double tap to like) */}
+      {/* 2. Media Container (constrained to accurate ratio and max height, with double tap to like & video player) */}
       {post.media_url && (
-        <div 
-          className={`relative w-full bg-[#0D2C5B]/5 overflow-hidden flex items-center justify-center mx-auto select-none touch-manipulation cursor-pointer ${getAspectRatioClass(post.aspect_ratio)}`}
-          onDoubleClick={handleDoubleTapLike}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="relative w-full">
           {post.media_type === 'video' ? (
-            <video
-              src={post.media_url}
-              controls
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full">
+              <FeedVideoPlayer
+                src={post.media_url}
+                aspectRatioClass={getAspectRatioClass(post.aspect_ratio)}
+                onDoubleTap={handleDoubleTapLike}
+              />
+              {/* Double-tap animated heart feedback for video */}
+              <AnimatePresence>
+                {showHeartBurst && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.3, 1], opacity: [0, 1, 1] }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center z-20"
+                  >
+                    <div className="p-4 rounded-full bg-black/40 backdrop-blur-xs shadow-2xl flex items-center justify-center">
+                      <Heart className="w-16 h-16 sm:w-20 sm:h-20 fill-[#E84020] text-white drop-shadow-xl" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : (
-            <img
-              src={post.media_url}
-              alt={post.caption.slice(0, 40)}
-              className="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.01]"
-              loading="lazy"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80';
-              }}
-            />
-          )}
+            <div 
+              className={`relative w-full bg-[#0D2C5B]/5 overflow-hidden flex items-center justify-center mx-auto select-none touch-manipulation cursor-pointer ${getAspectRatioClass(post.aspect_ratio)}`}
+              onDoubleClick={handleDoubleTapLike}
+              onTouchEnd={handleTouchEnd}
+            >
+              <img
+                src={resolvePreviewImageUrl(post.media_url)}
+                alt={post.caption.slice(0, 40)}
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-[1.01]"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80';
+                }}
+              />
 
-          {/* Double-tap animated heart feedback */}
-          <AnimatePresence>
-            {showHeartBurst && (
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: [0, 1.3, 1], opacity: [0, 1, 1] }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="pointer-events-none absolute inset-0 flex items-center justify-center z-20"
-              >
-                <div className="p-4 rounded-full bg-black/40 backdrop-blur-xs shadow-2xl flex items-center justify-center">
-                  <Heart className="w-16 h-16 sm:w-20 sm:h-20 fill-[#E84020] text-white drop-shadow-xl" />
+              {/* Google Drive indicator badge if applicable */}
+              {isGoogleDriveUrl(post.media_url) && (
+                <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold flex items-center gap-1 z-10">
+                  <HardDrive className="w-3 h-3 text-emerald-400" />
+                  <span>Drive</span>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+
+              {/* Double-tap animated heart feedback */}
+              <AnimatePresence>
+                {showHeartBurst && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.3, 1], opacity: [0, 1, 1] }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center z-20"
+                  >
+                    <div className="p-4 rounded-full bg-black/40 backdrop-blur-xs shadow-2xl flex items-center justify-center">
+                      <Heart className="w-16 h-16 sm:w-20 sm:h-20 fill-[#E84020] text-white drop-shadow-xl" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
       )}
 

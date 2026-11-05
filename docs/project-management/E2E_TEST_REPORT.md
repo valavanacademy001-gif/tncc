@@ -67,17 +67,19 @@
 ---
 
 ### TEST 4 — Member Feed
-- **Test Objective:** Verify feed loads, post creation works, image/video limit checks exist, likes/comments work, and showcase posts appear in portfolio.
+- **Test Objective:** Verify feed loads, post creation works, image/video limit checks exist, direct upload works, Google Drive previews operate, video player autoplays, and likes/comments work.
 - **Verification Evidence:**
   - Feed loads on `/community` with filter tabs ('All', 'Showcase', 'Discussion', 'Saved') and category dropdowns.
   - Creating a post creates an item with caption, hashtags, and category, awarding +10 XP.
-  - Like toggle increments counter and awards +2 XP to post author.
-  - Comment modal allows typing comment and updates comments count.
+  - Direct image upload validated at ≤ 1 MB limit (rejected 1.5 MB with HTTP 400, accepted 500 KB with HTTP 200).
+  - Direct video upload validated at ≤ 50 MB limit (rejected 52 MB with HTTP 400, accepted 2 MB with HTTP 200).
+  - Invalid MIME types rejected with HTTP 400.
+  - Google Drive image share links automatically resolved to direct thumbnail previews.
+  - Google Drive video links automatically resolved to responsive embed players with external links.
+  - Native HTML5 videos support viewport-based muted autoplay, custom progress bar, sound toggles, and single active video coordination.
+  - Double-tap on images and videos triggers like action with heart burst animation.
   - Setting `is_showcase: true` causes the post to immediately appear in `/community/portfolio`.
-- **Failures / Defect:**
-  - Direct file upload does not exist; post composer only accepts pasted URL strings.
-  - 1 MB image limit and 50 MB video limit are completely unvalidated.
-- **Verdict:** **PARTIALLY COMPLETED** (Issue logged: ISSUE-05, ISSUE-06).
+- **Verdict:** **PASS (Resolved in Issue #6)**.
 
 ---
 

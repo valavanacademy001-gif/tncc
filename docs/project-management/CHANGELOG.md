@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.0] - 2026-11-05 (GitHub Issue #6 – Direct Media Upload & Google Drive Auto Preview)
+
+### Added
+- **Direct Supabase Media Upload Endpoint (`/api/community/upload`):**
+  - Robust file upload endpoint accepting multipart/form-data.
+  - Enforces client and server-side strict file size limits: ≤ 1 MB for images, ≤ 50 MB for videos.
+  - Enforces strict MIME whitelist: JPG, PNG, WEBP for images; MP4, WEBM, MOV for videos.
+  - Rejects oversized files and invalid MIME types with HTTP 400 and clear error messages.
+  - Organizes uploads into partitioned user storage paths: `uploads/{memberId}/{mediaType}/{timestamp}-{random}.{ext}`.
+- **Supabase Storage Migration 006 (`supabase/migrations/006_storage_buckets_and_media.sql`):**
+  - Creates and configures `community-media` and `avatars` storage buckets.
+  - Sets public read access and authenticated upload/update/delete RLS policies.
+- **Google Drive Media Parser & Auto Preview Engine (`lib/media/google-drive.ts`):**
+  - Extracts file IDs across all Google Drive URL formats (`file/d/...`, `open?id=...`, `uc?id=...`, `docs.google.com/file/d/...`).
+  - Auto-resolves Google Drive image links to high-resolution direct thumbnail endpoints (`drive.google.com/thumbnail?id=...&sz=w1200`).
+  - Auto-resolves Google Drive video links to official embed preview URLs (`drive.google.com/file/d/.../preview`).
+- **Responsive Viewport-Based Video Player (`FeedVideoPlayer.tsx`):**
+  - Responsive video player supporting native HTML5 video and Google Drive embed players.
+  - Viewport-based muted autoplay via `IntersectionObserver` (threshold 0.5); auto-pauses when scrolled out of view.
+  - Single active video coordination: pauses previously playing feed video so multiple videos never clash.
+  - Custom controls: sound toggle with red/green status pill, play/pause overlay, progress scrubber bar, and fullscreen toggle.
+  - Integrated double-tap to like with animated heart burst.
+- **Feed Composer & Submission Upload Interfaces:**
+  - Integrated drag-and-drop zones, file choosers, real-time progress bars, and immediate image/video previews into `FeedComposer.tsx`.
+  - Added direct file upload option into `ChallengeSubmissionModal.tsx` and `EditProfileModal.tsx`.
+
+---
+
 ## [0.5.0] - 2026-11-05 (GitHub Issue #7 – Landing Page Anchors & Legal Routes)
 
 ### Added

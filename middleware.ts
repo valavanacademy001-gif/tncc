@@ -12,8 +12,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - api/community/upload (large streaming file uploads)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|brand|fonts|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|brand|fonts|api/community/upload|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

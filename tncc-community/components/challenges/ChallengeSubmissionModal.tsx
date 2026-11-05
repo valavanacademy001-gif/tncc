@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { ChallengeSubmission } from '../../lib/types';
+import { parseGoogleDriveUrl, resolvePreviewImageUrl } from '@/lib/media/google-drive';
 import { 
   X, 
   Upload, 
@@ -14,7 +15,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Clock
+  Clock,
+  UploadCloud
 } from 'lucide-react';
 
 interface SubmissionModalProps {
@@ -42,7 +44,52 @@ export default function ChallengeSubmissionModal({
   );
   const [submissionUrl, setSubmissionUrl] = useState(existingSubmission?.submission_url || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (file: File) => {
+    setUploadError(null);
+    const mime = file.type.toLowerCase();
+    const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(mime);
+    const isVideo = ['video/mp4', 'video/webm', 'video/quicktime'].includes(mime);
+
+    if (isImage && file.size > 1 * 1024 * 1024) {
+      setUploadError(`Image file size exceeds the 1 MB limit (${(file.size / (1024 * 1024)).toFixed(2)} MB).`);
+      return;
+    }
+    if (isVideo && file.size > 50 * 1024 * 1024) {
+      setUploadError(`Video file size exceeds the 50 MB limit (${(file.size / (1024 * 1024)).toFixed(2)} MB).`);
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'community-media');
+
+      const res = await fetch('/api/community/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Upload failed.');
+      }
+
+      setSubmissionUrl(data.url || data.publicUrl);
+      if (isImage) setSubmissionType('image');
+      else if (isVideo) setSubmissionType('video');
+    } catch (err: any) {
+      setUploadError(err.message || 'File upload failed.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const isDeadlineExpired = submissionDeadline
     ? new Date().getTime() > new Date(submissionDeadline).getTime()
@@ -180,24 +227,91 @@ export default function ChallengeSubmissionModal({
             />
           </div>
 
-          {/* Submission URL */}
+          {/* Submission URL & Direct Upload */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1">
-              {submissionType === 'gdrive'
-                ? 'Public Google Drive Link *'
-                : submissionType === 'portfolio'
-                ? 'Behance / External Portfolio URL *'
-                : 'Direct File / Artwork URL *'}
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-bold text-gray-700">
+                {submissionType === 'gdrive'
+                  ? 'Public Google Drive Link *'
+                  : submissionType === 'portfolio'
+                  ? 'Behance / External Portfolio URL *'
+                  : 'Direct File / Artwork URL *'}
+              </label>
+
+              {/* Direct File Picker Trigger */}
+              <button
+                type="button"
+                disabled={isDeadlineExpired || isSubmitting || isUploading}
+                onClick={() => fileInputRef.current?.click()}
+                className="text-[11px] font-bold text-[#E84020] hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Upload File (≤1 MB img, ≤50 MB vid)</span>
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime,application/pdf"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  handleFileUpload(e.target.files[0]);
+                }
+              }}
+            />
+
             <input
               type="url"
               required
-              disabled={isDeadlineExpired || isSubmitting}
+              disabled={isDeadlineExpired || isSubmitting || isUploading}
               value={submissionUrl}
               onChange={(e) => setSubmissionUrl(e.target.value)}
               placeholder="https://..."
               className="w-full text-xs sm:text-sm px-3.5 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] disabled:opacity-60"
             />
+
+            {isUploading && (
+              <p className="text-[11px] text-[#0D2C5B] font-semibold mt-1 flex items-center gap-1">
+                <Loader2 className="w-3 h-3 animate-spin text-[#E84020]" />
+                Uploading artwork to Supabase Storage...
+              </p>
+            )}
+
+            {uploadError && (
+              <p className="text-[11px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3 text-red-500" />
+                {uploadError}
+              </p>
+            )}
+
+            {/* Google Drive Link Notice */}
+            {parseGoogleDriveUrl(submissionUrl).isGoogleDrive && (
+              <div className="mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-[10px] text-emerald-800 flex items-center gap-1.5">
+                <HardDrive className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Google Drive Link verified. Ensure permission is set to <strong>"Anyone with the link can view"</strong>.</span>
+              </div>
+            )}
+
+            {/* Live Preview if available */}
+            {submissionUrl && (
+              <div className="mt-2 rounded-xl overflow-hidden max-h-40 bg-black/5 border border-gray-200 flex items-center justify-center p-2">
+                {submissionType === 'video' ? (
+                  <p className="text-xs text-gray-500 font-medium">Video preview ready for review</p>
+                ) : (
+                  <img
+                    src={resolvePreviewImageUrl(submissionUrl)}
+                    alt="Preview"
+                    className="max-h-36 object-contain rounded-lg"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                )}
+              </div>
+            )}
+
             <p className="text-[10px] text-gray-400 mt-1">
               Ensure links are publicly accessible so administrators can view your creative artifact.
             </p>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { 
   X, 
@@ -10,8 +10,22 @@ import {
   Hash, 
   Layers, 
   Globe, 
-  Check 
+  Check,
+  UploadCloud,
+  Loader2,
+  HardDrive,
+  AlertCircle,
+  ExternalLink,
+  Film
 } from 'lucide-react';
+import { parseGoogleDriveUrl, resolvePreviewImageUrl, isGoogleDriveUrl } from '@/lib/media/google-drive';
+
+// 1 MB limit for images, 50 MB limit for videos
+const MAX_IMAGE_SIZE_BYTES = 1 * 1024 * 1024;
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
 interface FeedComposerProps {
   onClose?: () => void;
@@ -31,6 +45,16 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
   const [isShowcase, setIsShowcase] = useState(true);
   const [showMediaInput, setShowMediaInput] = useState(false);
 
+  // Upload States
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
   // Quick preset sample images for creators if they want ready demo assets
   const PRESET_IMAGES = [
     { label: 'Typography', url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80' },
@@ -39,9 +63,107 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
     { label: 'AI Visual', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80' },
   ];
 
+  // Detect Google Drive Link
+  const gdrive = parseGoogleDriveUrl(mediaUrl);
+
+  const handleFileUpload = async (file: File) => {
+    setUploadError(null);
+    const mime = file.type.toLowerCase();
+    const isImage = ALLOWED_IMAGE_TYPES.includes(mime);
+    const isVideo = ALLOWED_VIDEO_TYPES.includes(mime);
+
+    // Validate MIME type
+    if (!isImage && !isVideo) {
+      const msg = `Unsupported file type "${file.name}". Please upload an image (JPG, PNG, WebP) or video (MP4, WebM, MOV).`;
+      setUploadError(msg);
+      return;
+    }
+
+    // Validate File Size
+    if (isImage && file.size > MAX_IMAGE_SIZE_BYTES) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      const msg = `Image file size exceeds the 1 MB limit (Selected: ${sizeMB} MB). Please choose a smaller image.`;
+      setUploadError(msg);
+      return;
+    }
+
+    if (isVideo && file.size > MAX_VIDEO_SIZE_BYTES) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      const msg = `Video file size exceeds the 50 MB limit (Selected: ${sizeMB} MB). Please upload a smaller video or share via Google Drive.`;
+      setUploadError(msg);
+      return;
+    }
+
+    // Set local immediate preview blob
+    const localBlob = URL.createObjectURL(file);
+    setPreviewBlobUrl(localBlob);
+    setMediaType(isImage ? 'image' : 'video');
+    setShowMediaInput(true);
+    setIsUploading(true);
+    setUploadProgress(15);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('member_id', currentMember?.id || 'anonymous');
+      formData.append('bucket', 'community-media');
+
+      setUploadProgress(40);
+
+      const res = await fetch('/api/community/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      setUploadProgress(85);
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to upload media to storage.');
+      }
+
+      setMediaUrl(data.url || data.publicUrl);
+      setUploadProgress(100);
+    } catch (err: any) {
+      console.error('File upload error:', err);
+      setUploadError(err.message || 'Media upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileUpload(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleClearMedia = () => {
+    setMediaUrl('');
+    setPreviewBlobUrl(null);
+    setUploadError(null);
+    setUploadProgress(0);
+    setShowMediaInput(false);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+    if (videoInputRef.current) videoInputRef.current.value = '';
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!caption.trim()) return;
+    if (!caption.trim() || isUploading) return;
 
     const parsedHashtags = hashtags
       .split(' ')
@@ -59,12 +181,36 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
     });
 
     setCaption('');
-    setMediaUrl('');
+    handleClearMedia();
     if (onClose) onClose();
   };
 
   const content = (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Hidden File Inputs */}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFileUpload(e.target.files[0]);
+          }
+        }}
+      />
+      <input
+        ref={videoInputRef}
+        type="file"
+        accept="video/mp4,video/webm,video/quicktime"
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFileUpload(e.target.files[0]);
+          }
+        }}
+      />
+
       {/* Header if modal */}
       {!isInline && (
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
@@ -129,13 +275,49 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
           className="w-full text-sm text-[#0D2C5B] placeholder:text-gray-400 border-none focus:ring-0 focus:outline-none resize-none bg-transparent"
         />
 
-        {/* Media URL Input & Aspect Ratio Selector */}
-        {(showMediaInput || mediaUrl) && (
-          <div className="p-3 bg-[#F8F6F1] rounded-xl space-y-3 border border-gray-200 animate-fade-in">
+        {/* Error Message Alert */}
+        {uploadError && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold">{uploadError}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setUploadError(null)}
+              className="text-red-400 hover:text-red-600"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Media Upload & URL Section */}
+        {(showMediaInput || mediaUrl || isUploading) && (
+          <div 
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`p-3.5 bg-[#F8F6F1] rounded-2xl space-y-3 border transition-all ${
+              isDragging ? 'border-[#E84020] bg-orange-50/50' : 'border-gray-200'
+            }`}
+          >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <span className="text-xs font-bold text-gray-700">Attach Media URL</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-gray-800">
+                  Attached Media {mediaType === 'video' ? '(Video)' : '(Image)'}
+                </span>
+                {isGoogleDriveUrl(mediaUrl) && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <HardDrive className="w-3 h-3 text-emerald-600" />
+                    Google Drive
+                  </span>
+                )}
+              </div>
+
+              {/* Aspect Ratio Selector */}
               <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-[11px] text-gray-500 mr-1">Aspect Ratio:</span>
+                <span className="text-[11px] text-gray-500 mr-1">Aspect:</span>
                 {(['portrait', 'square', 'landscape'] as const).map((ratio) => (
                   <button
                     key={ratio}
@@ -153,16 +335,116 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
               </div>
             </div>
 
-            <input
-              type="url"
-              value={mediaUrl}
-              onChange={(e) => setMediaUrl(e.target.value)}
-              placeholder="Paste direct Image or Video URL (https://...)"
-              className="w-full text-xs px-3 py-2 bg-white rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
-            />
+            {/* Upload Progress Bar */}
+            {isUploading && (
+              <div className="space-y-1.5 p-3 bg-white rounded-xl border border-gray-200">
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#E84020]" />
+                    Uploading to Supabase Storage...
+                  </span>
+                  <span className="font-bold text-[#0D2C5B]">{uploadProgress}%</span>
+                </div>
+                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#0D2C5B] to-[#E84020] transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Media URL Input or Direct Drop Prompt */}
+            <div className="space-y-2">
+              <input
+                type="url"
+                value={mediaUrl}
+                onChange={(e) => {
+                  setMediaUrl(e.target.value);
+                  const parsed = parseGoogleDriveUrl(e.target.value);
+                  if (parsed.isGoogleDrive) {
+                    setMediaType('image'); // default to image or let user select
+                  }
+                }}
+                placeholder="Paste direct URL or Google Drive share link (https://...)"
+                className="w-full text-xs px-3.5 py-2.5 bg-white rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+              />
+
+              {/* Google Drive Sharing Notice */}
+              {gdrive.isGoogleDrive && (
+                <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <HardDrive className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>
+                      Public link detected. Please ensure sharing is set to <strong>"Anyone with the link can view"</strong> in Drive.
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setMediaType('image')}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        mediaType === 'image' ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-700'
+                      }`}
+                    >
+                      Image
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMediaType('video')}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        mediaType === 'video' ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-700'
+                      }`}
+                    >
+                      Video
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Live Media Preview Box */}
+            {(previewBlobUrl || mediaUrl) && (
+              <div className="relative rounded-xl overflow-hidden max-h-56 bg-black border border-gray-200 flex items-center justify-center">
+                {mediaType === 'video' ? (
+                  gdrive.isGoogleDrive ? (
+                    <div className="p-6 text-center text-white flex flex-col items-center gap-2">
+                      <Film className="w-8 h-8 text-[#E84020]" />
+                      <p className="text-xs font-semibold">Google Drive Video Embed Ready</p>
+                      <p className="text-[10px] text-gray-400">Will stream via Google Drive viewer in feed</p>
+                    </div>
+                  ) : (
+                    <video
+                      src={previewBlobUrl || mediaUrl}
+                      controls
+                      playsInline
+                      className="max-h-56 w-full object-cover"
+                    />
+                  )
+                ) : (
+                  <img
+                    src={previewBlobUrl || resolvePreviewImageUrl(mediaUrl)}
+                    alt="Preview"
+                    className="max-h-56 w-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleClearMedia}
+                  className="absolute top-2.5 right-2.5 p-1.5 bg-black/70 hover:bg-black text-white rounded-full text-xs transition-colors shadow-lg"
+                  title="Remove media"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
 
             {/* Quick Demo Image Presets */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1">
               <span className="text-[10px] text-gray-400 shrink-0">Sample Presets:</span>
               {PRESET_IMAGES.map((img) => (
                 <button
@@ -170,35 +452,15 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                   type="button"
                   onClick={() => {
                     setMediaUrl(img.url);
+                    setPreviewBlobUrl(null);
                     setMediaType('image');
                   }}
-                  className="text-[10px] font-medium bg-white hover:bg-orange-50 hover:text-[#E84020] px-2 py-1 rounded border border-gray-200 shrink-0 transition-colors"
+                  className="text-[10px] font-medium bg-white hover:bg-orange-50 hover:text-[#E84020] px-2 py-1 rounded-md border border-gray-200 shrink-0 transition-colors"
                 >
                   {img.label}
                 </button>
               ))}
             </div>
-
-            {/* Media Preview */}
-            {mediaUrl && (
-              <div className="relative rounded-lg overflow-hidden max-h-48 bg-gray-900 border border-gray-200 flex items-center justify-center">
-                <img
-                  src={mediaUrl}
-                  alt="Preview"
-                  className="max-h-48 w-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setMediaUrl('')}
-                  className="absolute top-2 right-2 p-1 bg-black/60 hover:bg-black text-white rounded-full text-xs"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
           </div>
         )}
 
@@ -233,49 +495,70 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
         {/* Action Toolbar & Submit */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="flex items-center gap-2">
+            {/* Direct Image File Picker Button */}
             <button
               type="button"
               onClick={() => {
-                setShowMediaInput(true);
-                setMediaType('image');
+                imageInputRef.current?.click();
               }}
               className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                mediaType === 'image' && mediaUrl
+                mediaType === 'image' && (mediaUrl || previewBlobUrl)
                   ? 'bg-orange-50 text-[#E84020]'
-                  : 'text-gray-500 hover:bg-gray-100 hover:text-[#0D2C5B]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
               }`}
+              title="Upload Photo (Max 1 MB)"
             >
-              <ImageIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Photo</span>
+              <ImageIcon className="w-4 h-4 text-[#E84020]" />
+              <span className="hidden sm:inline">Photo (≤1 MB)</span>
             </button>
 
+            {/* Direct Video File Picker Button */}
             <button
               type="button"
               onClick={() => {
-                setShowMediaInput(true);
-                setMediaType('video');
+                videoInputRef.current?.click();
               }}
               className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                mediaType === 'video' && mediaUrl
+                mediaType === 'video' && (mediaUrl || previewBlobUrl)
                   ? 'bg-orange-50 text-[#E84020]'
-                  : 'text-gray-500 hover:bg-gray-100 hover:text-[#0D2C5B]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
               }`}
+              title="Upload Video (Max 50 MB)"
             >
-              <Video className="w-4 h-4" />
-              <span className="hidden sm:inline">Video</span>
+              <Video className="w-4 h-4 text-[#0D2C5B]" />
+              <span className="hidden sm:inline">Video (≤50 MB)</span>
+            </button>
+
+            {/* Toggle URL / Drive link input */}
+            <button
+              type="button"
+              onClick={() => setShowMediaInput((prev) => !prev)}
+              className="p-2 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-[#0D2C5B] transition-colors"
+              title="Paste Link / Google Drive"
+            >
+              <Globe className="w-4 h-4" />
             </button>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="submit"
-              disabled={!caption.trim()}
-              className="px-5 py-2 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-full text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5 active:scale-95"
+              disabled={!caption.trim() || isUploading}
+              className="px-5 py-2 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-full text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5 active:scale-95 cursor-pointer disabled:cursor-not-allowed"
             >
-              <span>Post to Community</span>
-              <span className="px-1.5 py-0.2 text-[9px] bg-white/20 rounded-full font-extrabold">
-                +10 XP
-              </span>
+              {isUploading ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <span>Post to Community</span>
+                  <span className="px-1.5 py-0.2 text-[9px] bg-white/20 rounded-full font-extrabold">
+                    +10 XP
+                  </span>
+                </>
+              )}
             </button>
           </div>
         </div>

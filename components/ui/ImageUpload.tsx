@@ -6,7 +6,7 @@ import { UploadCloud, X, Check, Loader2, AlertCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface ImageUploadProps {
-  bucket: 'avatars' | 'portfolio' | 'project-attachments' | 'package-images' | 'event-images';
+  bucket: 'avatars' | 'portfolio' | 'project-attachments' | 'package-images' | 'event-images' | 'community-media';
   value?: string;
   onChange: (url: string) => void;
   maxSizeMB?: number;
