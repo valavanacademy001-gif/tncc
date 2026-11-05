@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CommunityPost } from '../../lib/types';
 import { useCommunity } from '../../lib/community-context';
 import CommentsModal from './CommentsModal';
@@ -24,6 +25,44 @@ export default function PostCard({ post }: PostCardProps) {
   const { toggleLike, toggleSave, isFollowing, toggleFollow, currentMember } = useCommunity();
   const [showComments, setShowComments] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showHeartBurst, setShowHeartBurst] = useState(false);
+
+  const lastTapRef = useRef<number>(0);
+  const lastTriggerRef = useRef<number>(0);
+  const heartTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (heartTimerRef.current) clearTimeout(heartTimerRef.current);
+    };
+  }, []);
+
+  const handleDoubleTapLike = () => {
+    const now = Date.now();
+    if (now - lastTriggerRef.current < 350) return;
+    lastTriggerRef.current = now;
+
+    if (!post.is_liked) {
+      toggleLike(post.id);
+    }
+
+    setShowHeartBurst(true);
+    if (heartTimerRef.current) clearTimeout(heartTimerRef.current);
+    heartTimerRef.current = setTimeout(() => {
+      setShowHeartBurst(false);
+    }, 800);
+  };
+
+  const handleTouchEnd = () => {
+    const now = Date.now();
+    const timeSinceLastTap = now - lastTapRef.current;
+    if (timeSinceLastTap > 0 && timeSinceLastTap < 300) {
+      handleDoubleTapLike();
+      lastTapRef.current = 0;
+    } else {
+      lastTapRef.current = now;
+    }
+  };
 
   // Aspect ratio helper with max-height limits
   const getAspectRatioClass = (ratio: CommunityPost['aspect_ratio']) => {
@@ -43,7 +82,7 @@ export default function PostCard({ post }: PostCardProps) {
       id={post.id}
       className="max-w-[540px] w-full mx-auto bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
     >
-      {/* 1. Header: Author details, follower count & Follow button */}
+      {/* 1. Header: Author details & Follow button */}
       <div className="p-4 flex items-center justify-between border-b border-gray-50">
         <Link
           href={`/community/portfolio/${post.author.username}`}
@@ -67,10 +106,6 @@ export default function PostCard({ post }: PostCardProps) {
               <span>@{post.author.username}</span>
               <span>·</span>
               <span>{post.author.location.split(',')[0]}</span>
-              <span>·</span>
-              <span className="font-semibold text-gray-600">
-                {post.author.followers_count ?? 240} followers
-              </span>
             </div>
           </div>
         </Link>
@@ -101,13 +136,18 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      {/* 2. Media Container (constrained to accurate ratio and max height) */}
+      {/* 2. Media Container (constrained to accurate ratio and max height, with double tap to like) */}
       {post.media_url && (
-        <div className={`relative w-full bg-[#0D2C5B]/5 overflow-hidden flex items-center justify-center mx-auto ${getAspectRatioClass(post.aspect_ratio)}`}>
+        <div 
+          className={`relative w-full bg-[#0D2C5B]/5 overflow-hidden flex items-center justify-center mx-auto select-none touch-manipulation cursor-pointer ${getAspectRatioClass(post.aspect_ratio)}`}
+          onDoubleClick={handleDoubleTapLike}
+          onTouchEnd={handleTouchEnd}
+        >
           {post.media_type === 'video' ? (
             <video
               src={post.media_url}
               controls
+              playsInline
               className="w-full h-full object-cover"
             />
           ) : (
@@ -121,6 +161,23 @@ export default function PostCard({ post }: PostCardProps) {
               }}
             />
           )}
+
+          {/* Double-tap animated heart feedback */}
+          <AnimatePresence>
+            {showHeartBurst && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: [0, 1.3, 1], opacity: [0, 1, 1] }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="pointer-events-none absolute inset-0 flex items-center justify-center z-20"
+              >
+                <div className="p-4 rounded-full bg-black/40 backdrop-blur-xs shadow-2xl flex items-center justify-center">
+                  <Heart className="w-16 h-16 sm:w-20 sm:h-20 fill-[#E84020] text-white drop-shadow-xl" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 

@@ -62,7 +62,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
               className="transition-transform group-hover:scale-105"
               priority
             />
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-[#E84020]/10 text-[#E84020] border border-[#E84020]/20">
+            <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-[#E84020]/10 text-[#E84020] border border-[#E84020]/20">
               COMMUNITY
             </span>
           </Link>
@@ -85,10 +85,10 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {/* XP Badge & Meter */}
           <Link 
             href="/community/leaderboard"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-sm hover:shadow transition-all group"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-sm hover:shadow transition-all group shrink-0"
             title="Your Total Experience Points"
           >
-            <div className="w-5 h-5 rounded-full bg-[#E84020] flex items-center justify-center text-xs text-white">
+            <div className="w-5 h-5 rounded-full bg-[#E84020] flex items-center justify-center text-xs text-white shrink-0">
               ⚡
             </div>
             <div className="flex flex-col text-left">
@@ -99,7 +99,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                 {currentMember?.total_xp || 0} XP
               </span>
               <span 
-                className="text-[9px] font-medium text-gray-300 leading-tight"
+                className="hidden sm:block text-[9px] font-medium text-gray-300 leading-tight"
                 suppressHydrationWarning
               >
                 {memberLevel.title}
