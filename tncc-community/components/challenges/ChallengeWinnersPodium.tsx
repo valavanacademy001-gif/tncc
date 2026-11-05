@@ -41,9 +41,11 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
         {/* 2nd Place */}
         {winners.second && (
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/15 flex flex-col items-center text-center space-y-3 order-2 md:order-1">
-            <div className="w-10 h-10 rounded-full bg-[#D1D1D1] text-[#0D2C5B] flex items-center justify-center font-extrabold text-sm shadow-md">
-              🥈 2nd
-            </div>
+            <img
+              src="/medals/medal-2nd.png"
+              alt="2nd Place Silver Medal"
+              className="w-14 sm:w-16 h-auto object-contain drop-shadow-lg -mb-1 transition-transform hover:scale-105"
+            />
             <img
               src={winners.second.member.avatar_url}
               alt={winners.second.member.full_name}
@@ -69,9 +71,11 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
         {/* 1st Place (Center & Elevated) */}
         {winners.first && (
           <div className="bg-gradient-to-b from-white/20 to-white/10 backdrop-blur-lg rounded-2xl p-6 border-2 border-[#F5A623] flex flex-col items-center text-center space-y-3 order-1 md:order-2 shadow-2xl md:-translate-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#F5A623] text-[#0D2C5B] flex items-center justify-center font-extrabold text-base shadow-lg animate-bounce-subtle">
-              👑 1st
-            </div>
+            <img
+              src="/medals/medal-1st.png"
+              alt="1st Place Gold Medal"
+              className="w-18 sm:w-20 h-auto object-contain drop-shadow-2xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
+            />
             <img
               src={winners.first.member.avatar_url}
               alt={winners.first.member.full_name}
@@ -97,9 +101,11 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
         {/* 3rd Place */}
         {winners.third && (
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/15 flex flex-col items-center text-center space-y-3 order-3">
-            <div className="w-10 h-10 rounded-full bg-[#CD7F32] text-white flex items-center justify-center font-extrabold text-sm shadow-md">
-              🥉 3rd
-            </div>
+            <img
+              src="/medals/medal-3rd.png"
+              alt="3rd Place Bronze Medal"
+              className="w-14 sm:w-16 h-auto object-contain drop-shadow-lg -mb-1 transition-transform hover:scale-105"
+            />
             <img
               src={winners.third.member.avatar_url}
               alt={winners.third.member.full_name}

@@ -70,9 +70,11 @@ export default function LeaderboardView() {
         {/* 2nd Place */}
         {second && (
           <div className="bg-white rounded-3xl p-6 border-2 border-gray-200 shadow-sm flex flex-col items-center text-center space-y-3 order-2 md:order-1 relative overflow-hidden">
-            <div className="w-10 h-10 rounded-full bg-gray-200 text-[#0D2C5B] flex items-center justify-center font-extrabold text-sm shadow">
-              🥈 2nd
-            </div>
+            <img
+              src="/medals/medal-2nd.png"
+              alt="2nd Place Silver Medal"
+              className="w-14 sm:w-16 h-auto object-contain drop-shadow-md -mb-1 transition-transform hover:scale-105"
+            />
             <img
               src={second.avatar_url || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80'}
               alt={second.full_name}
@@ -100,9 +102,11 @@ export default function LeaderboardView() {
         {first && (
           <div className="bg-gradient-to-b from-[#FFF8EC] to-white rounded-3xl p-8 border-2 border-[#F5A623] shadow-xl flex flex-col items-center text-center space-y-4 order-1 md:order-2 relative md:-translate-y-4 overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#F5A623] via-[#E84020] to-[#F5A623]" />
-            <div className="w-12 h-12 rounded-full bg-[#F5A623] text-[#0D2C5B] flex items-center justify-center font-extrabold text-base shadow-lg animate-bounce-subtle">
-              👑 1st
-            </div>
+            <img
+              src="/medals/medal-1st.png"
+              alt="1st Place Gold Medal"
+              className="w-18 sm:w-20 h-auto object-contain drop-shadow-xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
+            />
             <img
               src={first.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
               alt={first.full_name}
@@ -129,9 +133,11 @@ export default function LeaderboardView() {
         {/* 3rd Place */}
         {third && (
           <div className="bg-white rounded-3xl p-6 border-2 border-gray-200 shadow-sm flex flex-col items-center text-center space-y-3 order-3 relative overflow-hidden">
-            <div className="w-10 h-10 rounded-full bg-[#CD7F32]/20 text-[#8B4513] flex items-center justify-center font-extrabold text-sm shadow">
-              🥉 3rd
-            </div>
+            <img
+              src="/medals/medal-3rd.png"
+              alt="3rd Place Bronze Medal"
+              className="w-14 sm:w-16 h-auto object-contain drop-shadow-md -mb-1 transition-transform hover:scale-105"
+            />
             <img
               src={third.avatar_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80'}
               alt={third.full_name}

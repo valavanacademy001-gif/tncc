@@ -84,3 +84,4 @@ CREATE POLICY "Authenticated users can upload avatars"
   WITH CHECK (
     bucket_id = 'avatars'
   );
+
