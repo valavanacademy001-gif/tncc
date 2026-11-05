@@ -17,10 +17,14 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
   if (!winners.first && !winners.second && !winners.third) return null;
 
   return (
-    <div className="bg-gradient-to-br from-[#0D2C5B] to-[#1B3F7E] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+    <div className="bg-gradient-to-br from-[#0D2C5B] via-[#10366d] to-[#081A3A] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-white/10">
+      {/* Brand Theme Accent Strip */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0D2C5B] via-[#E84020] via-[#F5A623] to-[#00B5C8]" />
+
       {/* Background decoration */}
-      <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-[#E84020]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -left-10 -top-10 w-48 h-48 bg-[#00B5C8]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#E84020]/25 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -left-10 -top-10 w-64 h-64 bg-[#00B5C8]/25 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#F5A623]/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="text-center max-w-md mx-auto mb-8 space-y-2 relative z-10">

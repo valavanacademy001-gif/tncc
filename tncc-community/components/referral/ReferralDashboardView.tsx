@@ -74,71 +74,107 @@ export default function ReferralDashboardView() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* 1. Motivational Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0D2C5B] via-[#1B3F7E] to-[#0D2C5B] text-white p-6 sm:p-8 shadow-xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#E84020]/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#FFB84D]/20 text-[#FFB84D] border border-[#FFB84D]/30">
-            <Gift className="w-3.5 h-3.5" />
+      {/* 1. Motivational Banner with TNCC Logo Theme Colors */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0D2C5B] via-[#10366d] to-[#081A3A] text-white p-6 sm:p-8 shadow-xl border border-white/10">
+        {/* Brand Theme Accent Strip */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0D2C5B] via-[#E84020] via-[#F5A623] to-[#00B5C8]" />
+
+        {/* Ambient Brand Glowing Orbs */}
+        <div className="absolute -top-12 -right-12 w-72 h-72 bg-[#E84020]/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-72 h-72 bg-[#00B5C8]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-[#F5A623]/15 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-2xl space-y-3.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/10 text-[#FFB84D] border border-[#FFB84D]/30 backdrop-blur-md shadow-xs">
+            <Gift className="w-3.5 h-3.5 text-[#E84020]" />
             <span>Referral & Earn Program</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
-            Invite your creative friends to TNCC. Earn <span className="text-[#FFB84D]">+50 XP</span>
+            Invite your creative friends to TNCC. Earn{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFB84D] via-[#FF5733] to-[#E84020] font-black drop-shadow-sm">
+              +50 XP
+            </span>
           </h2>
 
-          <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-normal">
+          <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-normal">
             Invite your creative friends to TNCC. Earn 50 XP when your friend completes their first approved creative activity (publishing their first approved showcase post or valid challenge entry).
           </p>
 
-          <div className="pt-2 flex items-center gap-2 text-[11px] text-[#FFB84D] font-semibold">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Verified Server-Side XP Ledger · Anti-Fraud Protected · No Signup Farming</span>
+          <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] font-semibold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-[#00CDE0] border border-[#00B5C8]/25 backdrop-blur-xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#00CDE0] shrink-0" />
+              <span>Verified Server-Side XP Ledger</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-emerald-300 border border-emerald-400/25 backdrop-blur-xs">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Anti-Fraud Protected</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-[#FFB84D] border border-[#FFB84D]/25 backdrop-blur-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#FFB84D] shrink-0" />
+              <span>No Signup Farming</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Shareable Code & Link Box */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200 shadow-sm space-y-5">
-        <h3 className="font-extrabold text-base text-[#0D2C5B]">Your Shareable Referral Assets</h3>
+      {/* 2. Shareable Code & Link Box with Brand Colors */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-5 relative overflow-hidden">
+        <div className="flex items-center gap-2.5">
+          <div className="w-2.5 h-6 rounded-full bg-gradient-to-b from-[#E84020] to-[#FFB84D]" />
+          <h3 className="font-black text-lg text-[#0D2C5B] tracking-tight">Your Shareable Referral Assets</h3>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Permanent Code Card */}
-          <div className="p-4 rounded-2xl bg-[#F8F6F1] border border-gray-200 flex items-center justify-between">
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Your Referral Code</p>
-              <p className="font-mono font-black text-xl text-[#0D2C5B] tracking-wider mt-0.5">{referralCode}</p>
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF8EC] via-[#FFF0ED]/40 to-white border border-[#FFB84D]/40 shadow-xs relative overflow-hidden group hover:border-[#E84020]/60 transition-all">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-[#E84020]/5 rounded-full blur-xl pointer-events-none" />
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-extrabold text-[#E84020] uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#E84020]" />
+                  <span>Your Referral Code</span>
+                </p>
+                <p className="font-mono font-black text-2xl text-[#0D2C5B] tracking-wider mt-1">{referralCode}</p>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(referralCode);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] hover:from-[#E84020] hover:to-[#FF5733] text-white font-bold text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                title="Copy referral code"
+              >
+                {copied ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
+              </button>
             </div>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(referralCode);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-              className="p-2.5 rounded-xl bg-white text-[#0D2C5B] hover:bg-[#0D2C5B] hover:text-white border border-gray-200 transition-all shadow-xs"
-              title="Copy code"
-            >
-              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-            </button>
           </div>
 
           {/* Shareable Link Input with Quick Buttons */}
-          <div className="p-4 rounded-2xl bg-[#F8F6F1] border border-gray-200 flex flex-col justify-between gap-2">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#E6F9FC] via-[#E6F9FC]/30 to-white border border-[#00B5C8]/40 shadow-xs flex flex-col justify-between gap-3 relative overflow-hidden group hover:border-[#00B5C8] transition-all">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-[#00B5C8]/10 rounded-full blur-xl pointer-events-none" />
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Shareable Invitation Link</p>
-              <p className="text-xs font-mono text-gray-700 truncate mt-0.5">{shareUrl}</p>
+              <p className="text-[11px] font-extrabold text-[#00B5C8] uppercase tracking-wider flex items-center gap-1.5">
+                <Share2 className="w-3.5 h-3.5 text-[#00B5C8]" />
+                <span>Shareable Invitation Link</span>
+              </p>
+              <div className="mt-1 px-3 py-1.5 rounded-xl bg-white/90 border border-[#00B5C8]/25 font-mono text-xs text-[#0D2C5B] select-all truncate font-semibold">
+                {shareUrl}
+              </div>
             </div>
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-2 pt-1">
               <button
                 onClick={handleCopy}
-                className="flex-1 py-1.5 px-3 rounded-lg bg-[#0D2C5B] hover:bg-[#1B3F7E] text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                className="flex-1 min-w-[120px] py-2 px-3.5 rounded-xl bg-gradient-to-r from-[#E84020] to-[#FF5733] hover:from-[#d03517] hover:to-[#e84020] text-white font-extrabold text-xs transition-all shadow-md shadow-orange-500/20 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied Link!' : 'Copy Link'}</span>
               </button>
               <button
                 onClick={handleWhatsAppShare}
-                className="py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1 shadow-xs"
+                className="py-2 px-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-xs transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                 title="Share on WhatsApp"
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -146,7 +182,7 @@ export default function ReferralDashboardView() {
               </button>
               <button
                 onClick={handleTwitterShare}
-                className="py-1.5 px-3 rounded-lg bg-black hover:bg-gray-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1 shadow-xs"
+                className="py-2 px-3.5 rounded-xl bg-black hover:bg-neutral-800 text-white font-extrabold text-xs transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                 title="Share on X / Twitter"
               >
                 <span>X / Twitter</span>
@@ -156,58 +192,79 @@ export default function ReferralDashboardView() {
         </div>
       </div>
 
-      {/* 3. Referral Metric Stats */}
+      {/* 3. Referral Metric Stats with Brand Theme Accents */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-gray-400">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Invited</span>
-            <Users className="w-4 h-4 text-[#0D2C5B]" />
+        {/* Card 1: Total Invited - Cyan & Navy Accent */}
+        <div className="bg-gradient-to-b from-[#E6F9FC]/60 to-white p-5 rounded-3xl border border-[#00B5C8]/30 border-t-4 border-t-[#00B5C8] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B]">
+            <span className="text-xs font-black uppercase tracking-wider text-[#00B5C8]">Total Invited</span>
+            <div className="w-8 h-8 rounded-xl bg-[#00B5C8]/15 text-[#00B5C8] flex items-center justify-center">
+              <Users className="w-4 h-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-[#0D2C5B]">{summary?.total_invited || 0}</p>
-          <p className="text-[11px] text-gray-400">Members registered</p>
+          <p className="text-3xl font-black text-[#0D2C5B]">{summary?.total_invited || 0}</p>
+          <p className="text-[11px] font-semibold text-gray-400">Members registered</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-gray-400">
-            <span className="text-xs font-bold uppercase tracking-wider">Pending Activity</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+        {/* Card 2: Pending Activity - Yellow/Amber Accent */}
+        <div className="bg-gradient-to-b from-[#FFF8EC]/70 to-white p-5 rounded-3xl border border-[#F5A623]/30 border-t-4 border-t-[#F5A623] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B]">
+            <span className="text-xs font-black uppercase tracking-wider text-[#F5A623]">Pending Activity</span>
+            <div className="w-8 h-8 rounded-xl bg-[#F5A623]/15 text-[#F5A623] flex items-center justify-center">
+              <Clock className="w-4 h-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-amber-500">{summary?.pending_count || 0}</p>
-          <p className="text-[11px] text-gray-400">Awaiting 1st post/challenge</p>
+          <p className="text-3xl font-black text-[#F5A623]">{summary?.pending_count || 0}</p>
+          <p className="text-[11px] font-semibold text-gray-400">Awaiting 1st post/challenge</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-gray-400">
-            <span className="text-xs font-bold uppercase tracking-wider">Successful</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        {/* Card 3: Successful - Emerald Accent */}
+        <div className="bg-gradient-to-b from-emerald-50/50 to-white p-5 rounded-3xl border border-emerald-500/30 border-t-4 border-t-emerald-500 shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B]">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-600">Successful</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-emerald-600">{summary?.successful_count || 0}</p>
-          <p className="text-[11px] text-gray-400">Activity verified</p>
+          <p className="text-3xl font-black text-emerald-600">{summary?.successful_count || 0}</p>
+          <p className="text-[11px] font-semibold text-gray-400">Activity verified</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-gray-400">
-            <span className="text-xs font-bold uppercase tracking-wider">Referral XP Earned</span>
-            <Sparkles className="w-4 h-4 text-[#E84020]" />
+        {/* Card 4: Referral XP Earned - Brand Orange Accent */}
+        <div className="bg-gradient-to-b from-[#FFF0ED]/70 to-white p-5 rounded-3xl border border-[#E84020]/30 border-t-4 border-t-[#E84020] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B]">
+            <span className="text-xs font-black uppercase tracking-wider text-[#E84020]">Referral XP Earned</span>
+            <div className="w-8 h-8 rounded-xl bg-[#E84020]/15 text-[#E84020] flex items-center justify-center">
+              <Sparkles className="w-4 h-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-[#E84020]">+{summary?.total_referral_xp || 0} XP</p>
-          <p className="text-[11px] text-gray-400">Credited to your balance</p>
+          <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E84020] to-[#FF5733]">
+            +{summary?.total_referral_xp || 0} XP
+          </p>
+          <p className="text-[11px] font-bold text-[#E84020]">Credited to your balance</p>
         </div>
       </div>
 
       {/* 4. Referral History Stream */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm space-y-4">
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-extrabold text-base text-[#0D2C5B]">Your Invited Creators</h3>
-          <span className="text-xs text-gray-400 font-semibold">{summary?.history?.length || 0} Records</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-2.5 h-6 rounded-full bg-gradient-to-b from-[#0D2C5B] to-[#00B5C8]" />
+            <h3 className="font-black text-lg text-[#0D2C5B] tracking-tight">Your Invited Creators</h3>
+          </div>
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#F8F6F1] text-[#0D2C5B] border border-gray-200">
+            {summary?.history?.length || 0} Records
+          </span>
         </div>
 
         {!summary?.history || summary.history.length === 0 ? (
-          <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-2xl p-6 space-y-2">
-            <Gift className="w-10 h-10 text-gray-300 mx-auto" />
-            <h4 className="font-bold text-sm text-[#0D2C5B]">No referrals yet</h4>
-            <p className="text-xs text-gray-500 max-w-sm mx-auto">
-              Share your link with talented Tamil creators. Once they publish their first creative post or submit to a challenge, you will automatically earn +50 XP!
+          <div className="text-center py-12 border-2 border-dashed border-[#FFB84D]/40 bg-gradient-to-b from-[#FFF8EC]/30 to-white rounded-2xl p-6 space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FFF0ED] to-[#FFF8EC] text-[#E84020] border border-[#FFB84D]/40 flex items-center justify-center mx-auto shadow-xs">
+              <Gift className="w-7 h-7" />
+            </div>
+            <h4 className="font-black text-base text-[#0D2C5B]">No referrals yet</h4>
+            <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+              Share your invite link with talented Tamil creators. Once they publish their first creative post or submit to a challenge, you will automatically earn <span className="font-bold text-[#E84020]">+50 XP</span>!
             </p>
           </div>
         ) : (
@@ -245,16 +302,17 @@ export default function ReferralDashboardView() {
         )}
       </div>
 
-      {/* 5. Rules & Anti-Fraud Notice */}
-      <div className="bg-[#FFF8EC] border border-[#F5A623]/30 rounded-2xl p-5 text-xs text-[#8A5000] space-y-1.5">
-        <div className="flex items-center gap-2 font-bold text-sm text-[#0D2C5B]">
+      {/* 5. Rules & Anti-Fraud Notice with Logo Palette */}
+      <div className="bg-gradient-to-br from-[#FFF8EC] via-white to-[#FFF0ED]/40 border border-[#F5A623]/35 rounded-2xl p-5 text-xs text-[#8A5000] space-y-2 relative overflow-hidden shadow-xs">
+        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#E84020] via-[#F5A623] to-[#00B5C8]" />
+        <div className="flex items-center gap-2 font-black text-sm text-[#0D2C5B]">
           <AlertCircle className="w-4 h-4 text-[#E84020]" />
           <span>TNCC Referral & Earn Policy</span>
         </div>
-        <p className="leading-relaxed">
+        <p className="leading-relaxed text-gray-700">
           • Referral reward is awarded <strong>only once per referred member</strong> when they successfully publish their first approved creative post or complete a challenge entry.
         </p>
-        <p className="leading-relaxed">
+        <p className="leading-relaxed text-gray-700">
           • <strong>Zero XP is awarded at signup</strong> to prevent automated bot farming. Self-referrals and duplicate accounts are strictly disqualified.
         </p>
       </div>
