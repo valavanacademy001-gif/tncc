@@ -22,3 +22,11 @@
 | **Realtime Sync** | Cross-Browser / Cross-Device | Supabase Realtime Channels | ✅ Live & Connected | postgres_changes subscription |
 | **XP & Ledger** | Immutable XP Ledger | `community_xp_transactions` | ✅ Live & Connected | Ledger entries on posts and likes |
 | **Leaderboard** | Statewide Creator Rankings | `get_verified_community_leaderboard` | ✅ Live & Connected | Podium medals & XP calculation |
+| **Security & RLS** | Supabase Row Level Security | PostgreSQL RLS on all tables | ✅ Enforced & Verified | Issue #4 Completed |
+| **Referral & Earn** | Referral Codes & Link Sharing | `community_referral_codes` | ✅ Live & Connected | GET /api/community/referrals/me & /join?ref= |
+| **Referral & Earn** | First Activity Reward Trigger | `evaluate_and_reward_referral` | ✅ Enforced & Verified | +50 XP on 1st post/challenge submission |
+| **Referral & Earn** | Anti-Fraud Verification | Database Constraints & Unique Checks | ✅ Enforced & Verified | 0 XP at signup, self-referral blocked |
+| **Referral Admin** | Referral Audit & Fraud Rejection | Admin Management Console | ✅ Live & Connected | /community/admin (Referrals Tab) |
+| **Mobile UI** | Streamlined Mobile Header | Header & Brand Bar | ✅ Cleaned & Verified | Removed community tag & rank title |
+| **Leaderboard & Challenges** | High-Res 3D Podium Medals | Realistic Gold, Silver, Bronze Medals | ✅ Deployed & Prominent | Scaled up medal graphics |
+

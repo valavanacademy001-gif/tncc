@@ -58,3 +58,4 @@
   `GET /api/community/posts/saved` -> Array includes the saved post with `is_saved: true`. **PASSED**.
 - **Test 17: Member removes bookmark**  
   `POST /api/community/posts/[id]/save` -> HTTP 200 `{"success":true,"saved":false,"saves_count":0}`. **PASSED**.
+

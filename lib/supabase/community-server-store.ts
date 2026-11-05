@@ -1,5 +1,5 @@
 import { INITIAL_CHALLENGES, INITIAL_MEMBERS, INITIAL_POSTS } from '@/tncc-community/lib/community-db';
-import { ChallengeSubmission, CommunityChallenge, CommunityMember, CommunityPost, PostComment, XPTransaction } from '@/tncc-community/lib/types';
+import { ChallengeSubmission, CommunityChallenge, CommunityMember, CommunityPost, PostComment, XPTransaction, ReferralRecord, MemberReferralSummary } from '@/tncc-community/lib/types';
 
 // Global server memory store to maintain state across API routes when Supabase schema migrations are pending
 declare global {
@@ -9,6 +9,8 @@ declare global {
   var __tncc_server_posts: CommunityPost[] | undefined;
   var __tncc_server_comments: PostComment[] | undefined;
   var __tncc_server_saved_posts: Record<string, string[]> | undefined; // memberId -> postId[]
+  var __tncc_server_referral_codes: Record<string, string> | undefined; // memberId -> code
+  var __tncc_server_referrals: ReferralRecord[] | undefined;
   var __tncc_server_xp_transactions: XPTransaction[] | undefined;
   var __tncc_server_like_awards: Set<string> | undefined;
   var __tncc_server_post_likes: Record<string, string[]> | undefined;
@@ -581,5 +583,191 @@ export const serverStore = {
   getVerifiedLeaderboard(limit: number = 50): CommunityMember[] {
     const members = [...this.getMembers()];
     return members.sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0)).slice(0, limit);
+  },
+
+  // --- Referral & Earn System (Part B) ---
+  getOrCreateReferralCode(memberId: string): string {
+    if (!global.__tncc_server_referral_codes) {
+      global.__tncc_server_referral_codes = {};
+    }
+
+    if (global.__tncc_server_referral_codes[memberId]) {
+      return global.__tncc_server_referral_codes[memberId];
+    }
+
+    const member = this.getMemberById(memberId);
+    const cleanUsername = member
+      ? member.username.toUpperCase().replace(/[^A-Z0-9]/g, '')
+      : 'CREATOR';
+    const code = `TNCC-${cleanUsername}`;
+
+    // Guarantee uniqueness
+    let finalCode = code;
+    const existing = Object.values(global.__tncc_server_referral_codes);
+    if (existing.includes(finalCode)) {
+      finalCode = `${code}${Math.floor(1000 + Math.random() * 9000)}`;
+    }
+
+    global.__tncc_server_referral_codes[memberId] = finalCode;
+    return finalCode;
+  },
+
+  registerReferralSignup(
+    referredMemberId: string,
+    referralCode: string
+  ): { success: boolean; message: string; referrerId?: string } {
+    if (!global.__tncc_server_referrals) {
+      global.__tncc_server_referrals = [];
+    }
+    if (!global.__tncc_server_referral_codes) {
+      global.__tncc_server_referral_codes = {};
+    }
+
+    const cleanCode = referralCode.trim().toUpperCase();
+
+    // 1. Find referrer by code
+    let referrerId: string | undefined;
+    for (const [mId, c] of Object.entries(global.__tncc_server_referral_codes)) {
+      if (c === cleanCode) {
+        referrerId = mId;
+        break;
+      }
+    }
+
+    // Check seed members
+    if (!referrerId) {
+      const match = this.getMembers().find(
+        (m) =>
+          cleanCode === `TNCC-${m.username.toUpperCase().replace(/[^A-Z0-9]/g, '')}` ||
+          cleanCode === `TNCC-${m.username.toUpperCase()}`
+      );
+      if (match) {
+        referrerId = match.id;
+        global.__tncc_server_referral_codes[match.id] = cleanCode;
+      }
+    }
+
+    if (!referrerId) {
+      return { success: false, message: 'Invalid referral code' };
+    }
+
+    // 2. Prevent self-referral
+    if (referrerId === referredMemberId) {
+      return { success: false, message: 'Self-referral is prohibited' };
+    }
+
+    // 3. Prevent duplicate referral attribution (one referrer per account)
+    const existing = global.__tncc_server_referrals.find((r) => r.referred_member_id === referredMemberId);
+    if (existing) {
+      return { success: false, message: 'Member is already attributed to a referrer' };
+    }
+
+    // 4. Record referral as pending_activity (ZERO XP AT SIGNUP)
+    const referredMember = this.getMemberById(referredMemberId);
+    const newRef: ReferralRecord = {
+      id: `ref-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      referrer_member_id: referrerId,
+      referred_member_id: referredMemberId,
+      referred_member_name: referredMember?.full_name || 'New Member',
+      referral_code: cleanCode,
+      status: 'pending_activity',
+      reward_xp: 50,
+      created_at: new Date().toISOString(),
+    };
+
+    global.__tncc_server_referrals.push(newRef);
+    return {
+      success: true,
+      message: 'Referral attribution successfully recorded as pending_activity',
+      referrerId,
+    };
+  },
+
+  evaluateAndRewardReferral(
+    referredMemberId: string,
+    activityType: 'post' | 'challenge',
+    activityId: string
+  ): { rewarded: boolean; reward_xp?: number; referrerId?: string; message?: string } {
+    if (!global.__tncc_server_referrals) {
+      return { rewarded: false, message: 'No referrals recorded' };
+    }
+
+    const ref = global.__tncc_server_referrals.find(
+      (r) => r.referred_member_id === referredMemberId && r.status === 'pending_activity'
+    );
+
+    if (!ref) {
+      return { rewarded: false, message: 'No pending referral eligible for reward' };
+    }
+
+    // Award +50 XP to REFERRER only
+    const txRef = `referral_bonus_${ref.id}`;
+    const xpResult = this.awardXP(
+      ref.referrer_member_id,
+      50,
+      'Referral Bonus: Member Completed First Creative Activity',
+      txRef,
+      'referral_bonus'
+    );
+
+    if (!xpResult.success && !xpResult.duplicate) {
+      return { rewarded: false, message: 'Failed to record XP transaction' };
+    }
+
+    // Update referral record to rewarded
+    ref.status = 'rewarded';
+    ref.qualifying_activity_type = activityType;
+    ref.qualifying_activity_id = activityId;
+    ref.rewarded_transaction_id = txRef;
+    ref.rewarded_at = new Date().toISOString();
+
+    return {
+      rewarded: true,
+      reward_xp: 50,
+      referrerId: ref.referrer_member_id,
+      message: '+50 XP awarded to referrer for qualifying creative activity',
+    };
+  },
+
+  getMemberReferralSummary(memberId: string): MemberReferralSummary {
+    const code = this.getOrCreateReferralCode(memberId);
+    const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://tncc.vercel.app';
+    const shareUrl = `${domain}/join?ref=${code}`;
+
+    const referrals = (global.__tncc_server_referrals || []).filter(
+      (r) => r.referrer_member_id === memberId
+    );
+
+    const pendingCount = referrals.filter((r) => r.status === 'pending_activity').length;
+    const successfulCount = referrals.filter((r) => r.status === 'rewarded').length;
+    const totalXP = successfulCount * 50;
+
+    return {
+      referral_code: code,
+      share_url: shareUrl,
+      total_invited: referrals.length,
+      pending_count: pendingCount,
+      successful_count: successfulCount,
+      total_referral_xp: totalXP,
+      history: referrals,
+    };
+  },
+
+  getAllReferrals(): ReferralRecord[] {
+    return global.__tncc_server_referrals || [];
+  },
+
+  rejectReferral(referralId: string, reason: string): { success: boolean; message?: string } {
+    if (!global.__tncc_server_referrals) {
+      return { success: false, message: 'No referrals found' };
+    }
+    const ref = global.__tncc_server_referrals.find((r) => r.id === referralId);
+    if (!ref) {
+      return { success: false, message: 'Referral not found' };
+    }
+
+    ref.status = 'rejected';
+    ref.rejection_reason = reason;
+    return { success: true, message: 'Referral marked as rejected' };
   },
 };

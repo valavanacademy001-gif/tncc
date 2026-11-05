@@ -22,6 +22,18 @@
 | `community_saved_posts` | Members read own saved posts | `SELECT` | `USING (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id) OR is_admin())` |
 | `community_saved_posts` | Members insert own saved posts | `INSERT` | `WITH CHECK (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id))` |
 | `community_saved_posts` | Members delete own saved posts | `DELETE` | `USING (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id))` |
+| `community_members` | Public read members profile | `SELECT` | `USING (true)` |
+| `community_members` | Members update own profile fields | `UPDATE` | `USING (auth.uid() = user_id OR is_admin()) WITH CHECK (auth.uid() = user_id OR is_admin())` |
+| `community_xp_transactions` | Members read own XP transactions | `SELECT` | `USING (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id) OR is_admin())` |
+| `community_xp_transactions` | Clients cannot modify ledger | `INSERT, UPDATE, DELETE` | `FORBIDDEN` (Immutable append-only via server service-role RPCs) |
+| `community_referral_codes` | Members read own or by code | `SELECT` | `USING (true)` |
+| `community_referrals` | Referrers read own referrals | `SELECT` | `USING (auth.uid() = (SELECT user_id FROM community_members WHERE id = referrer_member_id) OR is_admin())` |
+| `community_challenges` | Public read challenges | `SELECT` | `USING (true)` |
+| `community_challenges` | Admin manage challenges | `ALL` | `USING (is_admin())` |
+| `community_challenge_submissions` | Members read own or approved | `SELECT` | `USING (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id) OR is_admin())` |
+| `community_challenge_submissions` | Members submit own entries | `INSERT` | `WITH CHECK (auth.uid() = (SELECT user_id FROM community_members WHERE id = member_id))` |
+| `community_resources` | Public read resources | `SELECT` | `USING (true)` |
+| `community_resources` | Admin manage resources | `ALL` | `USING (is_admin())` |
 
 ---
 
@@ -31,3 +43,10 @@
 2. **Re-Like Anti-Farming:** Unliking and re-liking the same post does not re-award XP. Once the idempotency record exists in the ledger, repeat requests return `xp_earned: false`.
 3. **Double-Click & Mutex Concurrency:** Server-side mutex locking (`acquireXPLock` / database unique constraints) prevents concurrent simultaneous duplicate like records.
 4. **Ownership Verification on Deletion:** Attempting to delete another member's post or comment returns `HTTP 403 Forbidden` (`Unauthorized: You can only delete your own posts/comments`).
+5. **Referral Fraud Prevention:**
+   - 0 XP at signup, profile setup, or email verification.
+   - Referrer reward (+50 XP) is triggered strictly on the referred member's first approved creative post or verified challenge entry.
+   - Self-referrals are prevented by database-level `CHECK (referrer_member_id <> referred_member_id)`.
+   - Single referrer attribution enforced via `UNIQUE (referred_member_id)`.
+   - Admins can review and reject suspicious referrals via Admin Dashboard.
+

@@ -14,3 +14,4 @@
 - [ ] Issue #2: Secure Admin Route Protection via Next.js Middleware and Supabase JWT
 - [ ] Issue #11: Remove 14 MB Unoptimized GLB Model and Optimize 3D Asset Loading
 - [ ] Issue #12: Implement Automated End-to-End Test Suite with Playwright
+

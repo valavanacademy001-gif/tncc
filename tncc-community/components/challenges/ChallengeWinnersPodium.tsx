@@ -44,7 +44,7 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
             <img
               src="/medals/medal-2nd.png"
               alt="2nd Place Silver Medal"
-              className="w-14 sm:w-16 h-auto object-contain drop-shadow-lg -mb-1 transition-transform hover:scale-105"
+              className="w-20 sm:w-24 h-auto object-contain drop-shadow-xl -mb-1 transition-transform hover:scale-105"
             />
             <img
               src={winners.second.member.avatar_url}
@@ -74,7 +74,7 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
             <img
               src="/medals/medal-1st.png"
               alt="1st Place Gold Medal"
-              className="w-18 sm:w-20 h-auto object-contain drop-shadow-2xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
+              className="w-24 sm:w-28 h-auto object-contain drop-shadow-2xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
             />
             <img
               src={winners.first.member.avatar_url}
@@ -104,7 +104,7 @@ export default function ChallengeWinnersPodium({ winners }: WinnersPodiumProps) 
             <img
               src="/medals/medal-3rd.png"
               alt="3rd Place Bronze Medal"
-              className="w-14 sm:w-16 h-auto object-contain drop-shadow-lg -mb-1 transition-transform hover:scale-105"
+              className="w-20 sm:w-24 h-auto object-contain drop-shadow-xl -mb-1 transition-transform hover:scale-105"
             />
             <img
               src={winners.third.member.avatar_url}

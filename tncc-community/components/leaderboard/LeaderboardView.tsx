@@ -73,7 +73,7 @@ export default function LeaderboardView() {
             <img
               src="/medals/medal-2nd.png"
               alt="2nd Place Silver Medal"
-              className="w-14 sm:w-16 h-auto object-contain drop-shadow-md -mb-1 transition-transform hover:scale-105"
+              className="w-20 sm:w-24 h-auto object-contain drop-shadow-xl -mb-1 transition-transform hover:scale-105"
             />
             <img
               src={second.avatar_url || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80'}
@@ -105,7 +105,7 @@ export default function LeaderboardView() {
             <img
               src="/medals/medal-1st.png"
               alt="1st Place Gold Medal"
-              className="w-18 sm:w-20 h-auto object-contain drop-shadow-xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
+              className="w-24 sm:w-28 h-auto object-contain drop-shadow-2xl -mb-1 animate-bounce-subtle transition-transform hover:scale-105"
             />
             <img
               src={first.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
@@ -136,7 +136,7 @@ export default function LeaderboardView() {
             <img
               src="/medals/medal-3rd.png"
               alt="3rd Place Bronze Medal"
-              className="w-14 sm:w-16 h-auto object-contain drop-shadow-md -mb-1 transition-transform hover:scale-105"
+              className="w-20 sm:w-24 h-auto object-contain drop-shadow-xl -mb-1 transition-transform hover:scale-105"
             />
             <img
               src={third.avatar_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80'}

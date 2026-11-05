@@ -43,3 +43,23 @@
 4. `add_post_comment`: Atomically inserts comment and increments post `comments_count`.
 5. `delete_post_comment`: Verifies ownership and deletes comment, decrementing `comments_count`.
 6. `delete_community_post`: Verifies ownership and deletes post and associated cascades.
+7. `get_or_create_referral_code`: Generates deterministic unique referral code for member.
+8. `record_referral_signup`: Records pending referral attribution with zero XP reward.
+9. `evaluate_and_reward_referral`: Verifies first qualifying creative activity (post or challenge submission) and awards exactly +50 XP to the referrer via the XP ledger.
+
+---
+
+## 3. Referral & Earn Tables (Migration 008)
+
+### A. `community_referral_codes`
+- **Columns:** `id (UUID PK)`, `member_id (UUID FK)`, `code (TEXT UNIQUE)`, `created_at (TIMESTAMPTZ)`
+- **Constraint:** One permanent unique code per member.
+
+### B. `community_referrals`
+- **Columns:** `id (UUID PK)`, `referrer_member_id (UUID FK)`, `referred_member_id (UUID FK)`, `referral_code (TEXT)`, `status (TEXT)`, `reward_xp (INT DEFAULT 50)`, `reward_transaction_id (UUID FK)`, `first_activity_type (TEXT)`, `first_activity_id (TEXT)`, `created_at (TIMESTAMPTZ)`, `rewarded_at (TIMESTAMPTZ)`
+- **Anti-Fraud Constraints:**
+  - `UNIQUE (referred_member_id)`: Guarantees a referred user can only ever have one referrer.
+  - `CHECK (referrer_member_id <> referred_member_id)`: Self-referral is strictly forbidden.
+  - `status IN ('pending_activity', 'rewarded', 'rejected')`.
+
+

@@ -178,12 +178,14 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
 
     // Supabase Realtime subscription for cross-device & multi-browser sync
     let channel: any = null;
+    let client: any = null;
     try {
       if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_URL) {
         import('@/lib/supabase/client').then(({ createClient }) => {
-          const supabase = createClient();
-          channel = supabase
-            .channel('realtime_community_feed')
+          client = createClient();
+          const channelName = `realtime_feed_${Math.random().toString(36).slice(2, 8)}`;
+          channel = client
+            .channel(channelName)
             .on(
               'postgres_changes',
               { event: '*', schema: 'public', table: 'community_posts' },
@@ -206,9 +208,9 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     }
 
     return () => {
-      if (channel) {
+      if (channel && client) {
         try {
-          channel.unsubscribe();
+          client.removeChannel(channel);
         } catch {
           // cleanup
         }

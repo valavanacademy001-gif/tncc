@@ -62,9 +62,6 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
               className="transition-transform group-hover:scale-105"
               priority
             />
-            <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-[#E84020]/10 text-[#E84020] border border-[#E84020]/20">
-              COMMUNITY
-            </span>
           </Link>
         </div>
 
@@ -91,18 +88,12 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
             <div className="w-5 h-5 rounded-full bg-[#E84020] flex items-center justify-center text-xs text-white shrink-0">
               ⚡
             </div>
-            <div className="flex flex-col text-left">
+            <div className="flex items-center text-left">
               <span 
-                className="text-[11px] font-extrabold leading-none text-[#FFF8EC] group-hover:text-white"
+                className="text-xs sm:text-sm font-extrabold leading-none text-[#FFF8EC] group-hover:text-white"
                 suppressHydrationWarning
               >
                 {currentMember?.total_xp || 0} XP
-              </span>
-              <span 
-                className="hidden sm:block text-[9px] font-medium text-gray-300 leading-tight"
-                suppressHydrationWarning
-              >
-                {memberLevel.title}
               </span>
             </div>
           </Link>

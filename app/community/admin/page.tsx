@@ -28,6 +28,9 @@ import {
   X,
   MessageSquare,
   Loader2,
+  Gift,
+  AlertTriangle,
+  XCircle,
 } from 'lucide-react';
 import {
   CommunityResource,
@@ -70,8 +73,34 @@ export default function AdminDashboardPage() {
   } = useCommunity();
 
   const [activeTab, setActiveTab] = useState<
-    'reports' | 'users' | 'resources' | 'events' | 'challenges' | 'jobs'
+    'reports' | 'users' | 'resources' | 'events' | 'challenges' | 'jobs' | 'referrals'
   >('reports');
+
+  // Referral management state
+  const [adminReferrals, setAdminReferrals] = useState<any[]>([]);
+  const [referralStats, setReferralStats] = useState<any>(null);
+  const [isRejecting, setIsRejecting] = useState(false);
+
+  const fetchAdminReferrals = async () => {
+    try {
+      const res = await fetch('/api/community/admin/referrals', {
+        headers: { 'x-tncc-active-email': 'suganeshsugu07@gmail.com' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setAdminReferrals(data.referrals || []);
+          setReferralStats(data.stats || null);
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to fetch admin referrals:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchAdminReferrals();
+  }, []);
 
   // Search & filter states
   const [userSearch, setUserSearch] = useState('');
@@ -416,6 +445,7 @@ export default function AdminDashboardPage() {
             { id: 'events', name: 'Event Management', icon: Calendar, count: events.length },
             { id: 'challenges', name: 'Challenges & Winners', icon: Trophy, count: challenges.length },
             { id: 'jobs', name: 'Hiring & Jobs', icon: Briefcase, count: jobs.length },
+            { id: 'referrals', name: 'Referrals & Earn', icon: Gift, count: adminReferrals.length },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -1198,6 +1228,153 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================
+          TAB 7: REFERRALS & EARN MANAGEMENT
+          ============================================================ */}
+      {activeTab === 'referrals' && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Header & Stats Cards */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-lg text-[#0D2C5B]">Referral & Earn Overview</h3>
+              <p className="text-xs text-gray-500">
+                Monitor referral signups, qualifying activities, and automated +50 XP bonus rewards.
+              </p>
+            </div>
+            <button
+              onClick={fetchAdminReferrals}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#0D2C5B] text-white hover:bg-[#1B3F7E] transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Refresh Records</span>
+            </button>
+          </div>
+
+          {/* Metric Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Referrals</span>
+              <p className="text-2xl font-black text-[#0D2C5B]">{referralStats?.total_referrals ?? adminReferrals.length}</p>
+              <p className="text-[11px] text-gray-400">All registered referrals</p>
+            </div>
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pending Activity</span>
+              <p className="text-2xl font-black text-amber-500">{referralStats?.pending_referrals ?? 0}</p>
+              <p className="text-[11px] text-gray-400">Zero XP issued (normal)</p>
+            </div>
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rewarded (+50 XP)</span>
+              <p className="text-2xl font-black text-emerald-600">{referralStats?.successful_referrals ?? 0}</p>
+              <p className="text-[11px] text-gray-400">Qualifying activity confirmed</p>
+            </div>
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total XP Distributed</span>
+              <p className="text-2xl font-black text-[#E84020]">+{referralStats?.total_xp_distributed ?? 0} XP</p>
+              <p className="text-[11px] text-gray-400">Credited to referrers</p>
+            </div>
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Suspicious Activity</span>
+              <p className="text-2xl font-black text-purple-600">{referralStats?.suspicious_activity ?? 0}</p>
+              <p className="text-[11px] text-gray-400">Accounts flagged for audit</p>
+            </div>
+          </div>
+
+          {/* Referrals List Table */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+              <h4 className="font-bold text-xs text-[#0D2C5B]">Audit Trail & Attribution Records</h4>
+              <span className="text-xs text-gray-400">{adminReferrals.length} Total</span>
+            </div>
+
+            {adminReferrals.length === 0 ? (
+              <div className="p-10 text-center text-gray-400 text-xs">
+                No referral records found yet.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold">
+                      <th className="p-3.5">Referrer ID</th>
+                      <th className="p-3.5">Referred Member ID</th>
+                      <th className="p-3.5">Code Used</th>
+                      <th className="p-3.5">Status</th>
+                      <th className="p-3.5">Qualifying Event</th>
+                      <th className="p-3.5">Reward XP</th>
+                      <th className="p-3.5">Date Created</th>
+                      <th className="p-3.5 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {adminReferrals.map((r: any) => (
+                      <tr key={r.id} className="hover:bg-gray-50/60 transition-colors">
+                        <td className="p-3.5 font-mono text-[11px] text-[#0D2C5B] font-bold">{r.referrer_member_id}</td>
+                        <td className="p-3.5 font-mono text-[11px] text-gray-700">{r.referred_member_id}</td>
+                        <td className="p-3.5 font-mono font-bold text-[#E84020]">{r.referral_code}</td>
+                        <td className="p-3.5">
+                          {r.status === 'rewarded' ? (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              Rewarded
+                            </span>
+                          ) : r.status === 'pending_activity' ? (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                              Pending Activity
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
+                              Rejected
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3.5 capitalize text-gray-600">
+                          {r.qualifying_activity_type ? `${r.qualifying_activity_type} (${r.qualifying_activity_id?.slice(0, 8)}...)` : 'None yet'}
+                        </td>
+                        <td className="p-3.5 font-bold text-[#0D2C5B]">
+                          {r.status === 'rewarded' ? `+${r.reward_xp} XP` : '0 XP (Pending)'}
+                        </td>
+                        <td className="p-3.5 text-gray-400 text-[11px]">
+                          {new Date(r.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="p-3.5 text-right">
+                          {r.status === 'pending_activity' && (
+                            <button
+                              disabled={isRejecting}
+                              onClick={async () => {
+                                const reason = prompt('Reason for rejection:', 'Suspicious duplicate or bot activity');
+                                if (!reason) return;
+                                setIsRejecting(true);
+                                try {
+                                  const res = await fetch(`/api/community/admin/referrals/${r.id}/reject`, {
+                                    method: 'POST',
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'x-tncc-active-email': 'suganeshsugu07@gmail.com',
+                                    },
+                                    body: JSON.stringify({ reason }),
+                                  });
+                                  if (res.ok) {
+                                    fetchAdminReferrals();
+                                  }
+                                } finally {
+                                  setIsRejecting(false);
+                                }
+                              }}
+                              className="px-2.5 py-1 text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100 rounded-lg border border-red-200 transition-colors disabled:opacity-40"
+                            >
+                              Reject
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}

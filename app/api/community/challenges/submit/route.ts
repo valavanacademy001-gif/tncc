@@ -273,6 +273,18 @@ export async function POST(request: NextRequest) {
 
     serverStore.addSubmission(newSubmission);
 
+    // Referral Qualifying Activity Check (Part B): First challenge participation triggers +50 XP to Referrer
+    try {
+      await supabase.rpc('evaluate_and_reward_referral', {
+        p_referred_member_id: memberId,
+        p_activity_type: 'challenge',
+        p_activity_id: newSubmission.id,
+      });
+    } catch {
+      // Continue seamlessly
+    }
+    serverStore.evaluateAndRewardReferral(memberId, 'challenge', newSubmission.id);
+
     return NextResponse.json({
       success: true,
       message: 'Challenge entry submitted successfully! +15 XP awarded.',

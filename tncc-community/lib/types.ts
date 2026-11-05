@@ -210,3 +210,41 @@ export interface CommunityNotification {
   is_read: boolean;
   created_at: string;
 }
+
+// --- Referral & Earn Types ---
+export type ReferralStatus = 'pending_activity' | 'rewarded' | 'rejected';
+export type QualifyingActivityType = 'post' | 'challenge' | 'manual' | 'none';
+
+export interface ReferralCode {
+  id: string;
+  member_id: string;
+  referral_code: string;
+  created_at: string;
+}
+
+export interface ReferralRecord {
+  id: string;
+  referrer_member_id: string;
+  referred_member_id: string;
+  referred_member_name?: string;
+  referral_code: string;
+  status: ReferralStatus;
+  qualifying_activity_type?: QualifyingActivityType;
+  qualifying_activity_id?: string;
+  reward_xp: number;
+  rewarded_transaction_id?: string;
+  rejection_reason?: string;
+  created_at: string;
+  rewarded_at?: string;
+}
+
+export interface MemberReferralSummary {
+  referral_code: string;
+  share_url: string;
+  total_invited: number;
+  pending_count: number;
+  successful_count: number;
+  total_referral_xp: number;
+  history: ReferralRecord[];
+}
+

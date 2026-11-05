@@ -2,6 +2,22 @@
 
 ## [Unreleased] - 2026-11-05
 
+### Added (GitHub Issue #4 & Referral & Earn System)
+- **Supabase Migration 008:** Comprehensive Row Level Security (RLS) policies for all community tables (`community_members`, `community_posts`, `community_post_likes`, `community_post_comments`, `community_saved_posts`, `community_challenges`, `community_challenge_submissions`, `community_challenge_winners`, `community_resources`, `community_events`, `community_job_offers`, `community_xp_transactions`, `community_referral_codes`, `community_referrals`).
+- **Admin Authorization Function:** Centralized `is_admin()` function with safe `search_path = public` and bootstrap admin table.
+- **Referral & Earn System:**
+  - Referral reward: **+50 XP** to referrer.
+  - Strict anti-fraud trigger: **Zero XP at signup**, zero XP for email verification or profile setup. XP is awarded ONLY upon the referred member's first qualifying approved creative post or verified challenge entry.
+  - Database-enforced self-referral prevention and single-attribution constraint.
+  - Member referral dashboard in Profile / Community / Freelancer dashboard (`/community/referrals`).
+  - Public creator VIP invite landing page (`/join?ref=CODE`).
+  - Admin referral audit log and fraud rejection controls in `/community/admin`.
+- **UI Enhancements:**
+  - High-res 3D Gold, Silver, and Bronze medal assets rendered prominently on both Leaderboard and Challenge Winners podiums.
+  - Streamlined mobile header: removed "COMMUNITY" badge and rank subtitle, leaving clean `⚡ {XP} XP`.
+  - Streamlined creator follow button on feed post headers.
+  - Double-tap to like on images and videos with animated heart burst.
+
 ### Added (GitHub Issue #5 - Community Feed, Posts, Likes, Comments & Bookmarks)
 - **Supabase Migration 007:** Live PostgreSQL tables and constraints for `community_posts`, `community_post_likes`, `community_post_comments`, and `community_saved_posts`.
 - **Atomic Database Functions:**
@@ -28,3 +44,4 @@
   - Delete controls on PostCard for author/admin.
   - Delete controls in CommentsModal for author/admin.
   - Full hybrid media integration (Supabase Storage + Google Drive preview).
+

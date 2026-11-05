@@ -411,6 +411,18 @@ export async function POST(request: NextRequest) {
     });
     serverStore.awardXP(activeMemberId, 10, 'Published Community Post', `post_${newPostId}`, 'post_creation');
 
+    // 4. Referral Qualifying Activity Check (Part B): First Creative Post triggers +50 XP to Referrer
+    try {
+      await supabase.rpc('evaluate_and_reward_referral', {
+        p_referred_member_id: activeMemberId,
+        p_activity_type: 'post',
+        p_activity_id: newPostId,
+      });
+    } catch {
+      // Continue seamlessly
+    }
+    serverStore.evaluateAndRewardReferral(activeMemberId, 'post', newPostId);
+
     return NextResponse.json(
       {
         success: true,

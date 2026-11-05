@@ -20,12 +20,14 @@ import {
   CheckCircle2,
   FileCheck,
   MessageCircle,
-  X
+  X,
+  Gift
 } from 'lucide-react';
+import ReferralDashboardView from '../referral/ReferralDashboardView';
 
 export default function ProfileView() {
   const { currentMember, memberLevel, posts, challenges, getPortfolioProjects, getXPTransactions } = useCommunity();
-  const [activeTab, setActiveTab] = useState<'posts' | 'portfolio' | 'challenges' | 'submissions' | 'achievements'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'portfolio' | 'challenges' | 'submissions' | 'achievements' | 'referral'>('posts');
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any | null>(null);
   const [serverTransactions, setServerTransactions] = useState<any[] | null>(null);
@@ -55,6 +57,7 @@ export default function ProfileView() {
     { key: 'challenges', label: 'My Challenges', count: currentMember.challenges_count || 0, icon: Trophy },
     { key: 'submissions', label: 'XP History', count: activeXPTransactions.length, icon: FileCheck },
     { key: 'achievements', label: 'Achievements', count: currentMember.wins_count || 0, icon: Award },
+    { key: 'referral', label: 'Refer & Earn', count: undefined, icon: Gift },
   ] as const;
 
   return (
@@ -461,6 +464,10 @@ export default function ProfileView() {
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'referral' && (
+          <ReferralDashboardView />
         )}
       </div>
 
