@@ -69,9 +69,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Instagram (@${member.username})`}
-          className={`flex items-center font-bold border border-gray-200 bg-white text-[#E1306C] hover:bg-[#E1306C] hover:text-white hover:border-[#E1306C] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#FCE4EC] bg-[#FFF0F5] text-[#E1306C] hover:bg-[#E1306C] hover:text-white hover:border-[#E1306C] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <InstagramIcon className={iconSizes[size]} />
+          <InstagramIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Instagram</span>}
         </a>
       ) : onEditClick ? (
@@ -81,8 +81,8 @@ export default function SocialLinks({
           title="Add Instagram link"
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#E1306C] hover:border-[#E1306C] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
-          <Plus className="w-3 h-3" />
-          <InstagramIcon className={iconSizes[size]} />
+          <Plus className="w-3 h-3 shrink-0" />
+          <InstagramIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Add Instagram</span>}
         </button>
       ) : null}
@@ -94,9 +94,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`LinkedIn (@${member.username})`}
-          className={`flex items-center font-bold border border-gray-200 bg-white text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#E1EFFE] bg-[#F0F7FD] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <LinkedinIcon className={iconSizes[size]} />
+          <LinkedinIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>LinkedIn</span>}
         </a>
       ) : onEditClick ? (
@@ -106,8 +106,8 @@ export default function SocialLinks({
           title="Add LinkedIn link"
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0A66C2] hover:border-[#0A66C2] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
-          <Plus className="w-3 h-3" />
-          <LinkedinIcon className={iconSizes[size]} />
+          <Plus className="w-3 h-3 shrink-0" />
+          <LinkedinIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Add LinkedIn</span>}
         </button>
       ) : null}
@@ -119,9 +119,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Behance Portfolio (@${member.username})`}
-          className={`flex items-center font-bold border border-gray-200 bg-white text-[#0057FF] hover:bg-[#0057FF] hover:text-white hover:border-[#0057FF] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#E1EBFF] bg-[#F0F5FF] text-[#0057FF] hover:bg-[#0057FF] hover:text-white hover:border-[#0057FF] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <BehanceIcon className={iconSizes[size]} />
+          <BehanceIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Behance</span>}
         </a>
       ) : onEditClick ? (
@@ -131,8 +131,8 @@ export default function SocialLinks({
           title="Add Behance link"
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0057FF] hover:border-[#0057FF] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
-          <Plus className="w-3 h-3" />
-          <BehanceIcon className={iconSizes[size]} />
+          <Plus className="w-3 h-3 shrink-0" />
+          <BehanceIcon className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Add Behance</span>}
         </button>
       ) : null}
@@ -144,9 +144,9 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Website (${website})`}
-          className={`flex items-center font-bold border border-gray-200 bg-white text-[#00B5C8] hover:bg-[#0D2C5B] hover:text-white hover:border-[#0D2C5B] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#CCF4F8] bg-[#E6F9FC] text-[#008A99] hover:bg-[#0D2C5B] hover:text-white hover:border-[#0D2C5B] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
         >
-          <Globe className={iconSizes[size]} />
+          <Globe className={`${iconSizes[size]} text-current shrink-0`} />
           {showLabels && <span>Website</span>}
         </a>
       )}

@@ -19,30 +19,27 @@ export default function CreatorCard({ member, rank }: CreatorCardProps) {
   const topPreview = projects[0]?.preview_url || member.cover_url || fallbackCover;
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
+    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group/card">
       {/* Cover / Top Featured Project Preview */}
       <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-tr from-slate-100 to-slate-200 shrink-0">
         <img
           src={topPreview}
           alt={member.full_name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
           loading="lazy"
           onError={(e) => {
             (e.target as HTMLImageElement).src = fallbackCover;
           }}
         />
 
-        {/* Rank & XP Overlay */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
-          {rank && rank <= 3 && (
+        {/* Rank Overlay (Top 3 only — XP removed per request) */}
+        {rank && rank <= 3 && (
+          <div className="absolute top-3 left-3 flex items-center z-10">
             <span className="w-6 h-6 rounded-full bg-[#F5A623] text-[#0D2C5B] font-extrabold text-xs flex items-center justify-center shadow-md">
               #{rank}
             </span>
-          )}
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-[#0D2C5B]/90 text-white backdrop-blur-sm shadow">
-            ⚡ {member.total_xp} XP
-          </span>
-        </div>
+          </div>
+        )}
 
         {/* Total Projects Count */}
         <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 text-white backdrop-blur-sm z-10">

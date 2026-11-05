@@ -58,3 +58,4 @@ export async function DELETE() {
   response.cookies.delete('tncc_admin_session');
   return response;
 }
+
