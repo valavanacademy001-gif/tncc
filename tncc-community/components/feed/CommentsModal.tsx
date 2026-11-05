@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { PostComment } from '../../lib/types';
-import { X, Send } from 'lucide-react';
+import { X, Send, Trash2, Loader2 } from 'lucide-react';
 
 interface CommentsModalProps {
   postId: string;
@@ -12,15 +12,58 @@ interface CommentsModalProps {
 }
 
 export default function CommentsModal({ postId, postAuthorUsername, onClose }: CommentsModalProps) {
-  const { currentMember, getComments, addComment } = useCommunity();
+  const { currentMember, getComments, addComment, deleteComment, isAdmin } = useCommunity();
   const [commentText, setCommentText] = useState('');
-  const comments = getComments(postId);
+  const [liveComments, setLiveComments] = useState<PostComment[]>(getComments(postId));
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Fetch comments from live backend
+  useEffect(() => {
+    let active = true;
+    const fetchPostComments = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`/api/community/posts/${postId}/comments`);
+        if (res.ok) {
+          const data = await res.json();
+          if (active && data.success && Array.isArray(data.comments)) {
+            setLiveComments(data.comments);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load live comments, using cached list:', err);
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+
+    fetchPostComments();
+    return () => {
+      active = false;
+    };
+  }, [postId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commentText.trim()) return;
-    addComment(postId, commentText.trim());
-    setCommentText('');
+    const cleanText = commentText.trim();
+    if (!cleanText || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const newComment = addComment(postId, cleanText);
+      setLiveComments((prev) => [...prev, newComment]);
+      setCommentText('');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = (commentId: string) => {
+    if (confirm('Delete this comment?')) {
+      deleteComment(postId, commentId);
+      setLiveComments((prev) => prev.filter((c) => c.id !== commentId));
+    }
   };
 
   return (
@@ -41,31 +84,54 @@ export default function CommentsModal({ postId, postAuthorUsername, onClose }: C
         </div>
 
         {/* Comments List */}
-        <div className="flex-1 p-5 overflow-y-auto space-y-4">
-          {comments.length === 0 ? (
+        <div className="flex-1 p-5 overflow-y-auto space-y-4 min-h-[160px]">
+          {isLoading && liveComments.length === 0 ? (
+            <div className="flex items-center justify-center py-10 text-gray-400">
+              <Loader2 className="w-6 h-6 animate-spin text-[#0D2C5B]" />
+            </div>
+          ) : liveComments.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
               <p className="text-sm font-medium">No comments yet</p>
               <p className="text-xs mt-1">Be the first Tamil Nadu creator to share your feedback!</p>
             </div>
           ) : (
-            comments.map((comment) => (
-              <div key={comment.id} className="flex items-start gap-3 text-xs">
-                <img
-                  src={comment.author.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'}
-                  alt={comment.author.full_name}
-                  className="w-7 h-7 rounded-full object-cover border border-gray-100 shrink-0 mt-0.5"
-                />
-                <div className="flex-1 bg-[#F8F6F1] p-3 rounded-xl rounded-tl-none">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-[#0D2C5B]">{comment.author.full_name}</span>
-                    <span className="text-[10px] text-gray-400">
-                      {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+            liveComments.map((comment) => {
+              const canDelete =
+                comment.member_id === currentMember?.id ||
+                comment.author.username === currentMember?.username ||
+                isAdmin;
+
+              return (
+                <div key={comment.id} className="flex items-start gap-3 text-xs group">
+                  <img
+                    src={comment.author.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'}
+                    alt={comment.author.full_name}
+                    className="w-7 h-7 rounded-full object-cover border border-gray-100 shrink-0 mt-0.5"
+                  />
+                  <div className="flex-1 bg-[#F8F6F1] p-3 rounded-xl rounded-tl-none relative">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-[#0D2C5B]">{comment.author.full_name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-gray-400">
+                          {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        {canDelete && (
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(comment.id)}
+                            className="text-gray-400 hover:text-red-600 transition-colors p-0.5"
+                            title="Delete comment"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{comment.comment_text}</p>
                   </div>
-                  <p className="text-gray-700 leading-relaxed">{comment.comment_text}</p>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
@@ -80,15 +146,16 @@ export default function CommentsModal({ postId, postAuthorUsername, onClose }: C
             type="text"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
+            maxLength={1000}
             placeholder="Add a constructive critique or thought..."
             className="flex-1 text-xs px-3 py-2 bg-white rounded-full border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
           />
           <button
             type="submit"
-            disabled={!commentText.trim()}
+            disabled={!commentText.trim() || isSubmitting}
             className="p-2 bg-[#0D2C5B] hover:bg-[#1B3F7E] disabled:opacity-40 text-white rounded-full transition-colors shrink-0"
           >
-            <Send className="w-3.5 h-3.5" />
+            {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
           </button>
         </form>
       </div>

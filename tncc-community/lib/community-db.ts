@@ -1450,6 +1450,28 @@ export class CommunityDatabase {
     return { post: newPost, xpAwarded: xpReward };
   }
 
+  public deletePost(postId: string): boolean {
+    const postIndex = this.posts.findIndex((p) => p.id === postId);
+    if (postIndex === -1) return false;
+
+    const post = this.posts[postIndex];
+    this.posts = this.posts.filter((p) => p.id !== postId);
+    saveToStorage('posts', this.posts);
+
+    // Delete associated comments
+    this.comments = this.comments.filter((c) => c.post_id !== postId);
+    saveToStorage('comments', this.comments);
+
+    // Decrement posts_count on author
+    const author = this.members.find((m) => m.id === post.member_id);
+    if (author) {
+      author.posts_count = Math.max(0, (author.posts_count || 1) - 1);
+      saveToStorage('members', this.members);
+    }
+
+    return true;
+  }
+
   public toggleLike(postId: string): { post: CommunityPost; liked: boolean; xpEarned: boolean } {
     const current = this.getCurrentMember();
     const postIndex = this.posts.findIndex((p) => p.id === postId);
@@ -1526,6 +1548,21 @@ export class CommunityDatabase {
     }
 
     return comment;
+  }
+
+  public deleteComment(postId: string, commentId: string): boolean {
+    const initialLen = this.comments.length;
+    this.comments = this.comments.filter((c) => c.id !== commentId);
+    if (this.comments.length < initialLen) {
+      saveToStorage('comments', this.comments);
+      const postIndex = this.posts.findIndex((p) => p.id === postId);
+      if (postIndex !== -1) {
+        this.posts[postIndex].comments_count = Math.max(0, (this.posts[postIndex].comments_count || 1) - 1);
+        saveToStorage('posts', this.posts);
+      }
+      return true;
+    }
+    return false;
   }
 
   // --- Resources ---

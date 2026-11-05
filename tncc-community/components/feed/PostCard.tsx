@@ -17,7 +17,8 @@ import {
   Sparkles, 
   MoreHorizontal, 
   ExternalLink,
-  HardDrive
+  HardDrive,
+  Trash2
 } from 'lucide-react';
 
 interface PostCardProps {
@@ -25,7 +26,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  const { toggleLike, toggleSave, isFollowing, toggleFollow, currentMember } = useCommunity();
+  const { toggleLike, toggleSave, isFollowing, toggleFollow, currentMember, deletePost, isAdmin } = useCommunity();
   const [showComments, setShowComments] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showHeartBurst, setShowHeartBurst] = useState(false);
@@ -116,25 +117,55 @@ export default function PostCard({ post }: PostCardProps) {
         {/* Replaced duplicate showcase buttons with interactive Follow button */}
         <div className="flex items-center gap-2 shrink-0">
           {currentMember?.username !== post.author.username ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleFollow(post.author.username);
-              }}
-              className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 active:scale-95 shadow-sm ${
-                isFollowing(post.author.username)
-                  ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
-                  : 'bg-[#0D2C5B] text-white hover:bg-[#E84020]'
-              }`}
-            >
-              {isFollowing(post.author.username) ? 'Following' : '+ Follow'}
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleFollow(post.author.username);
+                }}
+                className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 active:scale-95 shadow-sm ${
+                  isFollowing(post.author.username)
+                    ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
+                    : 'bg-[#0D2C5B] text-white hover:bg-[#E84020]'
+                }`}
+              >
+                {isFollowing(post.author.username) ? 'Following' : '+ Follow'}
+              </button>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm('Admin: Delete this post?')) {
+                      deletePost(post.id);
+                    }
+                  }}
+                  className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  title="Admin Delete Post"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           ) : (
-            <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
-              You
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
+                You
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm('Are you sure you want to delete your post?')) {
+                    deletePost(post.id);
+                  }
+                }}
+                className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                title="Delete your post"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
           )}
         </div>
       </div>

@@ -17,7 +17,7 @@ export async function POST(
     const authHeader = request.headers.get('authorization');
     const isMockAuth = !user && authHeader && authHeader.startsWith('Bearer mock-member-token-');
 
-    // Reject unauthenticated requests
+    // Reject unauthenticated requests in production
     if (!user && !isMockAuth && process.env.NODE_ENV === 'production') {
       return NextResponse.json(
         { error: 'Unauthorized: You must be logged in to like posts.' },
@@ -29,10 +29,10 @@ export async function POST(
     try {
       body = await request.json();
     } catch {
-      // Empty body is acceptable
+      // Body may be empty
     }
 
-    let activeMemberId = body.member_id || 'mem-current';
+    let activeMemberId = body.member_id || request.headers.get('x-tncc-member-id') || 'mem-current';
     if (user) {
       const { data: mem } = await supabase
         .from('community_members')
@@ -44,7 +44,7 @@ export async function POST(
       }
     }
 
-    // Mutex locking for concurrent like requests
+    // Mutex locking for concurrent like requests (prevent race conditions)
     const actionKey = `like_${postId}`;
     const acquired = serverStore.acquireXPLock(activeMemberId, actionKey);
     if (!acquired) {
@@ -55,19 +55,45 @@ export async function POST(
     }
 
     try {
-      // Execute verified like toggle with anti-farming protections
-      const result = serverStore.toggleLike(postId, activeMemberId);
+      let supabaseSuccess = false;
+      let liked = false;
+      let likesCount = 0;
+      let xpEarned = false;
+      let message = '';
 
-      if (!result.success) {
-        return NextResponse.json({ error: result.message || 'Post not found' }, { status: 404 });
+      // 1. Try Supabase RPC: toggle_post_like_and_award_xp
+      const { data: rpcResult, error: rpcError } = await supabase.rpc('toggle_post_like_and_award_xp', {
+        p_post_id: postId,
+        p_liker_member_id: activeMemberId,
+      });
+
+      if (!rpcError && rpcResult) {
+        liked = !!rpcResult.liked;
+        likesCount = rpcResult.likes_count ?? 0;
+        xpEarned = !!rpcResult.xp_earned;
+        message = rpcResult.message || '';
+        supabaseSuccess = true;
+      }
+
+      // 2. Synchronize with serverStore
+      const storeResult = serverStore.toggleLike(postId, activeMemberId);
+
+      if (!supabaseSuccess) {
+        if (!storeResult.success) {
+          return NextResponse.json({ error: storeResult.message || 'Post not found' }, { status: 404 });
+        }
+        liked = storeResult.liked;
+        likesCount = storeResult.likesCount;
+        xpEarned = storeResult.xpEarned;
+        message = storeResult.message || '';
       }
 
       return NextResponse.json({
         success: true,
-        liked: result.liked,
-        likes_count: result.likesCount,
-        xp_earned: result.xpEarned,
-        message: result.message,
+        liked,
+        likes_count: likesCount,
+        xp_earned: xpEarned,
+        message,
       });
     } finally {
       serverStore.releaseXPLock(activeMemberId, actionKey);
@@ -76,4 +102,3 @@ export async function POST(
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
-

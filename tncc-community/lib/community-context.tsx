@@ -52,9 +52,11 @@ interface CommunityContextType {
     category: CommunityPost['category'];
     is_showcase: boolean;
   }) => void;
+  deletePost: (postId: string) => Promise<void>;
   toggleLike: (postId: string) => void;
   toggleSave: (postId: string) => void;
   addComment: (postId: string, text: string) => PostComment;
+  deleteComment: (postId: string, commentId: string) => void;
   getComments: (postId: string) => PostComment[];
   submitChallenge: (data: {
     challenge_id: string;
@@ -131,6 +133,23 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const fetchLivePosts = async () => {
+    try {
+      const curr = communityDb.getCurrentMember();
+      const res = await fetch('/api/community/posts?limit=50', {
+        headers: curr?.id ? { 'x-tncc-member-id': curr.id } : {},
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.posts) && data.posts.length > 0) {
+          setPosts(data.posts);
+        }
+      }
+    } catch (err) {
+      console.warn('Live posts fetch warning, using local state:', err);
+    }
+  };
+
   const loadAll = () => {
     communityDb.init();
     const curr = communityDb.getCurrentMember();
@@ -148,11 +167,53 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       const isAuthorized = checkIsAdmin(activeEmail);
       setIsAdmin(isAuthorized);
     }
+
+    // Refresh live posts from backend
+    fetchLivePosts();
   };
 
   useEffect(() => {
     setMounted(true);
     loadAll();
+
+    // Supabase Realtime subscription for cross-device & multi-browser sync
+    let channel: any = null;
+    try {
+      if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        import('@/lib/supabase/client').then(({ createClient }) => {
+          const supabase = createClient();
+          channel = supabase
+            .channel('realtime_community_feed')
+            .on(
+              'postgres_changes',
+              { event: '*', schema: 'public', table: 'community_posts' },
+              () => {
+                fetchLivePosts();
+              }
+            )
+            .on(
+              'postgres_changes',
+              { event: '*', schema: 'public', table: 'community_post_likes' },
+              () => {
+                fetchLivePosts();
+              }
+            )
+            .subscribe();
+        });
+      }
+    } catch (err) {
+      console.warn('Realtime subscription not initialized:', err);
+    }
+
+    return () => {
+      if (channel) {
+        try {
+          channel.unsubscribe();
+        } catch {
+          // cleanup
+        }
+      }
+    };
   }, []);
 
   const registerMember = (data: {
@@ -231,7 +292,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const createPost = (data: {
+  const createPost = async (data: {
     caption: string;
     media_url?: string;
     media_type: 'image' | 'video' | 'none';
@@ -240,6 +301,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     category: CommunityPost['category'];
     is_showcase: boolean;
   }) => {
+    // 1. Optimistic update
     const result = communityDb.createPost(data);
     setPosts(communityDb.getPosts());
     setAllMembers(communityDb.getMembers());
@@ -252,51 +314,111 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       message: 'Creative post published to TNCC statewide feed.',
     });
 
-    // Sync to server-side verified XP ledger
+    // 2. Persist to live Supabase backend
     try {
-      fetch('/api/community/posts', {
+      const response = await fetch('/api/community/posts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tncc-member-id': curr.id,
+        },
         body: JSON.stringify({
           ...data,
           member_id: curr.id,
         }),
-      }).catch((e) => console.warn('Server sync warning for post:', e));
+      });
+
+      if (response.ok) {
+        const resData = await response.json();
+        if (resData.success && resData.post) {
+          fetchLivePosts();
+        }
+      }
     } catch (e) {
       console.warn('Server sync error for post:', e);
     }
   };
 
-  const toggleLike = (postId: string) => {
+  const deletePost = async (postId: string): Promise<void> => {
+    // 1. Optimistic removal
+    setPosts((prev) => prev.filter((p) => p.id !== postId));
+    communityDb.deletePost(postId);
+
+    addToast({
+      type: 'info',
+      title: 'Post Removed',
+      message: 'Your post was successfully deleted.',
+    });
+
+    // 2. Persist to Supabase
     try {
+      const curr = communityDb.getCurrentMember();
+      await fetch(`/api/community/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-tncc-member-id': curr.id,
+        },
+      });
+      fetchLivePosts();
+    } catch (e) {
+      console.warn('Server delete error for post:', e);
+    }
+  };
+
+  const toggleLike = async (postId: string) => {
+    try {
+      const curr = communityDb.getCurrentMember();
+
+      // 1. Optimistic toggle
       const res = communityDb.toggleLike(postId);
       setPosts(communityDb.getPosts());
-      if (res.xpEarned) {
-        setAllMembers(communityDb.getMembers());
+
+      // 2. Send to live Supabase backend
+      const response = await fetch(`/api/community/posts/${postId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tncc-member-id': curr.id,
+        },
+        body: JSON.stringify({ member_id: curr.id }),
+      });
+
+      if (response.ok) {
+        const serverData = await response.json();
+        if (serverData.success) {
+          if (serverData.xp_earned) {
+            setAllMembers(communityDb.getMembers());
+            addToast({
+              type: 'xp',
+              title: '+2 XP Earned!',
+              message: 'Creator received community appreciation.',
+            });
+          }
+          // Reconcile likes count & liked state
+          setPosts((prev) =>
+            prev.map((p) =>
+              p.id === postId
+                ? { ...p, is_liked: serverData.liked, likes_count: serverData.likes_count }
+                : p
+            )
+          );
+        }
+      } else if (res.xpEarned) {
         addToast({
           type: 'xp',
           title: '+2 XP Earned!',
           message: 'Creator received community appreciation.',
         });
       }
-
-      // Sync to server-side anti-farming like handler
-      try {
-        const curr = communityDb.getCurrentMember();
-        fetch(`/api/community/posts/${postId}/like`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ member_id: curr.id }),
-        }).catch((e) => console.warn('Server sync warning for like:', e));
-      } catch (e) {
-        console.warn('Server sync error for like:', e);
-      }
     } catch (e) {
-      console.error(e);
+      console.error('Like toggle error:', e);
     }
   };
 
-  const toggleSave = (postId: string) => {
+  const toggleSave = async (postId: string) => {
+    const curr = communityDb.getCurrentMember();
+
+    // 1. Optimistic toggle
     const saved = communityDb.toggleSave(postId);
     setPosts(communityDb.getPosts());
     addToast({
@@ -304,9 +426,38 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       title: saved ? 'Saved to Bookmarks' : 'Removed from Bookmarks',
       message: saved ? 'Post saved to your creative collection.' : 'Removed.',
     });
+
+    // 2. Persist to Supabase
+    try {
+      const response = await fetch(`/api/community/posts/${postId}/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tncc-member-id': curr.id,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setPosts((prev) =>
+            prev.map((p) =>
+              p.id === postId
+                ? { ...p, is_saved: data.saved, saves_count: data.saves_count }
+                : p
+            )
+          );
+        }
+      }
+    } catch (e) {
+      console.warn('Server toggleSave error:', e);
+    }
   };
 
   const addComment = (postId: string, text: string): PostComment => {
+    const curr = communityDb.getCurrentMember();
+
+    // 1. Optimistic comment
     const comment = communityDb.addComment(postId, text);
     setPosts(communityDb.getPosts());
     addToast({
@@ -314,7 +465,72 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       title: 'Comment Added',
       message: 'Your critique has been shared.',
     });
+
+    // 2. Persist to live Supabase backend
+    try {
+      fetch(`/api/community/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tncc-member-id': curr.id,
+        },
+        body: JSON.stringify({
+          comment_text: text,
+          member_id: curr.id,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.comments_count !== undefined) {
+            setPosts((prev) =>
+              prev.map((p) =>
+                p.id === postId ? { ...p, comments_count: data.comments_count } : p
+              )
+            );
+          }
+        })
+        .catch((e) => console.warn('Server comment sync error:', e));
+    } catch (e) {
+      console.warn('Comment sync error:', e);
+    }
+
     return comment;
+  };
+
+  const deleteComment = (postId: string, commentId: string) => {
+    const curr = communityDb.getCurrentMember();
+
+    // 1. Optimistic delete
+    communityDb.deleteComment(postId, commentId);
+    setPosts(communityDb.getPosts());
+    addToast({
+      type: 'info',
+      title: 'Comment Deleted',
+      message: 'Your comment has been removed.',
+    });
+
+    // 2. Persist to Supabase
+    try {
+      fetch(`/api/community/posts/${postId}/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-tncc-member-id': curr.id,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.comments_count !== undefined) {
+            setPosts((prev) =>
+              prev.map((p) =>
+                p.id === postId ? { ...p, comments_count: data.comments_count } : p
+              )
+            );
+          }
+        })
+        .catch((e) => console.warn('Server deleteComment sync error:', e));
+    } catch (e) {
+      console.warn('Delete comment error:', e);
+    }
   };
 
   const getComments = (postId: string): PostComment[] => {
@@ -753,9 +969,11 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         toggleAdminMode,
         updateProfile,
         createPost,
+        deletePost,
         toggleLike,
         toggleSave,
         addComment,
+        deleteComment,
         getComments,
         submitChallenge,
         getMemberSubmission,

@@ -1,5 +1,5 @@
 import { INITIAL_CHALLENGES, INITIAL_MEMBERS, INITIAL_POSTS } from '@/tncc-community/lib/community-db';
-import { ChallengeSubmission, CommunityChallenge, CommunityMember, CommunityPost, XPTransaction } from '@/tncc-community/lib/types';
+import { ChallengeSubmission, CommunityChallenge, CommunityMember, CommunityPost, PostComment, XPTransaction } from '@/tncc-community/lib/types';
 
 // Global server memory store to maintain state across API routes when Supabase schema migrations are pending
 declare global {
@@ -7,6 +7,8 @@ declare global {
   var __tncc_server_challenges: CommunityChallenge[] | undefined;
   var __tncc_server_members: CommunityMember[] | undefined;
   var __tncc_server_posts: CommunityPost[] | undefined;
+  var __tncc_server_comments: PostComment[] | undefined;
+  var __tncc_server_saved_posts: Record<string, string[]> | undefined; // memberId -> postId[]
   var __tncc_server_xp_transactions: XPTransaction[] | undefined;
   var __tncc_server_like_awards: Set<string> | undefined;
   var __tncc_server_post_likes: Record<string, string[]> | undefined;
@@ -278,6 +280,132 @@ export const serverStore = {
     const updated = { ...global.__tncc_server_posts[idx], ...updates };
     global.__tncc_server_posts[idx] = updated;
     return updated;
+  },
+
+  deletePost(id: string, requesterMemberId: string, isAdmin: boolean = false): { success: boolean; message?: string } {
+    if (!global.__tncc_server_posts) return { success: false, message: 'Post not found' };
+    const post = this.getPostById(id);
+    if (!post) return { success: false, message: 'Post not found' };
+
+    if (post.member_id !== requesterMemberId && !isAdmin) {
+      return { success: false, message: 'Unauthorized: You can only delete your own posts' };
+    }
+
+    global.__tncc_server_posts = global.__tncc_server_posts.filter((p) => p.id !== id);
+
+    // Also remove comments and likes for this post
+    if (global.__tncc_server_comments) {
+      global.__tncc_server_comments = global.__tncc_server_comments.filter((c) => c.post_id !== id);
+    }
+    if (global.__tncc_server_post_likes) {
+      delete global.__tncc_server_post_likes[id];
+    }
+
+    // Decrement author's posts_count
+    const author = this.getMemberById(post.member_id);
+    if (author) {
+      this.updateMember(author.id, {
+        posts_count: Math.max(0, (author.posts_count || 1) - 1),
+      });
+    }
+
+    return { success: true, message: 'Post deleted' };
+  },
+
+  // --- Comments ---
+  getComments(postId: string): PostComment[] {
+    return (global.__tncc_server_comments || []).filter((c) => c.post_id === postId);
+  },
+
+  addComment(
+    postId: string,
+    memberId: string,
+    text: string
+  ): { success: boolean; comment?: PostComment; message?: string } {
+    const post = this.getPostById(postId);
+    if (!post) return { success: false, message: 'Post not found' };
+
+    const member = this.getMemberById(memberId) || this.getMembers()[0];
+    const newComment: PostComment = {
+      id: `comm-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      post_id: postId,
+      member_id: member.id,
+      author: {
+        username: member.username,
+        full_name: member.full_name,
+        avatar_url: member.avatar_url,
+      },
+      comment_text: text.trim(),
+      created_at: new Date().toISOString(),
+    };
+
+    if (!global.__tncc_server_comments) global.__tncc_server_comments = [];
+    global.__tncc_server_comments.push(newComment);
+
+    // Increment comments_count on post
+    this.updatePost(postId, {
+      comments_count: (post.comments_count || 0) + 1,
+    });
+
+    return { success: true, comment: newComment };
+  },
+
+  deleteComment(
+    commentId: string,
+    requesterMemberId: string,
+    isAdmin: boolean = false
+  ): { success: boolean; message?: string } {
+    if (!global.__tncc_server_comments) return { success: false, message: 'Comment not found' };
+    const comment = global.__tncc_server_comments.find((c) => c.id === commentId);
+    if (!comment) return { success: false, message: 'Comment not found' };
+
+    if (comment.member_id !== requesterMemberId && !isAdmin) {
+      return { success: false, message: 'Unauthorized: You can only delete your own comments' };
+    }
+
+    global.__tncc_server_comments = global.__tncc_server_comments.filter((c) => c.id !== commentId);
+
+    // Decrement comments_count on post
+    const post = this.getPostById(comment.post_id);
+    if (post) {
+      this.updatePost(comment.post_id, {
+        comments_count: Math.max(0, (post.comments_count || 1) - 1),
+      });
+    }
+
+    return { success: true, message: 'Comment deleted' };
+  },
+
+  // --- Bookmarks / Saved Posts ---
+  toggleSave(
+    postId: string,
+    memberId: string
+  ): { success: boolean; saved: boolean; savesCount: number; message?: string } {
+    const post = this.getPostById(postId);
+    if (!post) return { success: false, saved: false, savesCount: 0, message: 'Post not found' };
+
+    if (!global.__tncc_server_saved_posts) {
+      global.__tncc_server_saved_posts = {};
+    }
+
+    const savedList = global.__tncc_server_saved_posts[memberId] || [];
+    const isSaved = savedList.includes(postId);
+
+    if (isSaved) {
+      global.__tncc_server_saved_posts[memberId] = savedList.filter((id) => id !== postId);
+      const newCount = Math.max(0, (post.saves_count || 1) - 1);
+      this.updatePost(postId, { saves_count: newCount, is_saved: false });
+      return { success: true, saved: false, savesCount: newCount, message: 'Post removed from bookmarks' };
+    } else {
+      global.__tncc_server_saved_posts[memberId] = [...savedList, postId];
+      const newCount = (post.saves_count || 0) + 1;
+      this.updatePost(postId, { saves_count: newCount, is_saved: true });
+      return { success: true, saved: true, savesCount: newCount, message: 'Post saved to bookmarks' };
+    }
+  },
+
+  getSavedPostIds(memberId: string): string[] {
+    return (global.__tncc_server_saved_posts && global.__tncc_server_saved_posts[memberId]) || [];
   },
 
   // --- XP Ledger Operations ---
