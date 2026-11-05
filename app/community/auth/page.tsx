@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCommunity } from '@/tncc-community/lib/community-context';
 import { AUTHORIZED_ADMIN_EMAILS } from '@/tncc-community/lib/admin-config';
+import { createClient } from '@/lib/supabase/client';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -55,7 +56,7 @@ function AuthContent() {
     (e) => e.toLowerCase() === email.trim().toLowerCase()
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -69,8 +70,14 @@ function AuthContent() {
           return;
         }
 
+        if (password.length < 8) {
+          setErrorMsg('Password must be at least 8 characters.');
+          setLoading(false);
+          return;
+        }
+
         const skillsList = skills.split(',').map((s) => s.trim()).filter(Boolean);
-        const newMember = registerMember({
+        const res = await registerMember({
           full_name: fullName.trim() || 'New Creator',
           username: username.trim() || email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '_'),
           email: email.trim().toLowerCase(),
@@ -79,14 +86,29 @@ function AuthContent() {
           skills: skillsList,
         });
 
-        setSuccessMsg(`Welcome to TNCC, ${newMember.full_name}! Redirecting...`);
-        setTimeout(() => {
-          if (newMember.role === 'admin') {
-            router.push('/community/admin');
-          } else {
-            router.push('/community');
-          }
-        }, 800);
+        if (!res.success) {
+          setErrorMsg(res.error || 'Registration failed. Please check your details.');
+          setLoading(false);
+          return;
+        }
+
+        if (res.session) {
+          setSuccessMsg(`Welcome to TNCC, ${res.member?.full_name || 'Creator'}! Launching community...`);
+          setTimeout(() => {
+            const nextUrl = searchParams.get('next');
+            if (nextUrl) {
+              router.push(nextUrl);
+            } else if (res.member?.role === 'admin') {
+              router.push('/community/admin');
+            } else {
+              router.push('/community');
+            }
+          }, 800);
+        } else {
+          // Email confirmation is enabled in Supabase
+          setSuccessMsg('Account created successfully! Please check your email to confirm your account before logging in.');
+          setLoading(false);
+        }
       } else if (mode === 'login') {
         if (!email.trim() || !password.trim()) {
           setErrorMsg('Please enter both your email/username and password.');
@@ -94,7 +116,7 @@ function AuthContent() {
           return;
         }
 
-        const res = loginMember(email.trim().toLowerCase(), password);
+        const res = await loginMember(email.trim().toLowerCase(), password);
         if (!res.success) {
           setErrorMsg(res.error || 'Invalid credentials. Please verify your email and password.');
           setLoading(false);
@@ -104,23 +126,43 @@ function AuthContent() {
         setSuccessMsg(
           res.member?.role === 'admin' 
             ? '🛡️ Verified Administrator sign-in. Launching admin workspace...' 
-            : `Welcome back, ${res.member?.full_name}! Launching community...`
+            : `Welcome back, ${res.member?.full_name || 'Creator'}! Launching community...`
         );
 
         setTimeout(() => {
-          if (res.member?.role === 'admin') {
+          const nextUrl = searchParams.get('next');
+          if (nextUrl) {
+            router.push(nextUrl);
+          } else if (res.member?.role === 'admin') {
             router.push('/community/admin');
           } else {
             router.push('/community');
           }
         }, 700);
       } else {
-        // Forgot password simulation
-        setSuccessMsg('Password reset instructions sent to ' + email.trim());
+        // Real Supabase password reset
+        if (!email.trim()) {
+          setErrorMsg('Please enter your email address to receive reset instructions.');
+          setLoading(false);
+          return;
+        }
+
+        const supabase = createClient();
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+          redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+        });
+
+        if (resetError) {
+          setErrorMsg(resetError.message);
+          setLoading(false);
+          return;
+        }
+
+        setSuccessMsg('Password reset instructions sent to ' + email.trim() + '. Please check your inbox.');
         setTimeout(() => {
           setMode('login');
           setSuccessMsg('');
-        }, 2500);
+        }, 4000);
       }
     } catch (err: any) {
       setErrorMsg(err?.message || 'Authentication error. Please try again.');

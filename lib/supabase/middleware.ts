@@ -40,7 +40,9 @@ export async function updateSession(request: NextRequest) {
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = '/community/auth';
+    url.searchParams.set('mode', 'login');
+    url.searchParams.set('next', request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
 

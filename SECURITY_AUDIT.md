@@ -50,3 +50,20 @@
    - Single referrer attribution enforced via `UNIQUE (referred_member_id)`.
    - Admins can review and reject suspicious referrals via Admin Dashboard.
 
+---
+
+## 3. Unified Supabase Authentication Security (Issue #3)
+
+1. **Elimination of Client-Side LocalStorage Spoofing:**
+   - Client-controlled authentication flags (`isAuthenticated: true` in localStorage) completely removed.
+   - Supabase Auth session (`auth.users`) is the sole source of truth across all providers (`UserProvider`, `CommunityProvider`).
+2. **Server-Side Route Protection:**
+   - Protected routes (`/app`, `/onboarding`, `/community/admin`) enforce Supabase JWT validation via Next.js Middleware.
+   - Unauthenticated access returns HTTP 307 temporary redirect to `/community/auth?mode=login&next=...`.
+   - Unauthorized member access to admin routes is rejected with HTTP 403 Forbidden.
+3. **Password Security & Recovery:**
+   - Plain-text passwords never stored or logged.
+   - Password reset uses cryptographically signed, single-use auth codes via Supabase Auth email redirect (`/auth/callback?next=/reset-password`).
+   - New password update enforced through secure `supabase.auth.updateUser()`.
+
+

@@ -2,6 +2,23 @@
 
 ## [Unreleased] - 2026-11-05
 
+### Added (GitHub Issue #3 - Consolidate Dual Auth & Migrate Community Auth to Supabase)
+- **Unified Supabase Authentication Engine:**
+  - Migrated Community Authentication from local browser `localStorage` to real Supabase Auth (`supabase.auth.signUp()` and `supabase.auth.signInWithPassword()`).
+  - Integrated `auth.users` with `community_members` and `profiles` using the user's UUID as foreign key.
+  - Eliminated `localStorage` authentication spoofing and client-controlled `isAuthenticated` flags.
+  - Synchronized auth state across root `UserProvider`, `CommunityProvider`, desktop Navbar, and `MobileMenu`.
+- **Password Recovery & Auth Callback:**
+  - Integrated real `supabase.auth.resetPasswordForEmail()` in `/community/auth` and `/(auth)/forgot-password`.
+  - Added secure SSR code exchange route `/auth/callback`.
+  - Added responsive `/reset-password` page with password strength meters and `supabase.auth.updateUser()`.
+- **Email & Username Lookup Engine:**
+  - Created `/api/community/auth/lookup` supporting both raw email and handle-based logins (e.g., `suganesh_admin` or `@suganesh_admin`).
+  - Created `/api/community/auth/sync` for real-time member profile reconciliation and cookie management.
+- **Server-Side Route Protection (Next.js Middleware):**
+  - Enforced strict Supabase JWT verification on `/app`, `/onboarding`, and `/community/admin`.
+  - Redirects unauthenticated visitors with 307 temporary redirect to `/community/auth?mode=login&next=...`.
+
 ### Added (GitHub Issue #4 & Referral & Earn System)
 - **Supabase Migration 008:** Comprehensive Row Level Security (RLS) policies for all community tables (`community_members`, `community_posts`, `community_post_likes`, `community_post_comments`, `community_saved_posts`, `community_challenges`, `community_challenge_submissions`, `community_challenge_winners`, `community_resources`, `community_events`, `community_job_offers`, `community_xp_transactions`, `community_referral_codes`, `community_referrals`).
 - **Admin Authorization Function:** Centralized `is_admin()` function with safe `search_path = public` and bootstrap admin table.

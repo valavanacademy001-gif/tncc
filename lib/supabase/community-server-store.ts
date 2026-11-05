@@ -244,6 +244,10 @@ export const serverStore = {
     return (global.__tncc_server_members || []).find((m) => m.id === id || m.member_id === id);
   },
 
+  getMemberByUserId(userId: string): CommunityMember | undefined {
+    return (global.__tncc_server_members || []).find((m) => (m as any).user_id === userId);
+  },
+
   getMemberByEmail(email: string): CommunityMember | undefined {
     const lower = email.toLowerCase().trim();
     return (global.__tncc_server_members || []).find(
@@ -771,3 +775,5 @@ export const serverStore = {
     return { success: true, message: 'Referral marked as rejected' };
   },
 };
+
+export const communityServerStore = serverStore;

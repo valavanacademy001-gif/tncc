@@ -3,8 +3,9 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { X, ArrowRight, Briefcase, User2, Zap, MapPin, Calendar } from 'lucide-react';
+import { X, ArrowRight, Briefcase, User2, Zap, MapPin, Calendar, LogOut } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useUser } from '@/lib/user-context';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ const navItems = [
 ];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { user, logout } = useUser();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -139,52 +141,129 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Divider */}
               <div style={{ height: '1px', background: 'var(--gray-200)', margin: '12px 0' }} />
 
-              {/* Sign in action */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
-              >
-                <Link
-                  href="/community/auth"
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '14px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--cream)',
-                    textDecoration: 'none',
-                    marginBottom: '8px',
-                    border: '1px solid var(--gray-200)',
-                  }}
+              {/* User Authentication state */}
+              {user.isAuthenticated ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="space-y-2"
                 >
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background: 'var(--navy)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <User2 size={18} color="white" />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Member Sign In</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Access your creator account & XP</div>
-                  </div>
-                </Link>
-              </motion.div>
+                  <Link
+                    href="/community"
+                    onClick={onClose}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '14px 16px',
+                      borderRadius: '12px',
+                      background: 'var(--cream)',
+                      textDecoration: 'none',
+                      border: '1px solid var(--gray-200)',
+                    }}
+                  >
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'var(--navy)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: 700,
+                      overflow: 'hidden',
+                    }}>
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        user.name[0]
+                      )}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }} className="truncate">
+                        {user.name}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Open Community Dashboard</div>
+                    </div>
+                    <ArrowRight size={16} color="var(--gray-400)" />
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      onClose();
+                    }}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      background: 'none',
+                      border: '1px solid #FEE2E2',
+                      color: '#DC2626',
+                      fontWeight: 600,
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <LogOut size={16} />
+                    <span>Sign Out</span>
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  <Link
+                    href="/community/auth"
+                    onClick={onClose}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '14px 16px',
+                      borderRadius: '12px',
+                      background: 'var(--cream)',
+                      textDecoration: 'none',
+                      marginBottom: '8px',
+                      border: '1px solid var(--gray-200)',
+                    }}
+                  >
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'var(--navy)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <User2 size={18} color="white" />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Member Sign In</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Access your creator account & XP</div>
+                    </div>
+                  </Link>
+                </motion.div>
+              )}
             </div>
 
             {/* Footer CTA */}
-            <div style={{ padding: '20px 24px', borderTop: '1px solid var(--gray-200)' }}>
-              <Link href="/community/auth?mode=register" onClick={onClose} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                Join Free Community
-              </Link>
-            </div>
+            {!user.isAuthenticated && (
+              <div style={{ padding: '20px 24px', borderTop: '1px solid var(--gray-200)' }}>
+                <Link href="/community/auth?mode=register" onClick={onClose} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                  Join Free Community
+                </Link>
+              </div>
+            )}
           </motion.div>
         </>
       )}

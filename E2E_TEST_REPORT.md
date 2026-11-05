@@ -59,3 +59,25 @@
 - **Test 17: Member removes bookmark**  
   `POST /api/community/posts/[id]/save` -> HTTP 200 `{"success":true,"saved":false,"saves_count":0}`. **PASSED**.
 
+---
+
+## 5. Unified Supabase Authentication Tests (Issue #3)
+
+- **Test 18: Unauthenticated Auth Sync Check**  
+  `GET /api/community/auth/sync` -> HTTP 200 `{"authenticated":false}`. Cookies cleared. **PASSED**.
+- **Test 19: Username to Email Lookup**  
+  `POST /api/community/auth/lookup` (`emailOrUsername: "suganesh_admin"`) -> HTTP 200 `{"success":true,"email":"suganeshsugu07@gmail.com"}`. **PASSED**.
+- **Test 20: Username with leading @ lookup**  
+  `POST /api/community/auth/lookup` (`emailOrUsername: "@suganesh_admin"`) -> HTTP 200 `{"success":true,"email":"suganeshsugu07@gmail.com"}`. **PASSED**.
+- **Test 21: Server-Side Protected Route Guard (/community/admin)**  
+  `GET /community/admin` unauthenticated -> HTTP 307 Temporary Redirect to `/community/auth?mode=login&next=%2Fcommunity%2Fadmin`. **PASSED**.
+- **Test 22: Server-Side Protected Route Guard (/app)**  
+  `GET /app` unauthenticated -> HTTP 307 Temporary Redirect to `/community/auth?mode=login&next=%2Fapp`. **PASSED**.
+- **Test 23: Password Recovery Route Check**  
+  `GET /reset-password` -> HTTP 200 OK. Renders secure new password form. **PASSED**.
+- **Test 24: Auth Callback Route (Missing Code handling)**  
+  `GET /auth/callback` -> HTTP 307 Redirect to `/community/auth?error=auth_callback_failed`. **PASSED**.
+- **Test 25: Root Navbar & Mobile Menu Auth State Synchronization**  
+  `UserProvider` updates immediately on Supabase `onAuthStateChange`, removing stale localStorage auth flags. **PASSED**.
+
+

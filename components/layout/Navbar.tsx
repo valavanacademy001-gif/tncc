@@ -4,13 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Menu, X, Search, Briefcase, User, ExternalLink, Sparkles, ShieldCheck } from 'lucide-react';
+import { Menu, X, Search, Briefcase, User, ExternalLink, Sparkles, ShieldCheck, LogOut } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { mockCreators, mockProjects } from '@/lib/mock-data';
 import { useUser } from '@/lib/user-context';
 
 export default function Navbar() {
-  const { user, switchRole } = useUser();
+  const { user, switchRole, logout } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -300,36 +300,64 @@ export default function Navbar() {
                     </button>
                   )}
 
+                  <Link href="/community" className="btn btn-ghost btn-sm" style={{ fontSize: '0.875rem' }}>
+                    Community
+                  </Link>
+
                   <Link href="/app/hiring/projects/new" className="btn btn-primary btn-sm">
                     Post a Project
                   </Link>
 
-                  <Link href="/app" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '4px 10px 4px 4px',
-                    borderRadius: '100px',
-                    background: 'var(--cream)',
-                    border: '1px solid rgba(13,44,91,0.08)',
-                    textDecoration: 'none',
-                  }}>
-                    <div style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      background: 'var(--cyan)',
-                      color: 'white',
-                      fontWeight: 700,
-                      fontSize: '0.8rem',
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Link href="/community" style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      gap: '8px',
+                      padding: '4px 10px 4px 4px',
+                      borderRadius: '100px',
+                      background: 'var(--cream)',
+                      border: '1px solid rgba(13,44,91,0.08)',
+                      textDecoration: 'none',
                     }}>
-                      {user.name[0]}
-                    </div>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)' }}>{user.name.split(' ')[0]}</span>
-                  </Link>
+                      <div style={{
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '50%',
+                        background: 'var(--cyan)',
+                        color: 'white',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden',
+                      }}>
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          user.name[0]
+                        )}
+                      </div>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)' }}>{user.name.split(' ')[0]}</span>
+                    </Link>
+                    <button
+                      onClick={() => logout()}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '6px',
+                        color: 'var(--gray-400)',
+                        borderRadius: '100px',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                      title="Sign out"
+                      aria-label="Sign out"
+                    >
+                      <LogOut size={16} />
+                    </button>
+                  </div>
                 </>
               ) : (
                 <>

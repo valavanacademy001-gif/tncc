@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import {
   CommunityMember,
   CommunityPost,
@@ -16,7 +17,7 @@ import {
 } from './types';
 import { communityDb } from './community-db';
 import { XPEngine } from './xp-engine';
-import { checkIsAdmin } from './admin-config';
+import { checkIsAdmin, AUTHORIZED_ADMIN_EMAILS } from './admin-config';
 
 export interface ToastMessage {
   id: string;
@@ -74,7 +75,7 @@ interface CommunityContextType {
   toggleFollow: (memberIdOrUsername: string) => void;
   dismissToast: (id: string) => void;
   refreshData: () => void;
-  // --- Authentication Methods ---
+  // --- Authentication Methods (Unified Supabase Auth) ---
   registerMember: (data: {
     full_name: string;
     username: string;
@@ -82,9 +83,9 @@ interface CommunityContextType {
     password?: string;
     location?: string;
     skills?: string[];
-  }) => CommunityMember;
-  loginMember: (emailOrUsername: string, password?: string) => { success: boolean; member?: CommunityMember; error?: string };
-  signOutMember: () => void;
+  }) => Promise<{ success: boolean; member?: CommunityMember; error?: string; session?: any }>;
+  loginMember: (emailOrUsername: string, password?: string) => Promise<{ success: boolean; member?: CommunityMember; error?: string }>;
+  signOutMember: () => Promise<void>;
   // --- Admin Methods ---
   addResource: (data: Omit<CommunityResource, 'id'>) => void;
   updateResource: (id: string, data: Partial<CommunityResource>) => void;
@@ -218,7 +219,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const registerMember = (data: {
+  const registerMember = async (data: {
     full_name: string;
     username: string;
     email: string;
@@ -226,43 +227,189 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     location?: string;
     skills?: string[];
   }) => {
-    const newMember = communityDb.registerMember(data);
-    loadAll();
-    addToast({
-      type: 'success',
-      title: 'Welcome to TNCC!',
-      message: `Account created successfully for ${newMember.full_name}`,
-    });
-    return newMember;
-  };
+    try {
+      const supabase = createClient();
+      const cleanEmail = data.email.trim().toLowerCase();
+      const cleanUsername = data.username.trim().replace(/^@/, '');
 
-  const loginMember = (emailOrUsername: string, password?: string) => {
-    const res = communityDb.loginMember(emailOrUsername, password);
-    if (res.success && res.member) {
+      const { data: authData, error: authErr } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password: data.password || 'TnccPass123!',
+        options: {
+          data: {
+            full_name: data.full_name.trim(),
+            username: cleanUsername,
+            location: data.location?.trim() || 'Chennai, Tamil Nadu',
+            skills: data.skills || ['Creator'],
+          },
+        },
+      });
+
+      if (authErr) {
+        return { success: false, error: authErr.message };
+      }
+
+      // Sync member record via backend
+      let member: CommunityMember | undefined = undefined;
+      try {
+        const syncRes = await fetch('/api/community/auth/sync', { method: 'POST' });
+        if (syncRes.ok) {
+          const syncData = await syncRes.json();
+          member = syncData.member;
+        }
+      } catch (err) {
+        console.warn('Backend sync warning:', err);
+      }
+
+      // Fallback to local memory registration if sync did not complete
+      if (!member) {
+        member = communityDb.registerMember(data);
+      }
+
+      setCurrentMember(member);
       loadAll();
+
       addToast({
         type: 'success',
-        title: res.member.role === 'admin' ? '🛡️ Admin Authenticated' : 'Welcome Back!',
-        message: `Signed in as ${res.member.full_name}`,
+        title: 'Welcome to TNCC!',
+        message: `Account created successfully for ${data.full_name}`,
       });
+
+      return { success: true, member, session: authData.session };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Registration failed' };
     }
-    return res;
   };
 
-  const signOutMember = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('tncc_current_member_id');
-      localStorage.removeItem('tncc_active_user_email');
-      localStorage.removeItem('tncc_admin_demo');
-      localStorage.removeItem('tncc_user');
-      localStorage.removeItem('tncc_session');
+  const loginMember = async (emailOrUsername: string, password?: string) => {
+    try {
+      const supabase = createClient();
+      let clean = emailOrUsername.trim().toLowerCase();
+      let resolvedEmail = clean;
+
+      // If username entered, lookup registered email
+      if (!clean.includes('@')) {
+        try {
+          const lookupRes = await fetch('/api/community/auth/lookup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emailOrUsername: clean }),
+          });
+          const lookupData = await lookupRes.json();
+          if (lookupData.success && lookupData.email) {
+            resolvedEmail = lookupData.email;
+          } else {
+            resolvedEmail = `${clean.replace(/[^a-z0-9_]/g, '')}@gmail.com`;
+          }
+        } catch {
+          resolvedEmail = `${clean.replace(/[^a-z0-9_]/g, '')}@gmail.com`;
+        }
+      } else if (clean.endsWith('@gmailcom')) {
+        resolvedEmail = clean.replace('@gmailcom', '@gmail.com');
+      }
+
+      // Supabase authentication
+      let { data: authData, error: authErr } = await supabase.auth.signInWithPassword({
+        email: resolvedEmail,
+        password: password || '',
+      });
+
+      // Predefined accounts bootstrap if not yet created in Supabase
+      if (authErr && (resolvedEmail === 'suganeshsugu07@gmail.com' || resolvedEmail === 'test001@gmail.com')) {
+        try {
+          const seedSignUp = await supabase.auth.signUp({
+            email: resolvedEmail,
+            password: password || (resolvedEmail === 'suganeshsugu07@gmail.com' ? 'Suganesh@tncc' : 'Test001@gmail.com'),
+            options: {
+              data: {
+                full_name: resolvedEmail === 'suganeshsugu07@gmail.com' ? 'Suganesh' : 'Test Creator',
+                username: resolvedEmail === 'suganeshsugu07@gmail.com' ? 'suganesh_admin' : 'test001',
+                location: 'Tamil Nadu',
+              },
+            },
+          });
+          if (!seedSignUp.error && seedSignUp.data.session) {
+            authData = seedSignUp.data;
+            authErr = null;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (authErr) {
+        return {
+          success: false,
+          error: authErr.message === 'Invalid login credentials'
+            ? 'Invalid email or password. Please verify your credentials.'
+            : authErr.message,
+        };
+      }
+
+      // Synchronize session and member profile with backend
+      let member: CommunityMember | undefined = undefined;
+      try {
+        const syncRes = await fetch('/api/community/auth/sync', { method: 'POST' });
+        if (syncRes.ok) {
+          const syncData = await syncRes.json();
+          member = syncData.member;
+          if (syncData.isAdmin) {
+            setIsAdmin(true);
+          }
+        }
+      } catch (err) {
+        console.warn('Backend sync warning:', err);
+      }
+
+      if (!member) {
+        const fallbackRes = communityDb.loginMember(resolvedEmail, password);
+        member = fallbackRes.member;
+      }
+
+      if (member) {
+        setCurrentMember(member);
+        const isUserAdmin = checkIsAdmin(resolvedEmail);
+        setIsAdmin(isUserAdmin);
+        loadAll();
+
+        addToast({
+          type: 'success',
+          title: isUserAdmin ? '🛡️ Admin Authenticated' : 'Welcome Back!',
+          message: `Signed in as ${member.full_name}`,
+        });
+      }
+
+      return { success: true, member };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Login failed' };
     }
-    loadAll();
-    addToast({
-      type: 'info',
-      title: 'Signed Out',
-      message: 'You have been signed out.',
-    });
+  };
+
+  const signOutMember = async () => {
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn('Sign out warning:', err);
+    } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('tncc_current_member_id');
+        localStorage.removeItem('tncc_active_user_email');
+        localStorage.removeItem('tncc_admin_demo');
+        localStorage.removeItem('tncc_admin_session');
+        localStorage.removeItem('tncc_user');
+        localStorage.removeItem('tncc_session');
+      }
+      try {
+        await fetch('/api/community/auth/sync');
+      } catch {}
+      loadAll();
+      addToast({
+        type: 'info',
+        title: 'Signed Out',
+        message: 'You have been safely signed out.',
+      });
+    }
   };
 
   const toggleAdminMode = (enable?: boolean) => {

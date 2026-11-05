@@ -548,3 +548,4 @@ VALUES (
 ON CONFLICT (id) DO UPDATE SET
   public = true,
   file_size_limit = 1048576;
+
