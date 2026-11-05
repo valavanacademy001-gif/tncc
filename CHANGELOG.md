@@ -2,6 +2,21 @@
 
 ## [Unreleased] - 2026-11-05
 
+### Added (GitHub Issue #1 - Remove Hardcoded Plain-Text Passwords and Credential Leakage)
+- **Eradication of Hardcoded Plain-Text Credentials:**
+  - Removed all hardcoded administrator and test member passwords from `tncc-community/lib/community-db.ts` and `tncc-community/lib/community-context.tsx`.
+  - Removed `password?: string;` property from the `CommunityMember` TypeScript interface in `types.ts`, ensuring member models in memory and client state never hold plain-text credentials.
+  - Eliminated mock client-side credential comparison logic (`if (password !== ...)`) across the entire repository.
+  - Verified 0 active occurrences of hardcoded passwords across source code, config files, and documentation.
+- **Generic Error Handling (Zero-Leakage Authentication):**
+  - Standardized all login error handling across `community-context.tsx` and `app/community/auth/page.tsx` to return: `"Invalid email or password."`.
+  - Eliminated password-leaking error messages and account enumeration vulnerabilities.
+  - Added safe, non-revealing "Resend Confirmation Email" action for unconfirmed accounts.
+- **Supabase Auth bcrypt Delegation:**
+  - All user logins routed exclusively through `supabase.auth.signInWithPassword()`, delegating credential handling and verification to Supabase's bcrypt encryption.
+- **Environment & Secret Hygiene:**
+  - Audited environment variables and verified `.env*` files are strictly git-ignored; no private service keys are exposed to client-side bundles.
+
 ### Added (GitHub Issue #2 - Secure Admin Route Protection via Middleware and Supabase JWT)
 - **Multi-Layer Admin Route Protection Architecture:**
   - Next.js Edge Middleware (`middleware.ts`) intercepts `/community/admin` and returns HTTP 307 temporary redirect to `/community/auth?mode=login&next=/community/admin` for unauthenticated requests.

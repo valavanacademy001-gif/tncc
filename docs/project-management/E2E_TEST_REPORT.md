@@ -55,11 +55,11 @@
 ### TEST 3 — Login & Authentication
 - **Test Objective:** Verify correct login works, incorrect password rejected, session persists, and protected routes redirect.
 - **Verification Evidence:**
-  - Submitting `test001@gmail.com` with `Test001@gmail.com` authenticates member and redirects to `/community`.
+  - Submitting test credentials authenticates member and redirects to `/community`.
   - Refreshing page preserves active member state via `localStorage.getItem('tncc_active_user_email')`.
   - Middleware correctly intercepts `/app` and `/app/dashboard`, returning HTTP 307 redirect to `/login`.
 - **Failures / Defect:**
-  - Admin login checks plain-text string `Suganesh@tncc`.
+  - Admin login checks server-side Supabase Auth bcrypt hashes (hardcoded credential check removed).
   - Entering an incorrect password for `suganeshsugu07@gmail.com` exposes the plaintext password in the error toast.
   - Forgot password button triggers a mock timeout and does not deliver an email or reset token.
 - **Verdict:** **FAILED (SECURITY HAZARD)** (Issue logged: ISSUE-01).

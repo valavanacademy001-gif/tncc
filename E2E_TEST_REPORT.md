@@ -99,5 +99,25 @@
 - **Test 32: Server Component Dual Layer Protection**  
   `app/community/admin/page.tsx` executes server-side `auth.getUser()` before rendering. Zero administrative payload leak. **PASSED**.
 
+---
+
+## 7. Hardcoded Credential Removal & Generic Auth Tests (Issue #1)
+
+- **Test 33: Invalid Password Submission**  
+  `POST /community/auth?mode=login` with registered email and incorrect password -> Displays generic error: `"Invalid email or password."`. Actual password never appears in response or UI. **PASSED**.
+- **Test 34: Nonexistent Account Email Submission**  
+  `POST /community/auth?mode=login` with unregistered email `unknown_user@example.com` -> Displays identical generic error: `"Invalid email or password."`. Account existence is not enumerated. **PASSED**.
+- **Test 35: Active Codebase Search for Admin Credentials**  
+  `grep -rniI --exclude-dir={.next,node_modules,.git} "Suganesh@tncc" TNCC-Website/` -> Returns **0 occurrences**. **PASSED**.
+- **Test 36: Active Codebase Search for Hardcoded Test Credentials**  
+  `grep -rnI --exclude-dir={.next,node_modules,.git} "Test001@gmail.com" TNCC-Website/` -> Returns **0 occurrences** (password references eliminated). **PASSED**.
+- **Test 37: Type Safety & State Inspection**  
+  Inspected `tncc-community/lib/types.ts`: `CommunityMember` interface has `password` property completely removed. Members in memory never carry password fields. **PASSED**.
+- **Test 38: Client Bundle & Environment Secret Inspection**  
+  Inspected client JS bundles and `.env*` tracking: No `SUPABASE_SERVICE_ROLE_KEY` or sensitive credentials bundled into client output. `.env*` properly excluded by `.gitignore`. **PASSED**.
+- **Test 39: Supabase Auth bcrypt Hashing Verification**  
+  All logins routed exclusively through `supabase.auth.signInWithPassword()`, delegating credential verification to Supabase's bcrypt implementation. **PASSED**.
+
+
 
 

@@ -229,9 +229,13 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       const cleanEmail = data.email.trim().toLowerCase();
       const cleanUsername = data.username.trim().replace(/^@/, '');
 
+      if (!data.password || data.password.trim().length < 8) {
+        return { success: false, error: 'Password must be at least 8 characters long.' };
+      }
+
       const { data: authData, error: authErr } = await supabase.auth.signUp({
         email: cleanEmail,
-        password: data.password || 'TnccPass123!',
+        password: data.password.trim(),
         options: {
           data: {
             full_name: data.full_name.trim(),
@@ -311,51 +315,14 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         password: password || '',
       });
 
-      // Predefined accounts bootstrap if not yet created in Supabase
-      if (authErr && (resolvedEmail === 'suganeshsugu07@gmail.com' || resolvedEmail === 'test001@gmail.com')) {
-        try {
-          const seedSignUp = await supabase.auth.signUp({
-            email: resolvedEmail,
-            password: password || (resolvedEmail === 'suganeshsugu07@gmail.com' ? 'Suganesh@tncc' : 'Test001@gmail.com'),
-            options: {
-              data: {
-                full_name: resolvedEmail === 'suganeshsugu07@gmail.com' ? 'Suganesh' : 'Test Creator',
-                username: resolvedEmail === 'suganeshsugu07@gmail.com' ? 'suganesh_admin' : 'test001',
-                location: 'Tamil Nadu',
-              },
-            },
-          });
-          if (!seedSignUp.error && seedSignUp.data.session) {
-            authData = seedSignUp.data;
-            authErr = null;
-          }
-        } catch {
-          // ignore
-        }
-
-        // If Supabase has "Confirm email" enabled, mock/test accounts will have "Email not confirmed".
-        // Verify credentials with communityDb so test accounts can authenticate seamlessly.
-        if (authErr) {
-          const fallbackRes = communityDb.loginMember(resolvedEmail, password);
-          if (fallbackRes.success && fallbackRes.member) {
-            const member = fallbackRes.member;
-            setCurrentMember(member);
-            const isUserAdmin = checkIsAdmin(resolvedEmail);
-            setIsAdmin(isUserAdmin);
-            loadAll();
-            return { success: true, member };
-          } else if (fallbackRes.error) {
-            return { success: false, error: fallbackRes.error };
-          }
-        }
-      }
-
       if (authErr) {
+        // Generic authentication errors per Issue #1 security specifications
+        const isEmailNotConfirmed = authErr.message?.toLowerCase().includes('not confirmed');
         return {
           success: false,
-          error: authErr.message === 'Invalid login credentials'
-            ? 'Invalid email or password. Please verify your credentials.'
-            : authErr.message,
+          error: isEmailNotConfirmed
+            ? 'Email not confirmed. Please check your inbox or click resend.'
+            : 'Invalid email or password.',
         };
       }
 

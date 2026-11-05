@@ -144,7 +144,12 @@ function AuthContent() {
 
         const res = await loginMember(email.trim().toLowerCase(), password);
         if (!res.success) {
-          setErrorMsg(res.error || 'Invalid credentials. Please verify your email and password.');
+          const isEmailNotConfirmed = res.error?.toLowerCase().includes('not confirmed');
+          setErrorMsg(
+            isEmailNotConfirmed
+              ? 'Email not confirmed. Please check your inbox or click resend.'
+              : 'Invalid email or password.'
+          );
           setLoading(false);
           return;
         }

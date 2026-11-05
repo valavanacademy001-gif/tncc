@@ -28,7 +28,6 @@ export const INITIAL_MEMBERS: CommunityMember[] = [
     location: 'Chennai, Tamil Nadu',
     skills: ['Community Administrator', 'Creative Direction', 'UI/UX'],
     email: 'suganeshsugu07@gmail.com',
-    password: 'Suganesh@tncc',
     instagram_url: 'https://instagram.com/suganesh_creator',
     linkedin_url: 'https://linkedin.com/in/suganeshsugu07',
     behance_url: 'https://behance.net/suganesh',
@@ -52,7 +51,6 @@ export const INITIAL_MEMBERS: CommunityMember[] = [
     location: 'Tamil Nadu',
     skills: ['Graphic Design', 'Motion Design', 'Video Editing'],
     email: 'test001@gmail.com',
-    password: 'Test001@gmail.com',
     instagram_url: 'https://instagram.com/test001_creator',
     linkedin_url: 'https://linkedin.com/in/test001-creator',
     behance_url: 'https://behance.net/test001',
@@ -1049,7 +1047,6 @@ export class CommunityDatabase {
       this.members.push(admin);
       membersUpdated = true;
     } else {
-      admin.password = 'Suganesh@tncc';
       admin.role = 'admin';
       admin.email = 'suganeshsugu07@gmail.com';
       if (!admin.instagram_url) admin.instagram_url = 'https://instagram.com/suganesh_creator';
@@ -1068,7 +1065,6 @@ export class CommunityDatabase {
       this.members.push(testUser);
       membersUpdated = true;
     } else {
-      testUser.password = 'Test001@gmail.com';
       testUser.email = 'test001@gmail.com';
       if (!testUser.instagram_url) testUser.instagram_url = 'https://instagram.com/test001_creator';
       if (!testUser.linkedin_url) testUser.linkedin_url = 'https://linkedin.com/in/test001-creator';
@@ -1160,7 +1156,6 @@ export class CommunityDatabase {
         full_name: data.full_name.trim(),
         username: data.username.trim(),
         email: cleanEmail,
-        password: data.password || this.members[existingIndex].password,
         location: data.location?.trim() || this.members[existingIndex].location,
         skills: data.skills && data.skills.length > 0 ? data.skills : this.members[existingIndex].skills,
         role: isAdmin ? 'admin' : 'member',
@@ -1178,7 +1173,6 @@ export class CommunityDatabase {
       username: data.username.trim().replace(/^@/, ''),
       full_name: data.full_name.trim(),
       email: cleanEmail,
-      password: data.password,
       avatar_url: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80`,
       cover_url: `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80`,
       bio: 'Tamil Nadu creator crafting impactful visuals and stories.',
@@ -1228,7 +1222,6 @@ export class CommunityDatabase {
         full_name: 'Suganesh',
         username: 'suganesh_admin',
         email: 'suganeshsugu07@gmail.com',
-        password: 'Suganesh@tncc',
         location: 'Tamil Nadu',
         skills: ['Community Administrator', 'Creative Direction'],
       });
@@ -1241,7 +1234,6 @@ export class CommunityDatabase {
         full_name: 'Test Creator',
         username: 'test001',
         email: 'test001@gmail.com',
-        password: 'Test001@gmail.com',
         location: 'Tamil Nadu',
         skills: ['Graphic Design', 'Motion Design'],
       });
@@ -1251,47 +1243,7 @@ export class CommunityDatabase {
     if (!member) {
       return {
         success: false,
-        error: 'No creator account found with this email. Please click "Create Free Member Profile" below to sign up.',
-      };
-    }
-
-    // Verify requested passwords:
-    // 1. Admin Suganesh: Suganesh@tncc
-    if (
-      clean === 'suganeshsugu07@gmail.com' ||
-      clean === 'suganeshsugu07@gmailcom' ||
-      member.username.toLowerCase() === 'suganesh_admin' ||
-      member.username.toLowerCase() === 'suganesh'
-    ) {
-      if (password !== 'Suganesh@tncc') {
-        return {
-          success: false,
-          error: 'Incorrect admin password. Please enter Suganesh@tncc to access the admin workspace.',
-        };
-      }
-      member.password = 'Suganesh@tncc';
-      member.role = 'admin';
-    }
-    // 2. User test001: Test001@gmail.com
-    else if (
-      clean === 'test001@gmail.com' ||
-      clean === 'test001@gmailcom' ||
-      member.username.toLowerCase() === 'test001'
-    ) {
-      if (password !== 'Test001@gmail.com') {
-        return {
-          success: false,
-          error: 'Incorrect password. Please verify your credentials and try again.',
-        };
-      }
-      member.password = 'Test001@gmail.com';
-      member.role = 'member';
-    }
-    // 3. Any other registered member
-    else if (member.password && password && member.password !== password) {
-      return {
-        success: false,
-        error: 'Incorrect password. Please verify your credentials and try again.',
+        error: 'Invalid email or password.',
       };
     }
 
@@ -1307,6 +1259,9 @@ export class CommunityDatabase {
     saveToStorage('currentMemberId', this.currentMemberId);
 
     return {
+      success: true,
+      member,
+    };
       success: true,
       member,
     };

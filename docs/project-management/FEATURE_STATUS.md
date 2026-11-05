@@ -123,7 +123,7 @@
 |---|---|---|---|---|
 | **Supabase RLS** | PARTIALLY COMPLETED | `002_community_platform.sql` has `SELECT` policies only; NO `INSERT`, `UPDATE`, `DELETE` policies defined | Write explicit RLS policies for all operations with auth user bindings | P0 |
 | **Admin Authorization** | CRITICAL VULNERABILITY | Client-side-only check in React component; no server-side middleware protection | Add Next.js Middleware route guard for `/community/admin` and verify server JWT | P0 |
-| **Credential Storage** | CRITICAL VULNERABILITY | Plain-text passwords and leakage in error message (`Suganesh@tncc`, `Test001@gmail.com`) | Remove all hardcoded passwords; enforce Supabase Auth bcrypt hashing | P0 |
+| **Credential Storage** | RESOLVED (Issue #1) | All hardcoded credentials and error message leakage removed | Enforce Supabase Auth bcrypt hashing | P0 |
 | **XP Ledger Security** | CRITICAL VULNERABILITY | XP is modified in client `localStorage` with no database ledger | Migrate XP transactions to PostgreSQL with row-level security and RPC functions | P0 |
 | **File Upload Security** | NOT STARTED | Direct file uploads not enabled on community platform | Configure authenticated Supabase Storage bucket with strict file size & MIME limits | P1 |
 | **Environment Variables** | COMPLETED | No secret keys exposed in client code; only public anon keys defined | Maintain strict separation of service role keys | P3 |

@@ -79,4 +79,29 @@
    - Eliminated `tncc_active_user_email` and `tncc_admin_session` cookie/header bypasses.
    - Client-side spoofing (`localStorage.setItem('tncc_active_user_email', 'suganeshsugu07@gmail.com')`) is completely rejected. Only cryptographically verified Supabase Auth JWTs grant administrative rights.
 
+---
+
+## 5. Hardcoded Credential Removal & Generic Error Handling (Issue #1)
+
+1. **Elimination of Plain-Text Passwords & Credential Constants:**
+   - Completely eradicated all hardcoded admin and member passwords from `community-db.ts` and `community-context.tsx`.
+   - Removed `password?: string;` property from `CommunityMember` TypeScript interface in `types.ts`. Passwords are never held in client state, memory, or member objects.
+   - Removed all client-side password matching logic (`if (password !== ...)`) in mock databases.
+   - Verified 0 occurrences of hardcoded credential strings across the active source code, configuration files, and documentation.
+
+2. **Generic Error Messages (Zero Credential Leakage):**
+   - All authentication failures across `community-context.tsx` and `app/community/auth/page.tsx` return a standardized, non-revealing generic message:
+     `"Invalid email or password."`
+   - Eradicated error messages that revealed account existence, password correctness, or administrative hints (such as *"Incorrect admin password. Please enter [password] to access..."*).
+   - Sanitized diagnostic logging so passwords, refresh tokens, and authentication secrets are never output to console or logs.
+
+3. **Supabase Auth Centralization:**
+   - All logins use `supabase.auth.signInWithPassword()`, relying on Supabase's secure bcrypt hash comparison.
+   - Expired sessions and invalid refresh tokens redirect securely to the login route.
+
+4. **Environment & Secret Hygiene:**
+   - Confirmed `.env*` files are strictly excluded from git tracking in `.gitignore`.
+   - Verified `NEXT_PUBLIC_*` client environment variables contain only public endpoints and anonymous keys; no `SUPABASE_SERVICE_ROLE_KEY` or database secrets are bundled into client code.
+
+
 

@@ -39,5 +39,9 @@
 | **Admin Route Middleware** | Edge Middleware Interception | Next.js Middleware `updateSession` | ✅ Enforced & Verified | HTTP 307 on unauth access |
 | **Admin API Protection** | Server-side `requireAdminAuth` | All `/api/community/admin/*` endpoints | ✅ Enforced & Verified | 401 unauth / 403 non-admin |
 | **Admin Bypass Removal** | Zero LocalStorage Spoofing | Removed `tncc_active_user_email` checks | ✅ Eliminated & Verified | Cryptographic JWT only |
+| **Credential Hardcoding** | Hardcoded Password Removal | `community-db.ts` & `community-context.tsx` | ✅ Eradicated & Verified | Issue #1 Completed (0 plain-text passwords) |
+| **Credential Leakage** | Generic Authentication Errors | "Invalid email or password." across auth | ✅ Enforced & Verified | Zero password/account leaks in error toasts |
+| **Type Integrity** | Password Field Removal | Removed `password` from `CommunityMember` | ✅ Secured & Verified | No credentials in client memory/state |
+| **Secret Scanning** | Environment & Git Secret Audit | `.env*` git-ignored, no client service keys | ✅ Audited & Verified | Clean client bundles |
 
 

@@ -62,4 +62,13 @@
   - `CHECK (referrer_member_id <> referred_member_id)`: Self-referral is strictly forbidden.
   - `status IN ('pending_activity', 'rewarded', 'rejected')`.
 
+---
+
+## 4. Credential Security & Password Hashing Verification (Issue #1)
+
+- **Application Table Hygiene:** Verified that no application tables (`community_members`, `profiles`, `community_xp_transactions`) contain password columns or plain-text credentials.
+- **Supabase Auth Isolation:** All user credentials reside exclusively within the isolated `auth.users` system schema, protected by Supabase's cryptographic bcrypt hashing algorithm and salt.
+- **Client Privilege Isolation:** Clients and public API keys have zero read or write access to `auth.users` password hashes.
+
+
 

@@ -13,11 +13,11 @@ This document serves as the operational guide for developers continuing work on 
   - `tncc-community/lib/community-db.ts`
   - `app/community/auth/page.tsx`
 - **Actions Required:**
-  1. Remove hardcoded strings `Suganesh@tncc` and `Test001@gmail.com` from `community-db.ts`.
-  2. Eliminate the password-leaking error toast on line 1204 (`"Incorrect admin password. Please enter Suganesh@tncc to access the admin workspace."`).
+  1. Remove hardcoded strings and credentials from `community-db.ts`.
+  2. Eliminate the password-leaking error toast (`"Incorrect admin password..."`).
   3. Replace with a secure, generic authentication failure message: `"Invalid email or password."`.
 - **Acceptance Criteria:**
-  - Codebase grep for `Suganesh@tncc` returns 0 occurrences.
+  - Codebase grep for hardcoded admin credentials returns 0 occurrences.
   - Invalid credentials show generic error message.
 
 ---

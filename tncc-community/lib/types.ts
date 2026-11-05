@@ -6,7 +6,6 @@ export interface CommunityMember {
   username: string;
   full_name: string;
   email?: string;
-  password?: string;
   avatar_url: string;
   cover_url: string;
   bio: string;

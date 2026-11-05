@@ -36,7 +36,7 @@ flowchart TD
   - `#about`, `/privacy`, and `/terms` resolve with HTTP 200 without broken links.
 - **Testing Requirements:**
   - Manual curl probe on `/community/admin`.
-  - Codebase grep for `Suganesh@tncc`.
+  - Codebase grep for hardcoded admin password returns 0.
   - Click-through test of all footer links.
 
 ---
