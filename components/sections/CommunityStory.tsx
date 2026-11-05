@@ -122,7 +122,7 @@ export default function CommunityStory() {
 
   return (
     <section
-      id="pillars"
+      id="about"
       style={{
         background: '#FFFFFF',
         position: 'relative',
@@ -130,6 +130,8 @@ export default function CommunityStory() {
         padding: '110px 0 90px',
       }}
     >
+      {/* Legacy anchor compatibility */}
+      <div id="pillars" style={{ position: 'absolute', top: 0, left: 0 }} aria-hidden="true" />
       {/* Background subtle dot pattern */}
       <div
         className="bg-dot-pattern"

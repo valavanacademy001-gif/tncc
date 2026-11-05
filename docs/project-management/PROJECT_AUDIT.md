@@ -93,7 +93,7 @@ pie title TNCC Feature Implementation Health
 1. **Disconnected Community Backend & Issue #10 Progress:** `tncc-community/` had rich features persisted only in local device `localStorage`. As of Issue #10, the Admin Dashboard has been equipped with dedicated Next.js Server API routes (`/api/community/admin/*`), database migration `003_community_admin_and_rls.sql` with atomic PostgreSQL RPC functions (`announce_challenge_winner`, `award_admin_bonus_xp`), complete RLS mutation policies, and server-side middleware protection.
 2. **Plain-Text Credentials & Leakage:** Hardcoded credentials (`Suganesh@tncc` and `Test001@gmail.com`) are embedded in client source code (`community-db.ts`), with error messages actively printing the password.
 3. **No File Upload Validation in Community Feed:** The post composer accepts text URLs rather than file attachments; 1 MB image and 50 MB video limits specified in project requirements are unenforced.
-4. **Missing Static Pages:** Privacy Policy (`/privacy`) and Terms of Service (`/terms`) linked in the footer return HTTP 404.
-5. **Broken Anchor Navigation:** `#about` in Navbar and Footer fails to navigate because the corresponding section in `CommunityStory.tsx` is tagged `id="pillars"`.
+4. **Missing Static Pages (RESOLVED in Issue #7):** Comprehensive Privacy Policy (`/privacy`) and Terms of Service (`/terms`) implemented following the TNCC design system, with structured clauses and footer integration.
+5. **Broken Anchor Navigation (RESOLVED in Issue #7):** Set `id="about"` on `CommunityStory.tsx`, updated navigation links to `/#about`, and added `scroll-margin-top: 80px` in `globals.css` for sticky navbar offset.
 6. **Repository Bloat:** A 14 MB uncompressed 3D GLB file (`regional_map_logo (3).glb`) sits in the repository root and `public` directory, impacting clone performance.
 

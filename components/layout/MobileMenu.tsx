@@ -12,11 +12,11 @@ interface MobileMenuProps {
 }
 
 const navItems = [
-  { label: 'About', href: '#about', sub: 'More than a community' },
-  { label: 'How It Works', href: '#how-it-works', sub: 'Your creative journey' },
-  { label: 'Activities', href: '#activities', sub: 'Challenges, showcases & events' },
-  { label: 'Benefits', href: '#benefits', sub: 'Why join TNCC' },
-  { label: 'FAQ', href: '#faq', sub: 'Common questions & answers' },
+  { label: 'About', href: '/#about', sub: 'More than a community' },
+  { label: 'How It Works', href: '/#how-it-works', sub: 'Your creative journey' },
+  { label: 'Activities', href: '/#activities', sub: 'Challenges, showcases & events' },
+  { label: 'Benefits', href: '/#benefits', sub: 'Why join TNCC' },
+  { label: 'FAQ', href: '/#faq', sub: 'Common questions & answers' },
 ];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {

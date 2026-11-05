@@ -239,11 +239,11 @@ export default function Navbar() {
               gap: '4px',
             }} className="nav-links-desktop">
               {[
-                { label: 'About', href: '#about' },
-                { label: 'How It Works', href: '#how-it-works' },
-                { label: 'Activities', href: '#activities' },
-                { label: 'Benefits', href: '#benefits' },
-                { label: 'FAQ', href: '#faq' },
+                { label: 'About', href: '/#about' },
+                { label: 'How It Works', href: '/#how-it-works' },
+                { label: 'Activities', href: '/#activities' },
+                { label: 'Benefits', href: '/#benefits' },
+                { label: 'FAQ', href: '/#faq' },
               ].map(item => (
                 <Link
                   key={item.href}

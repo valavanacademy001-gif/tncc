@@ -38,13 +38,14 @@ This document serves as the operational guide for developers continuing work on 
 ### Task 1.3: Fix Landing Page `#about` Anchor & Missing Statutory Pages
 - **Issue Reference:** `ISSUE-07`
 - **Priority:** **P1 – High**
-- **Files to Modify:**
-  - `components/sections/CommunityStory.tsx`
-  - `app/privacy/page.tsx`
-  - `app/terms/page.tsx`
-- **Actions Required:**
-  1. Add `id="about"` to `<section>` in `CommunityStory.tsx`.
-  2. Implement branded `/privacy` and `/terms` static pages matching the TNCC design system.
+- **Status:** **COMPLETED (Issue #7)**
+- **Files Modified:**
+  - `components/sections/CommunityStory.tsx` (`id="about"`)
+  - `components/sections/StackingCards.tsx` (`id="community-guidelines"`)
+  - `app/globals.css` (`scroll-margin-top: 80px`)
+  - `components/layout/Navbar.tsx`, `components/layout/MobileMenu.tsx`, `components/layout/Footer.tsx` (`/#about`, etc.)
+  - `app/privacy/page.tsx` (Complete 14-section policy)
+  - `app/terms/page.tsx` (Complete 16-section terms)
 
 ### Task 2.1: Supabase RLS Migration for Community Platform
 - **Issue Reference:** `ISSUE-04`

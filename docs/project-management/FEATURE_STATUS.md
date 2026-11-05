@@ -14,10 +14,10 @@
 
 | Feature | Current Status | What Works | What is Missing | Known Bugs | Priority | Complexity |
 |---|---|---|---|---|---|---|
-| **Header Navigation** | PARTIALLY COMPLETED | Brand logo, desktop & mobile menu, anchor navigation, search trigger | Search routes to old mock data directory | Anchor `#about` fails to scroll to section | P1 | Low |
+| **Header Navigation** | COMPLETED (Issue #7) | Brand logo, desktop & mobile menu, verified anchor navigation (`/#about`, `/#how-it-works`, `/#activities`, `/#benefits`, `/#faq`), search trigger | None | Resolved broken `#about` anchor | P1 | Low |
 | **Hero Section** | COMPLETED | Responsive typography, CTA button, elastic animated cards, responsive offsets | None | None | P3 | Low |
 | **Interactive 3D Logo** | COMPLETED | WebGL Three.js render, DRACO compression, mouse yaw/pitch tracking, smooth idle drift | Model optimization could reduce initial load | None | P2 | Medium |
-| **About TNCC Section** | BUG | High-impact interactive pillar tabs, stats, Valavan Academy mission statement | Missing proper HTML anchor id | Missing `id="about"` (currently `id="pillars"`), causing navbar clicks to fail | P1 | Low |
+| **About TNCC Section** | COMPLETED (Issue #7) | High-impact interactive pillar tabs, stats, Valavan Academy mission statement, `id="about"` anchor | None | Resolved missing anchor ID | P1 | Low |
 | **Organizer Section (Valavan Academy)** | COMPLETED | Integrated into About & Footer sections with verified branding | None | None | P3 | Low |
 | **How It Works** | COMPLETED | 4-step progressive timeline with responsive layout | None | None | P3 | Low |
 | **Community Activities** | COMPLETED | Category cards, creative discipline tags, interactive hover effects | None | None | P3 | Low |
@@ -29,7 +29,7 @@
 | **Community Guidelines** | COMPLETED | Card in Stacking Cards with anchor `id="community-guidelines"` | Expandable dedicated policy page | None | P3 | Low |
 | **FAQ** | COMPLETED | Accordion animation via Framer Motion, 11 accurate community Q&As | None | None | P3 | Low |
 | **Final CTA** | COMPLETED | Radial hover glow, dynamic cursor spring, direct link to join free | None | None | P3 | Low |
-| **Footer & Legal Links** | BUG | Logo, disclaimer, social links, copyright | Legal pages missing | `/privacy` and `/terms` return 404 Not Found | P1 | Low |
+| **Footer & Legal Links** | COMPLETED (Issue #7) | Logo, disclaimer, social links, copyright, `/privacy` and `/terms` routes | None | Resolved missing legal routes (Issue #7) | P1 | Low |
 
 ---
 

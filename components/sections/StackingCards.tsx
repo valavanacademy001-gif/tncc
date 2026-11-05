@@ -175,6 +175,8 @@ export default function StackingCards() {
         padding: '72px 0 0',
       }}
     >
+      {/* Community Guidelines Anchor Target */}
+      <div id="community-guidelines" style={{ position: 'absolute', top: 0, left: 0 }} aria-hidden="true" />
       {/* Section Header - Scrolls naturally with page (not sticky) */}
       <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '0 24px 44px' }}>
         <div style={{ textAlign: 'center' }}>

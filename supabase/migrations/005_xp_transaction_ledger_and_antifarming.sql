@@ -417,3 +417,4 @@ CREATE POLICY "Admin only insert xp transactions"
 
 -- DELETE Policy: FORBIDDEN. Ledger entries cannot be deleted.
 -- No DELETE policy defined = all DELETEs are rejected.
+

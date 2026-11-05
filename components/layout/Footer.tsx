@@ -6,21 +6,21 @@ import { ExternalLink, Link2, Play, X as XIcon } from 'lucide-react';
 
 const footerNav = {
   community: [
-    { label: 'About TNCC', href: '#about' },
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Community Activities', href: '#activities' },
-    { label: 'Why Join TNCC (Benefits)', href: '#benefits' },
+    { label: 'About TNCC', href: '/#about' },
+    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Community Activities', href: '/#activities' },
+    { label: 'Why Join TNCC (Benefits)', href: '/#benefits' },
   ],
   membership: [
     { label: 'Sign In', href: '/community/auth' },
     { label: 'Join Free', href: '/community/auth?mode=register' },
-    { label: 'FAQ', href: '#faq' },
-    { label: 'Community Guidelines', href: '#community-guidelines' },
+    { label: 'FAQ', href: '/#faq' },
+    { label: 'Community Guidelines', href: '/#community-guidelines' },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms & Conditions', href: '/terms' },
-    { label: 'Organized by Valavan Academy', href: '#about' },
+    { label: 'Organized by Valavan Academy', href: '/#about' },
   ],
 };
 

@@ -34,9 +34,8 @@
   - Interactive 3D logo (`/regional_map_logo.glb?v=4`) loaded cleanly via Three.js WebGL and DRACOLoader.
   - FAQ accordion items expand/collapse with smooth Framer Motion transitions.
 - **Failures / Defect:**
-  - Clicking `#about` does not scroll because the section in `CommunityStory.tsx` has `id="pillars"` instead of `id="about"`.
-  - Footer links to `/privacy` and `/terms` return HTTP 404.
-- **Verdict:** **PASS WITH DEFECT** (Issue logged: ISSUE-07).
+  - None. Resolved broken `#about` anchor by tagging `id="about"` on `CommunityStory.tsx`, updated navigation to `/#about`, configured `scroll-margin-top: 80px`, and implemented dedicated `/privacy` and `/terms` routes.
+- **Verdict:** **PASS** (Resolved in Issue #7).
 
 ---
 

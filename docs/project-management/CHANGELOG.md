@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.5.0] - 2026-11-05 (GitHub Issue #7 – Landing Page Anchors & Legal Routes)
+
+### Added
+- **Privacy Policy Page (`/privacy`):**
+  - Complete 14-section structured legal policy tailored to the TNCC platform, covering information collection, creator portfolio visibility, Supabase PostgreSQL storage, Google Drive resources, data security, user rights, and contact details.
+  - Branded hero header with back-to-home breadcrumb navigation, table of contents box, and full integration with `<Navbar />` and `<Footer />`.
+- **Terms & Conditions Page (`/terms`):**
+  - Complete 16-section structured terms covering acceptance, member eligibility, Code of Conduct, user-generated content licenses, zero-plagiarism warranty, competition submission rules, non-monetary XP guidelines, and account termination.
+  - Branded layout with table of contents and reciprocal link to `/privacy`.
+
+### Fixed
+- **Broken `#about` Anchor:**
+  - Resolved root cause by setting `id="about"` on `<section>` in `components/sections/CommunityStory.tsx` (previously mislabeled as `id="pillars"`).
+  - Maintained `<div id="pillars" />` for backward compatibility.
+- **Sticky Navbar Scroll Offset:**
+  - Added `scroll-margin-top: 80px` to `section[id], div[id]` in `app/globals.css`, ensuring the sticky navbar (height: 64-76px) does not obscure section titles upon anchor navigation.
+- **Cross-Page Anchor Navigation:**
+  - Prefixed navigation links in `Navbar.tsx`, `MobileMenu.tsx`, and `Footer.tsx` with `/` (`/#about`, `/#how-it-works`, `/#activities`, `/#benefits`, `/#faq`, `/#community-guidelines`) so clicking footer/header links from subpages (`/privacy`, `/terms`) smoothly returns to the homepage section without 404 errors.
+- **Community Guidelines Anchor:**
+  - Added anchor target `id="community-guidelines"` in `StackingCards.tsx` directly linking the footer guidelines link to the respectful community card.
+
+---
+
 ## [0.4.0] - 2026-11-05 (GitHub Issue #8 – Server-Side XP Ledger & Anti-Farming)
 
 ### Added
