@@ -6,6 +6,7 @@
 1. `supabase/migrations/001_initial_schema.sql` (Initial Marketplace / Agency Schema)
 2. `supabase/migrations/002_community_platform.sql` (Member Community Platform Schema)
 3. `supabase/migrations/003_community_admin_and_rls.sql` (Admin Dashboard, Atomic RPC Functions & Community RLS Write Policies)
+4. `supabase/migrations/004_challenge_submissions_and_deadlines.sql` (Challenge Submissions Unique Constraint, Deadlines & Atomic submit_challenge_entry RPC)
 
 ---
 

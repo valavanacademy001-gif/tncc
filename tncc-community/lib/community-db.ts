@@ -1477,8 +1477,64 @@ export class CommunityDatabase {
     description?: string;
     submission_type: 'image' | 'video' | 'pdf' | 'gdrive' | 'portfolio';
     submission_url: string;
+    is_update?: boolean;
   }): { submission: ChallengeSubmission; xpAwarded: number } {
     const current = this.getCurrentMember();
+
+    // 1. Verify Challenge exists
+    const chalIndex = this.challenges.findIndex((c) => c.id === data.challenge_id);
+    if (chalIndex === -1) {
+      throw new Error(`Challenge ${data.challenge_id} not found`);
+    }
+
+    const challenge = this.challenges[chalIndex];
+
+    // 2. Enforce Challenge Status (Must be Active)
+    if (challenge.status !== 'Active') {
+      throw new Error(
+        `This challenge is not currently open for submissions (Current Status: ${challenge.status}).`
+      );
+    }
+
+    // 3. Enforce Challenge Deadline (Server/Local Date check)
+    const now = new Date().getTime();
+    const deadline = new Date(challenge.submission_deadline).getTime();
+    if (now > deadline) {
+      throw new Error(
+        `Challenge deadline has expired. Submissions closed on ${new Date(challenge.submission_deadline).toLocaleString()}.`
+      );
+    }
+
+    // 4. Check for Existing Submission by this member
+    const existingIndex = this.submissions.findIndex(
+      (s) => s.challenge_id === data.challenge_id && s.member_id === current.id
+    );
+
+    // 5. Enforce Duplicate Prevention: Reject repeated submissions if not explicitly updating
+    if (existingIndex !== -1 && !data.is_update) {
+      throw new Error(
+        'Duplicate submission rejected: You have already submitted an entry for this challenge. Each member may submit only once.'
+      );
+    }
+
+    // 6. Handle Update (Preserves existing submission ID and does not duplicate records or XP)
+    if (existingIndex !== -1 && data.is_update) {
+      const updatedSub: ChallengeSubmission = {
+        ...this.submissions[existingIndex],
+        title: data.title.trim(),
+        description: data.description ? data.description.trim() : undefined,
+        submission_type: data.submission_type,
+        submission_url: data.submission_url.trim(),
+        preview_url: data.submission_type === 'image' ? data.submission_url.trim() : this.submissions[existingIndex].preview_url,
+        submitted_at: new Date().toISOString(),
+      };
+
+      this.submissions[existingIndex] = updatedSub;
+      saveToStorage('submissions', this.submissions);
+      return { submission: updatedSub, xpAwarded: 0 };
+    }
+
+    // 7. Handle New Submission
     const submission: ChallengeSubmission = {
       id: `sub-${Date.now()}`,
       challenge_id: data.challenge_id,
@@ -1488,10 +1544,12 @@ export class CommunityDatabase {
         full_name: current.full_name,
         avatar_url: current.avatar_url,
       },
-      title: data.title,
-      description: data.description,
+      title: data.title.trim(),
+      description: data.description ? data.description.trim() : undefined,
       submission_type: data.submission_type,
-      submission_url: data.submission_url,
+      submission_url: data.submission_url.trim(),
+      preview_url: data.submission_type === 'image' ? data.submission_url.trim() : undefined,
+      status: 'pending',
       submitted_at: new Date().toISOString(),
     };
 
@@ -1499,14 +1557,11 @@ export class CommunityDatabase {
     saveToStorage('submissions', this.submissions);
 
     // Update challenge submissions count & flag user_submitted
-    const chalIndex = this.challenges.findIndex((c) => c.id === data.challenge_id);
-    if (chalIndex !== -1) {
-      this.challenges[chalIndex].submissions_count = (this.challenges[chalIndex].submissions_count || 0) + 1;
-      this.challenges[chalIndex].user_submitted = true;
-      saveToStorage('challenges', this.challenges);
-    }
+    this.challenges[chalIndex].submissions_count = (this.challenges[chalIndex].submissions_count || 0) + 1;
+    this.challenges[chalIndex].user_submitted = true;
+    saveToStorage('challenges', this.challenges);
 
-    // Award +15 XP for challenge participation (if not already participated)
+    // Award +15 XP for challenge participation (Strict anti-duplicate ledger check)
     const xpReward = xpEngine.getChallengeParticipationXP();
     const actionKey = `challenge-part-${data.challenge_id}`;
     if (!xpEngine.isDuplicateTransaction(this.xpTransactions, current.id, 'Challenge Participation', actionKey)) {
@@ -1514,6 +1569,10 @@ export class CommunityDatabase {
     }
 
     return { submission, xpAwarded: xpReward };
+  }
+
+  public getSubmissionForMember(challengeId: string, memberId: string): ChallengeSubmission | undefined {
+    return this.submissions.find((s) => s.challenge_id === challengeId && s.member_id === memberId);
   }
 
   public getSubmissionsForChallenge(challengeId: string): ChallengeSubmission[] {

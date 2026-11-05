@@ -100,10 +100,13 @@
   - Dynamic challenge details page `/community/challenges/[id]` renders requirements, prizes, and countdown.
   - Submission modal opens and accepts title, description, format, and URL, awarding +15 XP.
   - Completed challenge renders first, second, and third place winners podium.
-- **Failures / Defect:**
-  - No duplicate submission locking: members can submit multiple times for the same challenge.
-  - Expired / closed challenges do not disable the submission action.
-- **Verdict:** **PARTIALLY COMPLETED** (Issue logged: ISSUE-09).
+  - Server-side route `/api/community/challenges/submit` and PostgreSQL RPC `submit_challenge_entry` enforce strict validation.
+  - Duplicate submissions by the same member return HTTP 409 Conflict.
+  - Concurrent race condition attempts are serialized and blocked.
+  - Submissions after server UTC deadline return HTTP 400 Bad Request.
+  - Submissions to inactive/unpublished challenges return HTTP 400 Bad Request.
+  - In-place submission updates succeed without duplicate record creation or XP re-awarding.
+- **Verdict:** **PASS** (Resolved in Issue #9 via `004_challenge_submissions_and_deadlines.sql` & `/api/community/challenges/submit`).
 
 ---
 

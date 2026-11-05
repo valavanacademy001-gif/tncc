@@ -19,7 +19,7 @@ import {
 
 export default function ChallengeDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const { getChallengeById, currentMember } = useCommunity();
+  const { getChallengeById, getMemberSubmission, currentMember } = useCommunity();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   const challenge = getChallengeById(resolvedParams.id);
@@ -37,6 +37,9 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
 
   const isCompleted = challenge.status === 'Completed';
   const isActive = challenge.status === 'Active';
+  const isDeadlineExpired = new Date().getTime() > new Date(challenge.submission_deadline).getTime();
+  const memberSubmission = getMemberSubmission(challenge.id);
+  const isUserSubmitted = Boolean(challenge.user_submitted || memberSubmission);
 
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl">
@@ -177,22 +180,59 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
               </p>
             </div>
 
-            {challenge.user_submitted ? (
+            {isUserSubmitted ? (
               <div className="p-4 bg-green-50 rounded-2xl border border-green-200 text-center space-y-2">
                 <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto" />
                 <p className="text-xs font-bold text-green-800">Your Entry is Recorded</p>
+                {memberSubmission && (
+                  <div className="text-[11px] text-gray-700 bg-white/70 p-2.5 rounded-xl border border-green-100 text-left space-y-1">
+                    <p className="font-bold text-[#0D2C5B] truncate">{memberSubmission.title}</p>
+                    <p className="text-[10px] text-gray-500">Format: {memberSubmission.submission_type}</p>
+                    {memberSubmission.status && (
+                      <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                        memberSubmission.status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : memberSubmission.status === 'rejected'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        Status: {memberSubmission.status}
+                      </span>
+                    )}
+                    {memberSubmission.admin_feedback && (
+                      <p className="text-[10px] text-gray-600 italic">
+                        &quot;{memberSubmission.admin_feedback}&quot;
+                      </p>
+                    )}
+                  </div>
+                )}
                 <p className="text-[11px] text-green-700">+15 XP has been awarded to your profile!</p>
-                <button
-                  onClick={() => setShowSubmitModal(true)}
-                  className="text-xs font-bold text-green-900 underline mt-1"
-                >
-                  Replace or Update Submission
-                </button>
+                
+                {isDeadlineExpired ? (
+                  <p className="text-[10px] font-bold text-gray-500 bg-gray-100 py-1.5 px-2 rounded-lg">
+                    🔒 Deadline expired. Submissions are locked for judging.
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => setShowSubmitModal(true)}
+                    className="text-xs font-bold text-green-900 underline hover:text-green-700 mt-1 cursor-pointer block mx-auto"
+                  >
+                    Replace or Update Submission
+                  </button>
+                )}
+              </div>
+            ) : isDeadlineExpired ? (
+              <div className="p-4 bg-red-50 rounded-2xl border border-red-200 text-center space-y-2">
+                <Clock className="w-6 h-6 text-red-600 mx-auto" />
+                <p className="text-xs font-bold text-red-800">Deadline Expired</p>
+                <p className="text-[11px] text-red-600">
+                  Submissions closed on {new Date(challenge.submission_deadline).toLocaleString()}. New entries are no longer accepted.
+                </p>
               </div>
             ) : isActive ? (
               <button
                 onClick={() => setShowSubmitModal(true)}
-                className="w-full py-3 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-2xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-2xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <UploadCloud className="w-4 h-4" />
                 <span>Submit Your Creative Work</span>
@@ -214,6 +254,8 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
         <ChallengeSubmissionModal
           challengeId={challenge.id}
           challengeTitle={challenge.title}
+          submissionDeadline={challenge.submission_deadline}
+          existingSubmission={memberSubmission}
           onClose={() => setShowSubmitModal(false)}
         />
       )}

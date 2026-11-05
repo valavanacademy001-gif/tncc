@@ -64,7 +64,7 @@
 | **Search & Filters** | COMPLETED (Client) | Search by text/author/tag, filter by category & tab | Full-text PostgreSQL search | Searches only in-memory mock posts | P2 | Low |
 | **Resources Directory** | PARTIALLY COMPLETED | Category filters, download counts, search, external links | Supabase `community_resources` sync, real download tracking | In-memory data only | P1 | Medium |
 | **Challenges Directory** | PARTIALLY COMPLETED | Active, upcoming, closed badges, prizes, countdown | Supabase `community_challenges` sync | In-memory data only | P1 | Medium |
-| **Challenge Submissions** | PARTIALLY COMPLETED | Modal with format selector (Image, Video, PDF, GDrive, Portfolio) | File upload, duplicate entry lock, deadline enforcement | Allows duplicate submissions; no deadline validation | P1 | Medium |
+| **Challenge Submissions** | COMPLETED (Issue #9) | Format selector, duplicate entry lock (409 Conflict), server UTC deadline expiry (400), simultaneous request mutex, update-in-place | None | Resolved duplicate entries and deadline bypass (Issue #9) | P1 | Medium |
 | **Portfolio Showcase** | PARTIALLY COMPLETED | Automatic mapping of `is_showcase` posts into creator portfolio | Persistence in Supabase `community_portfolio_projects` | In-memory data only | P1 | Low |
 | **Creative Jobs Board** | PARTIALLY COMPLETED | Job cards, filter by category, work mode, WhatsApp apply link | Supabase `community_job_offers` sync, employer posting | In-memory data only | P2 | Low |
 | **Community Events** | PARTIALLY COMPLETED | Event cards, online/offline indicators, registration link | Supabase `community_events` sync, attendee RSVP tracking | In-memory data only | P2 | Low |

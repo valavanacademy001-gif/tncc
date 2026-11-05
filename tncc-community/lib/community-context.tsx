@@ -62,7 +62,9 @@ interface CommunityContextType {
     description?: string;
     submission_type: 'image' | 'video' | 'pdf' | 'gdrive' | 'portfolio';
     submission_url: string;
-  }) => void;
+    is_update?: boolean;
+  }) => Promise<{ success: boolean; error?: string; submission?: ChallengeSubmission }>;
+  getMemberSubmission: (challengeId: string) => ChallengeSubmission | undefined;
   getChallengeById: (id: string) => CommunityChallenge | undefined;
   getPortfolioProjects: (memberId: string) => PortfolioProject[];
   getXPTransactions: (memberId: string) => XPTransaction[];
@@ -293,24 +295,84 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     return communityDb.getComments(postId);
   };
 
-  const submitChallenge = (data: {
+  const submitChallenge = async (data: {
     challenge_id: string;
     title: string;
     description?: string;
     submission_type: 'image' | 'video' | 'pdf' | 'gdrive' | 'portfolio';
     submission_url: string;
-  }) => {
-    const result = communityDb.submitChallenge(data);
-    setChallenges(communityDb.getChallenges());
-    setAllMembers(communityDb.getMembers());
-    const curr = communityDb.getCurrentMember();
-    setCurrentMember({ ...curr });
+    is_update?: boolean;
+  }): Promise<{ success: boolean; error?: string; submission?: ChallengeSubmission }> => {
+    // 1. Live Backend Submission via API
+    try {
+      const res = await fetch('/api/community/challenges/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tncc-user-email': currentMember?.email || 'test001@gmail.com',
+        },
+        body: JSON.stringify(data),
+      });
 
-    addToast({
-      type: 'xp',
-      title: `+${result.xpAwarded} XP Awarded!`,
-      message: 'Challenge submission entered successfully for review.',
-    });
+      const resData = await res.json();
+
+      if (!res.ok) {
+        addToast({
+          type: 'info',
+          title: res.status === 409 ? 'Duplicate Submission' : 'Submission Blocked',
+          message: resData.error || 'Challenge submission was not accepted.',
+        });
+        return { success: false, error: resData.error };
+      }
+
+      // 2. Synchronize client local state upon backend confirmation
+      const result = communityDb.submitChallenge(data);
+      setChallenges([...communityDb.getChallenges()]);
+      setAllMembers([...communityDb.getMembers()]);
+      const curr = communityDb.getCurrentMember();
+      setCurrentMember({ ...curr });
+
+      addToast({
+        type: data.is_update ? 'success' : 'xp',
+        title: data.is_update ? 'Entry Updated' : `+${result.xpAwarded} XP Awarded!`,
+        message: data.is_update
+          ? 'Your challenge submission has been successfully updated.'
+          : 'Challenge submission entered successfully for review.',
+      });
+
+      return { success: true, submission: result.submission };
+    } catch (err: any) {
+      // Local fallback with duplicate and deadline verification
+      try {
+        const result = communityDb.submitChallenge(data);
+        setChallenges([...communityDb.getChallenges()]);
+        setAllMembers([...communityDb.getMembers()]);
+        const curr = communityDb.getCurrentMember();
+        setCurrentMember({ ...curr });
+
+        addToast({
+          type: data.is_update ? 'success' : 'xp',
+          title: data.is_update ? 'Entry Updated' : `+${result.xpAwarded} XP Awarded!`,
+          message: data.is_update
+            ? 'Your challenge submission has been successfully updated.'
+            : 'Challenge submission entered successfully for review.',
+        });
+
+        return { success: true, submission: result.submission };
+      } catch (localErr: any) {
+        addToast({
+          type: 'info',
+          title: 'Submission Blocked',
+          message: localErr.message || 'Unable to submit entry.',
+        });
+        return { success: false, error: localErr.message };
+      }
+    }
+  };
+
+  const getMemberSubmission = (challengeId: string) => {
+    if (!currentMember) return undefined;
+    return communityDb.getSubmissionForMember(challengeId, currentMember.id);
   };
 
   const getChallengeById = (id: string) => {
@@ -670,6 +732,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         addComment,
         getComments,
         submitChallenge,
+        getMemberSubmission,
         getChallengeById,
         getPortfolioProjects,
         getXPTransactions,

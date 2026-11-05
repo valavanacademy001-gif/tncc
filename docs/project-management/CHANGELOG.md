@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.0] - 2026-11-05 (GitHub Issue #9 – Challenge Submission Rules & Deadlines)
+
+### Added
+- **Database Migration 004 (`supabase/migrations/004_challenge_submissions_and_deadlines.sql`):**
+  - Database unique constraint `unique_member_challenge_submission UNIQUE (challenge_id, member_id)` preventing duplicate submissions.
+  - Atomic PostgreSQL RPC function `submit_challenge_entry` checking authentication, resolving member from `auth.uid()`, enforcing active challenge status, verifying server UTC deadline expiry, idempotently crediting participation XP (+15 XP), and supporting update-in-place.
+  - Granular RLS policies restricting INSERT and UPDATE to active challenges before deadline expiry.
+- **Challenge Submission API (`app/api/community/challenges/submit/route.ts`):**
+  - Enforces server-side authentication (HTTP 401).
+  - Enforces challenge status ('Active') and server UTC deadline validation (HTTP 400).
+  - Enforces duplicate submission prevention (HTTP 409 Conflict) with concurrency mutex lock to block simultaneous requests.
+  - Supports updating existing entries without creating secondary records or duplicate XP awards (HTTP 200).
+  - Ignores client-supplied `member_id` to prevent user impersonation.
+- **Server Store & Mutex (`lib/supabase/community-server-store.ts`):**
+  - Added atomic in-flight mutex lock (`acquireSubmissionLock`, `releaseSubmissionLock`) for concurrent duplicate request mitigation.
+- **Frontend Submission UX (`ChallengeSubmissionModal.tsx` & `challenges/[id]/page.tsx`):**
+  - Clear deadline-expired banners and locked state when past deadline.
+  - Pre-populates existing entry when updating.
+  - Inline error alert box displaying server error messages without silently closing modal.
+  - Loading state with spinner (`isSubmitting`) preventing repeated clicks.
+
+---
+
 ## [0.2.0] - 2026-11-05 (GitHub Issue #10 – Admin Dashboard Supabase Integration)
 
 ### Added

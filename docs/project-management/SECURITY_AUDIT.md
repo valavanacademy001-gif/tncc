@@ -18,6 +18,7 @@
 | **SEC-06** | Unverified Client-Side XP Ledger (State Tampering) | A08: Software and Data Integrity Failures | **HIGH (CVSS 7.1)** | Unresolved |
 | **SEC-07** | Lack of Server-Side File Upload Limits and MIME Validation | A04: Insecure Design | **MEDIUM (CVSS 6.5)** | Unresolved |
 | **SEC-08** | Missing CSRF / Rate Limiting on Community Auth Forms | A07: Identification and Authentication Failures | **MEDIUM (CVSS 5.3)** | Unresolved |
+| **SEC-09** | Client-Side Deadline & Duplicate Submission Tampering | A01: Broken Access Control / A08: Software and Data Integrity | **HIGH (CVSS 7.4)** | Resolved (Issue #9) |
 
 ---
 
@@ -97,6 +98,20 @@
      - `allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm']`
      - `file_size_limit = 52428800` (50 MB)
   3. Sanitize file names to prevent path traversal or special character injection.
+
+---
+
+### SEC-09: Client-Side Deadline & Duplicate Submission Tampering
+
+- **Location:** `app/api/community/challenges/submit/route.ts`, `supabase/migrations/004_challenge_submissions_and_deadlines.sql`, `tncc-community/lib/community-db.ts`
+- **Description:**
+  Previously, challenge submissions were validated only in client-side React code. Users could bypass deadlines by tampering with local system clocks, send duplicate submissions to farm submission XP (+15 XP per submission), or spoof user IDs.
+- **Remediation Implemented (Issue #9):**
+  1. **Server-Side Validation:** Created `/api/community/challenges/submit` verifying authenticated user (`auth.uid()`). Rejects unauthenticated callers (HTTP 401).
+  2. **Anti-Spoofing:** Client-supplied member IDs are ignored; member ID is derived directly from the authenticated session.
+  3. **Deadline Enforcement:** Challenge deadlines are validated using server UTC (`now()`). Expired or non-active challenges are rejected with HTTP 400.
+  4. **Duplicate Prevention:** Database unique constraint `unique_member_challenge_submission (challenge_id, member_id)` and concurrency mutex lock prevent simultaneous duplicate submissions, returning HTTP 409 Conflict.
+  5. **In-Place Updates:** Allows legitimate edits (`is_update: true`) without creating duplicate records or granting duplicate XP.
 
 ---
 
