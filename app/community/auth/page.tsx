@@ -42,6 +42,32 @@ function AuthContent() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  const handleResendConfirmation = async () => {
+    if (!email.trim()) {
+      setErrorMsg('Please enter your email address first.');
+      return;
+    }
+    setResending(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.trim().toLowerCase(),
+      });
+      if (error) {
+        setErrorMsg(`Failed to resend confirmation: ${error.message}`);
+      } else {
+        setSuccessMsg('Confirmation email resent! Please check your inbox (and Spam folder).');
+        setErrorMsg('');
+      }
+    } catch (err: any) {
+      setErrorMsg(`Failed to resend confirmation: ${err.message || 'Unknown error'}`);
+    } finally {
+      setResending(false);
+    }
+  };
 
   useEffect(() => {
     const qMode = searchParams.get('mode');
@@ -221,9 +247,24 @@ function AuthContent() {
 
         {/* Error / Success Notifications */}
         {errorMsg && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-            <span>{errorMsg}</span>
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs space-y-2">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+              <span>{errorMsg}</span>
+            </div>
+            {errorMsg.toLowerCase().includes('not confirmed') && (
+              <div className="pt-1.5 flex items-center justify-between border-t border-red-200/70 text-[11px]">
+                <span className="text-gray-600">Haven't verified your email yet?</span>
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resending}
+                  className="font-bold text-[#E84020] hover:underline disabled:opacity-50 cursor-pointer"
+                >
+                  {resending ? 'Sending...' : 'Resend Confirmation Email'}
+                </button>
+              </div>
+            )}
           </div>
         )}
 

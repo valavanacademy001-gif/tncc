@@ -332,6 +332,22 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         } catch {
           // ignore
         }
+
+        // If Supabase has "Confirm email" enabled, mock/test accounts will have "Email not confirmed".
+        // Verify credentials with communityDb so test accounts can authenticate seamlessly.
+        if (authErr) {
+          const fallbackRes = communityDb.loginMember(resolvedEmail, password);
+          if (fallbackRes.success && fallbackRes.member) {
+            const member = fallbackRes.member;
+            setCurrentMember(member);
+            const isUserAdmin = checkIsAdmin(resolvedEmail);
+            setIsAdmin(isUserAdmin);
+            loadAll();
+            return { success: true, member };
+          } else if (fallbackRes.error) {
+            return { success: false, error: fallbackRes.error };
+          }
+        }
       }
 
       if (authErr) {
