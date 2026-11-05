@@ -161,3 +161,4 @@ export async function POST(request: NextRequest) {
   // Support POST as well for explicit triggers
   return GET(request);
 }
+

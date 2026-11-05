@@ -66,4 +66,17 @@
    - Password reset uses cryptographically signed, single-use auth codes via Supabase Auth email redirect (`/auth/callback?next=/reset-password`).
    - New password update enforced through secure `supabase.auth.updateUser()`.
 
+---
+
+## 4. Secure Admin Route Protection & Defense-in-Depth (Issue #2)
+
+1. **Zero-Trust Admin Authorization Architecture:**
+   - Layer 1 (Edge Middleware): Next.js `middleware.ts` intercepts all `/community/admin` requests, validates Supabase Auth session via `supabase.auth.getUser()`, and enforces HTTP 307 redirects for unauthenticated requests.
+   - Layer 2 (Server Component Page Guard): `app/community/admin/page.tsx` is an `async Server Component` executing server-side authorization before generating ANY HTML. Unauthorized requests are redirected immediately, preventing payload or state exposure.
+   - Layer 3 (API Route Verification): All `/api/community/admin/*` endpoints strictly enforce `requireAdminAuth(request)`, returning HTTP 401 for unauthenticated and HTTP 403 for non-admin members.
+   - Layer 4 (PostgreSQL RLS): Database operations on admin resources are protected with PostgreSQL Row Level Security using `is_admin()`.
+2. **Complete Removal of LocalStorage and Cookie Bypasses:**
+   - Eliminated `tncc_active_user_email` and `tncc_admin_session` cookie/header bypasses.
+   - Client-side spoofing (`localStorage.setItem('tncc_active_user_email', 'suganeshsugu07@gmail.com')`) is completely rejected. Only cryptographically verified Supabase Auth JWTs grant administrative rights.
+
 

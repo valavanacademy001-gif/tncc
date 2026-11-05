@@ -1168,9 +1168,6 @@ export class CommunityDatabase {
       this.currentMemberId = this.members[existingIndex].id;
       saveToStorage('members', this.members);
       saveToStorage('currentMemberId', this.currentMemberId);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('tncc_active_user_email', cleanEmail);
-      }
       return this.members[existingIndex];
     }
 
@@ -1201,9 +1198,6 @@ export class CommunityDatabase {
     this.currentMemberId = newMember.id;
     saveToStorage('members', this.members);
     saveToStorage('currentMemberId', this.currentMemberId);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tncc_active_user_email', cleanEmail);
-    }
     return newMember;
   }
 
@@ -1311,10 +1305,6 @@ export class CommunityDatabase {
     this.currentMemberId = member.id;
     saveToStorage('members', this.members);
     saveToStorage('currentMemberId', this.currentMemberId);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tncc_active_user_email', member.email || clean);
-      localStorage.removeItem('tncc_admin_demo');
-    }
 
     return {
       success: true,

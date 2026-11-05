@@ -1,37 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminAuth } from '@/lib/supabase/admin-auth';
 import { serverStore } from '@/lib/supabase/community-server-store';
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAdminAuth(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
+  const supabase = auth.supabase;
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    // Check admin authorization
-    const authHeader = request.headers.get('authorization');
-    const isMockAuth = !user && authHeader && authHeader.startsWith('Bearer mock-member-token-');
-    const emailHeader = request.headers.get('x-tncc-active-email');
-
-    let isAdmin = false;
-    if (user?.email === 'suganeshsugu07@gmail.com' || emailHeader === 'suganeshsugu07@gmail.com') {
-      isAdmin = true;
-    } else if (user) {
-      const { data: mem } = await supabase
-        .from('community_members')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
-      isAdmin = mem?.role === 'admin';
-    } else {
-      isAdmin = true; // Local development inspection
-    }
-
-    if (!isAdmin && process.env.NODE_ENV === 'production') {
-      return NextResponse.json({ error: 'Unauthorized: Admin access required.' }, { status: 403 });
-    }
-
     // 1. Fetch from Supabase community_referrals
     const { data: dbReferrals, error } = await supabase
       .from('community_referrals')

@@ -35,5 +35,9 @@
 | **Password Recovery** | resetPasswordForEmail & Callback | `/auth/callback` + `/reset-password` | ✅ Live & Connected | Real password reset flow |
 | **Session Synchronization** | Root & Community Providers Sync | `onAuthStateChange` + SSR Cookie Sync | ✅ Synced & Verified | Navbar, Landing, Community, Admin synced |
 | **Protected Routes** | Server-side Route Guards | Next.js Middleware + Supabase Auth Session | ✅ Enforced & Verified | 307 redirect with ?next= query |
+| **Admin Route Security** | Server Component Guard | `app/community/admin/page.tsx` Server Check | ✅ Enforced & Verified | Issue #2 Completed |
+| **Admin Route Middleware** | Edge Middleware Interception | Next.js Middleware `updateSession` | ✅ Enforced & Verified | HTTP 307 on unauth access |
+| **Admin API Protection** | Server-side `requireAdminAuth` | All `/api/community/admin/*` endpoints | ✅ Enforced & Verified | 401 unauth / 403 non-admin |
+| **Admin Bypass Removal** | Zero LocalStorage Spoofing | Removed `tncc_active_user_email` checks | ✅ Eliminated & Verified | Cryptographic JWT only |
 
 

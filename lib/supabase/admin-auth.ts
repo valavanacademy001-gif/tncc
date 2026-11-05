@@ -21,81 +21,62 @@ export async function requireAdminAuth(request: NextRequest): Promise<AdminAuthC
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  // Also check admin authorization cookies / headers for community auth transition
-  const adminCookie = request.cookies.get('tncc_admin_session')?.value;
-  const adminEmailCookie = request.cookies.get('tncc_active_user_email')?.value;
-  const adminHeader = request.headers.get('x-tncc-admin-role');
-  const userEmailHeader = request.headers.get('x-tncc-user-email');
-
-  // Case 1: Supabase authenticated user
-  if (user) {
-    const userEmail = (user.email || '').toLowerCase().trim();
-    const isEmailAdmin = AUTHORIZED_ADMIN_EMAILS.some(
-      (email) => email.toLowerCase().trim() === userEmail
-    );
-
-    if (isEmailAdmin) {
-      return { authorized: true, status: 200, user, supabase };
-    }
-
-    // Check community_members table if it exists
-    try {
-      const { data: member } = await supabase
-        .from('community_members')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
-
-      if (member && member.role === 'admin') {
-        return { authorized: true, status: 200, user, supabase };
-      }
-    } catch {
-      // Table may not yet be provisioned
-    }
-
-    // Authenticated user exists, but is NOT an admin
+  // 1. Unauthenticated -> 401 Unauthorized
+  if (!user || authError) {
     return {
       authorized: false,
-      status: 403,
-      error: 'Forbidden: You do not have administrative privileges.',
-      user,
+      status: 401,
+      error: 'Unauthorized: Authentication required. Please sign in as an administrator.',
       supabase,
     };
   }
 
-  // Case 2: Community auth session headers/cookies
-  const effectiveEmail = (adminEmailCookie || userEmailHeader || '').toLowerCase().trim();
-  const isCookieOrHeaderAdmin = (
-    adminCookie === 'true' ||
-    adminHeader === 'admin' ||
-    AUTHORIZED_ADMIN_EMAILS.some((email) => email.toLowerCase().trim() === effectiveEmail)
+  // 2. Verified Super Admin email check
+  const userEmail = (user.email || '').toLowerCase().trim();
+  const isSuperAdmin = AUTHORIZED_ADMIN_EMAILS.some(
+    (email) => email.toLowerCase().trim() === userEmail
   );
 
-  // If a non-admin email is explicitly present without admin credentials:
-  if (effectiveEmail && !isCookieOrHeaderAdmin) {
-    return {
-      authorized: false,
-      status: 403,
-      error: 'Forbidden: Member account does not have administrative access.',
-      supabase,
-    };
+  if (isSuperAdmin) {
+    return { authorized: true, status: 200, user, supabase };
   }
 
-  // If valid admin session header/cookie
-  if (isCookieOrHeaderAdmin) {
-    return {
-      authorized: true,
-      status: 200,
-      user: { email: effectiveEmail || 'suganeshsugu07@gmail.com', role: 'admin' },
-      supabase,
-    };
+  // 3. Database admin verification via community_admins table
+  try {
+    const { data: adminRecord } = await supabase
+      .from('community_admins')
+      .select('role')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (adminRecord) {
+      return { authorized: true, status: 200, user, supabase };
+    }
+  } catch {
+    // Table may not yet be provisioned
   }
 
-  // Case 3: Completely unauthenticated
+  // 4. Database admin verification via community_members table
+  try {
+    const { data: member } = await supabase
+      .from('community_members')
+      .select('role')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (member && member.role === 'admin') {
+      return { authorized: true, status: 200, user, supabase };
+    }
+  } catch {
+    // Fallback
+  }
+
+  // 5. Authenticated non-admin member -> 403 Forbidden
   return {
     authorized: false,
-    status: 401,
-    error: 'Authentication required. Please sign in as an administrator.',
+    status: 403,
+    error: 'Forbidden: You do not have administrative privileges.',
+    user,
     supabase,
   };
 }

@@ -80,4 +80,24 @@
 - **Test 25: Root Navbar & Mobile Menu Auth State Synchronization**  
   `UserProvider` updates immediately on Supabase `onAuthStateChange`, removing stale localStorage auth flags. **PASSED**.
 
+---
+
+## 6. Secure Admin Route Protection Tests (Issue #2)
+
+- **Test 26: Unauthenticated Admin Route Interception**  
+  `curl -I http://localhost:3000/community/admin` -> HTTP 307 Temporary Redirect to `/community/auth?mode=login&next=%2Fcommunity%2Fadmin`. Admin HTML and payload completely withheld. **PASSED**.
+- **Test 27: LocalStorage & Cookie Spoofing Bypass Rejection**  
+  `curl -I -H "Cookie: tncc_active_user_email=suganeshsugu07@gmail.com; tncc_admin_session=true" http://localhost:3000/community/admin` -> HTTP 307 Temporary Redirect to `/community/auth?mode=login&next=%2Fcommunity%2Fadmin`. Spoofed cookies ignored. **PASSED**.
+- **Test 28: Admin API Unauthenticated Rejection (Reports)**  
+  `GET /api/community/admin/reports` -> HTTP 401 Unauthorized `{"error":"Unauthorized: Authentication required. Please sign in as an administrator."}`. **PASSED**.
+- **Test 29: Admin API Unauthenticated Rejection (Challenges)**  
+  `GET /api/community/admin/challenges` -> HTTP 401 Unauthorized. **PASSED**.
+- **Test 30: Admin API Unauthenticated Rejection (Referrals)**  
+  `GET /api/community/admin/referrals` -> HTTP 401 Unauthorized. **PASSED**.
+- **Test 31: Admin API Spoofed Header Rejection**  
+  `GET /api/community/admin/reports` with `x-tncc-active-email: suganeshsugu07@gmail.com` -> HTTP 401 Unauthorized. Header bypass rejected. **PASSED**.
+- **Test 32: Server Component Dual Layer Protection**  
+  `app/community/admin/page.tsx` executes server-side `auth.getUser()` before rendering. Zero administrative payload leak. **PASSED**.
+
+
 

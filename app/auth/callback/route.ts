@@ -22,3 +22,4 @@ export async function GET(request: Request) {
   // If code exchange fails or missing, redirect to auth page with notification
   return NextResponse.redirect(`${origin}/community/auth?error=auth_callback_failed`);
 }
+

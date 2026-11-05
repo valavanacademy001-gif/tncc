@@ -2,6 +2,18 @@
 
 ## [Unreleased] - 2026-11-05
 
+### Added (GitHub Issue #2 - Secure Admin Route Protection via Middleware and Supabase JWT)
+- **Multi-Layer Admin Route Protection Architecture:**
+  - Next.js Edge Middleware (`middleware.ts`) intercepts `/community/admin` and returns HTTP 307 temporary redirect to `/community/auth?mode=login&next=/community/admin` for unauthenticated requests.
+  - Converted `app/community/admin/page.tsx` into an `async Server Component` that verifies `supabase.auth.getUser()` before rendering. Unauthorized users never receive admin HTML or client payloads.
+  - Extracted interactive admin management interface into `app/community/admin/AdminDashboardClient.tsx`.
+- **Zero-Trust Server API Authorization:**
+  - Refactored `requireAdminAuth(request)` in `lib/supabase/admin-auth.ts` to strictly require valid Supabase session tokens.
+  - Completely removed `tncc_active_user_email` and `tncc_admin_session` cookie/header bypasses.
+  - Protected all admin API routes (`/api/community/admin/*`) returning HTTP 401 for unauthenticated and HTTP 403 for non-admin members.
+- **Client Spoofing Eradication:**
+  - Removed `localStorage.getItem('tncc_active_user_email')` as an authorization source across `community-context.tsx` and `community-db.ts`.
+
 ### Added (GitHub Issue #3 - Consolidate Dual Auth & Migrate Community Auth to Supabase)
 - **Unified Supabase Authentication Engine:**
   - Migrated Community Authentication from local browser `localStorage` to real Supabase Auth (`supabase.auth.signUp()` and `supabase.auth.signInWithPassword()`).

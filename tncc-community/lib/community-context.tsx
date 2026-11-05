@@ -162,12 +162,9 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     setJobs(communityDb.getJobs());
     setEvents(communityDb.getEvents());
 
-    // Strict Admin check: strictly suganeshsugu07@gmail.com
-    if (typeof window !== 'undefined') {
-      const activeEmail = localStorage.getItem('tncc_active_user_email') || curr?.email || (curr?.username ? `${curr.username}@gmail.com` : undefined);
-      const isAuthorized = checkIsAdmin(activeEmail);
-      setIsAdmin(isAuthorized);
-    }
+    // Strict Admin check: strictly verified admin role and email
+    const isAuthorized = curr?.role === 'admin' || checkIsAdmin(curr?.email);
+    setIsAdmin(Boolean(isAuthorized));
 
     // Refresh live posts from backend
     fetchLivePosts();
@@ -413,16 +410,14 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleAdminMode = (enable?: boolean) => {
-    if (typeof window !== 'undefined') {
-      const activeEmail = localStorage.getItem('tncc_active_user_email') || currentMember?.email;
-      if (!checkIsAdmin(activeEmail)) {
-        addToast({
-          type: 'error',
-          title: 'Access Restricted',
-          message: 'Admin access is strictly restricted to suganeshsugu07@gmail.com.',
-        });
-        return;
-      }
+    const isAuthorized = currentMember?.role === 'admin' || checkIsAdmin(currentMember?.email);
+    if (!isAuthorized) {
+      addToast({
+        type: 'error',
+        title: 'Access Restricted',
+        message: 'Admin access is strictly restricted to verified administrators.',
+      });
+      return;
     }
     const newVal = enable !== undefined ? enable : !isAdmin;
     setIsAdmin(newVal);

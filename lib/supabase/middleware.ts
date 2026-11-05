@@ -46,37 +46,45 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // ISSUE-02 / ISSUE-10: Server-side route protection for /community/admin
+  // ISSUE-02: Server-side route protection for /community/admin
   if (request.nextUrl.pathname.startsWith('/community/admin')) {
-    // Check Supabase session first
-    const isSupabaseAdmin = user?.email && (
-      user.email.toLowerCase() === 'suganeshsugu07@gmail.com' ||
-      user.email.toLowerCase() === 'suganeshsugu07@gmailcom'
-    );
-
-    // Also check community admin session cookie for hybrid transition
-    const adminSessionCookie = request.cookies.get('tncc_admin_session')?.value;
-    const activeEmailCookie = request.cookies.get('tncc_active_user_email')?.value;
-    const isCookieAdmin = (
-      adminSessionCookie === 'true' ||
-      (activeEmailCookie && activeEmailCookie.toLowerCase() === 'suganeshsugu07@gmail.com')
-    );
-
-    if (!user && !isCookieAdmin) {
-      // Unauthenticated visitor -> redirect to community login with return URL
+    // 1. Unauthenticated -> HTTP 307 redirect to /community/auth
+    if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = '/community/auth';
       url.searchParams.set('mode', 'login');
       url.searchParams.set('next', '/community/admin');
-      return NextResponse.redirect(url);
+      return NextResponse.redirect(url, { status: 307 });
     }
 
-    if (user && !isSupabaseAdmin && !isCookieAdmin) {
-      // Authenticated non-admin member -> 403 Forbidden redirect
+    // 2. Validate admin role against trusted server sources (no client cookie bypass)
+    const cleanEmail = (user.email || '').toLowerCase().trim();
+    const isSuperAdmin = (
+      cleanEmail === 'suganeshsugu07@gmail.com' ||
+      cleanEmail === 'suganeshsugu07@gmailcom'
+    );
+
+    let isDbAdmin = false;
+    try {
+      const { data: member } = await supabase
+        .from('community_members')
+        .select('role')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (member?.role === 'admin') {
+        isDbAdmin = true;
+      }
+    } catch {
+      // Database check fallback
+    }
+
+    if (!isSuperAdmin && !isDbAdmin) {
+      // Authenticated non-admin member -> HTTP 307 Forbidden redirect
       const url = request.nextUrl.clone();
       url.pathname = '/community';
       url.searchParams.set('error', 'forbidden_admin_access_required');
-      return NextResponse.redirect(url);
+      return NextResponse.redirect(url, { status: 307 });
     }
   }
 
