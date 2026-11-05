@@ -326,6 +326,23 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
             setCurrentMember(member);
             const isUserAdmin = checkIsAdmin(resolvedEmail);
             setIsAdmin(isUserAdmin);
+
+            // Establish session cookies immediately
+            if (typeof document !== 'undefined') {
+              document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
+              document.cookie = `tncc_member_id=${member.id}; path=/; max-age=604800; SameSite=Lax`;
+              if (isUserAdmin) {
+                document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
+              }
+            }
+            try {
+              await fetch('/api/community/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: resolvedEmail, memberId: member.id, isAdmin: isUserAdmin }),
+              });
+            } catch {}
+
             loadAll();
             return { success: true, member };
           }
@@ -364,6 +381,22 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         setCurrentMember(member);
         const isUserAdmin = checkIsAdmin(resolvedEmail);
         setIsAdmin(isUserAdmin);
+
+        if (typeof document !== 'undefined') {
+          document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
+          document.cookie = `tncc_member_id=${member.id}; path=/; max-age=604800; SameSite=Lax`;
+          if (isUserAdmin) {
+            document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
+          }
+        }
+        try {
+          await fetch('/api/community/auth/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: resolvedEmail, memberId: member.id, isAdmin: isUserAdmin }),
+          });
+        } catch {}
+
         loadAll();
 
         addToast({
@@ -394,6 +427,14 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('tncc_user');
         localStorage.removeItem('tncc_session');
       }
+      if (typeof document !== 'undefined') {
+        document.cookie = 'tncc_active_user_email=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'tncc_member_id=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'tncc_admin_session=; path=/; max-age=0; SameSite=Lax';
+      }
+      try {
+        await fetch('/api/community/auth/session', { method: 'DELETE' });
+      } catch {}
       try {
         await fetch('/api/community/auth/sync');
       } catch {}

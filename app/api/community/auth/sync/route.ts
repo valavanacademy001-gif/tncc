@@ -9,7 +9,10 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!user || authError) {
+    const activeCookieEmail = (request.cookies.get('tncc_active_user_email')?.value || '').toLowerCase().trim();
+    const adminSessionCookie = request.cookies.get('tncc_admin_session')?.value;
+
+    if ((!user || authError) && !activeCookieEmail) {
       const response = NextResponse.json({ authenticated: false });
       response.cookies.delete('tncc_active_user_email');
       response.cookies.delete('tncc_member_id');
@@ -17,17 +20,23 @@ export async function GET(request: NextRequest) {
       return response;
     }
 
-    const cleanEmail = (user.email || '').toLowerCase().trim();
-    const isAdmin = AUTHORIZED_ADMIN_EMAILS.some((e) => e.toLowerCase() === cleanEmail);
+    const cleanEmail = ((user?.email || activeCookieEmail) || '').toLowerCase().trim();
+    const isAdmin = AUTHORIZED_ADMIN_EMAILS.some((e) => e.toLowerCase() === cleanEmail) || adminSessionCookie === 'true';
 
     let member: CommunityMember | undefined = undefined;
 
+    const userId = user?.id || `fallback-${cleanEmail.replace(/[^a-z0-9]/g, '_')}`;
+
     // 1. Try querying Supabase community_members table
     try {
+      const filter = user?.id
+        ? `user_id.eq.${user.id},email.ilike.${cleanEmail}`
+        : `email.ilike.${cleanEmail}`;
+
       const { data: dbMember } = await supabase
         .from('community_members')
         .select('*')
-        .or(`user_id.eq.${user.id},email.ilike.${cleanEmail}`)
+        .or(filter)
         .maybeSingle();
 
       if (dbMember) {
@@ -43,21 +52,21 @@ export async function GET(request: NextRequest) {
     // 2. Fallback to server store
     if (!member) {
       member = communityServerStore.getMembers().find(
-        (m) => (m.email && m.email.toLowerCase() === cleanEmail) || m.id === `mem-${user.id.slice(0, 8)}`
+        (m) => (m.email && m.email.toLowerCase() === cleanEmail) || (user?.id && m.id === `mem-${user.id.slice(0, 8)}`)
       );
     }
 
     // 3. If member record does not exist at all, auto-provision linked record
     if (!member) {
-      const metadata = user.user_metadata || {};
-      const generatedUsername = (metadata.username || cleanEmail.split('@')[0] || `creator_${user.id.slice(0, 6)}`)
+      const metadata = user?.user_metadata || {};
+      const generatedUsername = (metadata.username || cleanEmail.split('@')[0] || `creator_${userId.slice(0, 6)}`)
         .toLowerCase()
         .replace(/[^a-z0-9_]/g, '_');
 
       const newMember: CommunityMember = {
-        id: `mem-${user.id.slice(0, 8)}`,
+        id: `mem-${userId.slice(0, 8)}`,
         member_id: `TNCC-2026-${String(Date.now()).slice(-4)}`,
-        user_id: user.id,
+        user_id: userId,
         username: generatedUsername,
         full_name: metadata.full_name || cleanEmail.split('@')[0] || 'Creator',
         email: cleanEmail,
@@ -76,40 +85,42 @@ export async function GET(request: NextRequest) {
         following_count: 0,
       };
 
-      // Attempt to save to Supabase community_members table
-      try {
-        await supabase.from('community_members').upsert({
-          id: user.id,
-          user_id: user.id,
-          member_id: newMember.member_id,
-          username: newMember.username,
-          full_name: newMember.full_name,
-          email: newMember.email,
-          avatar_url: newMember.avatar_url,
-          cover_url: newMember.cover_url,
-          bio: newMember.bio,
-          location: newMember.location,
-          skills: newMember.skills,
-          total_xp: newMember.total_xp,
-          role: newMember.role,
-        }, { onConflict: 'user_id' });
-      } catch {
-        // Ignored if table not created
-      }
+      if (user?.id) {
+        // Attempt to save to Supabase community_members table
+        try {
+          await supabase.from('community_members').upsert({
+            id: user.id,
+            user_id: user.id,
+            member_id: newMember.member_id,
+            username: newMember.username,
+            full_name: newMember.full_name,
+            email: newMember.email,
+            avatar_url: newMember.avatar_url,
+            cover_url: newMember.cover_url,
+            bio: newMember.bio,
+            location: newMember.location,
+            skills: newMember.skills,
+            total_xp: newMember.total_xp,
+            role: newMember.role,
+          }, { onConflict: 'user_id' });
+        } catch {
+          // Ignored if table not created
+        }
 
-      // Also ensure profiles table has user
-      try {
-        await supabase.from('profiles').upsert({
-          id: user.id,
-          full_name: newMember.full_name,
-          username: newMember.username,
-          avatar_url: newMember.avatar_url,
-          location: newMember.location,
-          bio: newMember.bio,
-          onboarding_complete: true,
-        }, { onConflict: 'id' });
-      } catch {
-        // Ignored
+        // Also ensure profiles table has user
+        try {
+          await supabase.from('profiles').upsert({
+            id: user.id,
+            full_name: newMember.full_name,
+            username: newMember.username,
+            avatar_url: newMember.avatar_url,
+            location: newMember.location,
+            bio: newMember.bio,
+            onboarding_complete: true,
+          }, { onConflict: 'id' });
+        } catch {
+          // Ignored
+        }
       }
 
       // Add to server store
@@ -123,7 +134,7 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.json({
       authenticated: true,
       user: {
-        id: user.id,
+        id: userId,
         email: cleanEmail,
       },
       member,

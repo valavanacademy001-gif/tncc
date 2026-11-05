@@ -162,14 +162,13 @@ function AuthContent() {
 
         setTimeout(() => {
           const nextUrl = searchParams.get('next');
-          if (nextUrl) {
-            router.push(nextUrl);
-          } else if (res.member?.role === 'admin') {
-            router.push('/community/admin');
+          const targetUrl = nextUrl || (res.member?.role === 'admin' ? '/community/admin' : '/community');
+          if (typeof window !== 'undefined') {
+            window.location.href = targetUrl;
           } else {
-            router.push('/community');
+            router.push(targetUrl);
           }
-        }, 700);
+        }, 500);
       } else {
         // Real Supabase password reset
         if (!email.trim()) {
