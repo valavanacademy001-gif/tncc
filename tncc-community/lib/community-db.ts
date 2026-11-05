@@ -1262,9 +1262,6 @@ export class CommunityDatabase {
       success: true,
       member,
     };
-      success: true,
-      member,
-    };
   }
 
   // --- Follow System ---
