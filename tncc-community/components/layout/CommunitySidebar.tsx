@@ -15,15 +15,13 @@ import {
   User, 
   Zap,
   LogOut,
-  ShieldCheck,
-  Gift
+  ShieldCheck
 } from 'lucide-react';
 import { useCommunity } from '../../lib/community-context';
 import { useUser } from '@/lib/user-context';
 
 export const COMMUNITY_NAV_ITEMS = [
   { name: 'Feed', href: '/community', icon: Compass, badge: 'Live' },
-  { name: 'Refer & Earn', href: '/community/referrals', icon: Gift, badge: '+50 XP' },
   { name: 'Resources', href: '/community/resources', icon: BookOpen },
   { name: 'Events', href: '/community/events', icon: Calendar },
   { name: 'Challenges', href: '/community/challenges', icon: Trophy, badge: 'XP' },

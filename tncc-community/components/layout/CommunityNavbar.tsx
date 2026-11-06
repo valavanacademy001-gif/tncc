@@ -245,19 +245,6 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                     My Creator Profile
                   </Link>
                   <Link
-                    href="/community/referrals"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center justify-between px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Gift className="w-3.5 h-3.5 text-[#E84020]" />
-                      <span>Refer & Earn</span>
-                    </div>
-                    <span className="text-[10px] font-extrabold bg-[#FFF0ED] text-[#E84020] px-1.5 py-0.5 rounded-full border border-[#E84020]/20">
-                      +50 XP
-                    </span>
-                  </Link>
-                  <Link
                     href="/community/leaderboard"
                     onClick={() => setShowProfileMenu(false)}
                     className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
