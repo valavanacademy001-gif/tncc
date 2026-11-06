@@ -21,7 +21,8 @@ import {
   FileCheck,
   MessageCircle,
   X,
-  Gift
+  Gift,
+  LogIn
 } from 'lucide-react';
 import ReferralDashboardView from '../referral/ReferralDashboardView';
 
@@ -122,14 +123,25 @@ export default function ProfileView() {
             </div>
           </div>
 
-          {/* Edit Profile Button */}
-          <button
-            onClick={() => setShowEditModal(true)}
-            className="px-4 py-2 bg-[#F8F6F1] hover:bg-[#0D2C5B] text-[#0D2C5B] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center gap-1.5 self-start sm:self-auto active:scale-95 shadow-sm"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>Edit Profile</span>
-          </button>
+          {/* Profile Action Buttons */}
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+            <Link
+              href="/community/auth?mode=login"
+              className="px-3.5 py-2 bg-[#F8F6F1] hover:bg-[#E84020] text-[#0D2C5B] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center gap-1.5 active:scale-95 shadow-sm"
+              title="Sign in or switch account"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In / Switch</span>
+            </Link>
+
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="px-4 py-2 bg-[#F8F6F1] hover:bg-[#0D2C5B] text-[#0D2C5B] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center gap-1.5 active:scale-95 shadow-sm"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>Edit Profile</span>
+            </button>
+          </div>
         </div>
 
         {/* Bio */}

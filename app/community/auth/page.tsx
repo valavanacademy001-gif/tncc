@@ -143,7 +143,8 @@ function AuthContent() {
         }
 
         const cleanEmail = email.trim().toLowerCase();
-        const res = await loginMember(cleanEmail, password);
+        const cleanPassword = password.trim();
+        const res = await loginMember(cleanEmail, cleanPassword);
         if (!res.success) {
           const isEmailNotConfirmed = res.error?.toLowerCase().includes('not confirmed');
           setErrorMsg(
@@ -175,6 +176,21 @@ function AuthContent() {
           }
         }
 
+        // Establish HTTP session cookies on server for mobile WebKit & Edge Middleware
+        try {
+          await fetch('/api/community/auth/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: cleanEmail,
+              memberId: res.member?.id,
+              isAdmin: isUserAdmin,
+            }),
+          });
+        } catch (sessionErr) {
+          console.warn('Session cookie sync error:', sessionErr);
+        }
+
         setSuccessMsg(
           isUserAdmin 
             ? '🛡️ Verified Administrator sign-in. Launching admin workspace...' 
@@ -189,7 +205,7 @@ function AuthContent() {
           } else {
             router.push(targetUrl);
           }
-        }, 200);
+        }, 350);
       } else {
         // Real Supabase password reset
         if (!email.trim()) {
@@ -336,6 +352,9 @@ function AuthContent() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter your username"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
                     className="w-full text-xs sm:text-sm pl-8 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                   />
                 </div>
@@ -383,6 +402,10 @@ function AuthContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={mode === 'signup' ? 'Enter your email' : 'Enter your email or username'}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                autoComplete="email"
                 className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
               />
             </div>
@@ -413,6 +436,10 @@ function AuthContent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
                   className="w-full text-xs sm:text-sm pl-9 pr-10 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
                 />
                 <button
@@ -429,7 +456,7 @@ function AuthContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full py-3 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md touch-manipulation flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <span>
               {loading

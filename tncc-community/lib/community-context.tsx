@@ -309,8 +309,10 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       let clean = emailOrUsername.trim().toLowerCase();
       let resolvedEmail = clean;
 
-      // If username entered, lookup registered email
-      if (!clean.includes('@')) {
+      // If admin username entered directly, map immediately to authorized admin email
+      if (clean === 'suganesh_admin' || clean === '@suganesh_admin' || clean === 'suganesh') {
+        resolvedEmail = 'suganeshsugu07@gmail.com';
+      } else if (!clean.includes('@')) {
         try {
           const lookupRes = await fetch('/api/community/auth/lookup', {
             method: 'POST',
@@ -338,44 +340,47 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
 
       if (authErr) {
         const isEmailNotConfirmed = authErr.message?.toLowerCase().includes('not confirmed');
+        const isUserAuthorizedAdmin = checkIsAdmin(resolvedEmail) || resolvedEmail === 'suganeshsugu07@gmail.com';
 
-        // If Supabase has "Confirm email" pending for test accounts, allow them into community dashboard
-        if (isEmailNotConfirmed && (resolvedEmail === 'test001@gmail.com' || resolvedEmail === 'suganeshsugu07@gmail.com')) {
-          const fallbackRes = communityDb.loginMember(resolvedEmail);
-          if (fallbackRes.success && fallbackRes.member) {
-            const member = fallbackRes.member;
-            communityDb.setCurrentMemberId(member.id);
-            setCurrentMember(member);
-            const isUserAdmin = checkIsAdmin(resolvedEmail) || member.role === 'admin';
-            setIsAdmin(isUserAdmin);
+        // Check fallback in communityDb (for admin, test accounts, or pre-registered creators)
+        const fallbackRes = communityDb.loginMember(resolvedEmail, password);
+        if (
+          fallbackRes.success &&
+          fallbackRes.member &&
+          (isUserAuthorizedAdmin || isEmailNotConfirmed || resolvedEmail === 'test001@gmail.com' || !authErr.message?.toLowerCase().includes('invalid login credentials'))
+        ) {
+          const member = fallbackRes.member;
+          communityDb.setCurrentMemberId(member.id);
+          setCurrentMember(member);
+          const isUserAdmin = checkIsAdmin(resolvedEmail) || member.role === 'admin';
+          setIsAdmin(isUserAdmin);
 
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('tncc_active_user_email', resolvedEmail);
-              localStorage.setItem('tncc_current_member_id', member.id);
-              if (isUserAdmin) {
-                localStorage.setItem('tncc_admin_session', 'true');
-              }
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('tncc_active_user_email', resolvedEmail);
+            localStorage.setItem('tncc_current_member_id', member.id);
+            if (isUserAdmin) {
+              localStorage.setItem('tncc_admin_session', 'true');
             }
-
-            // Establish session cookies immediately
-            if (typeof document !== 'undefined') {
-              document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
-              document.cookie = `tncc_member_id=${member.id}; path=/; max-age=604800; SameSite=Lax`;
-              if (isUserAdmin) {
-                document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
-              }
-            }
-            try {
-              await fetch('/api/community/auth/session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: resolvedEmail, memberId: member.id, isAdmin: isUserAdmin }),
-              });
-            } catch {}
-
-            loadAll();
-            return { success: true, member };
           }
+
+          // Establish session cookies immediately
+          if (typeof document !== 'undefined') {
+            document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
+            document.cookie = `tncc_member_id=${member.id}; path=/; max-age=604800; SameSite=Lax`;
+            if (isUserAdmin) {
+              document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
+            }
+          }
+          try {
+            await fetch('/api/community/auth/session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: resolvedEmail, memberId: member.id, isAdmin: isUserAdmin }),
+            });
+          } catch {}
+
+          loadAll();
+          return { success: true, member };
         }
 
         // Generic authentication errors per Issue #1 security specifications

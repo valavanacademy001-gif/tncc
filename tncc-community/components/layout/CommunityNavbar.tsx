@@ -22,7 +22,8 @@ import {
   Calendar,
   Trophy,
   Briefcase,
-  Gift
+  Gift,
+  LogIn
 } from 'lucide-react';
 
 export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: () => void }) {
@@ -147,138 +148,151 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
             </button>
 
             {showProfileMenu && (
-              <div 
-                className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-scale-up"
-                onMouseLeave={() => setShowProfileMenu(false)}
-              >
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold text-[#0D2C5B] truncate">{currentMember?.full_name}</p>
-                    {isAdmin && (
-                      <span className="text-[9px] font-extrabold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full border border-amber-200">
-                        ADMIN
-                      </span>
-                    )}
+              <>
+                <div
+                  className="fixed inset-0 z-40 bg-transparent"
+                  onClick={() => setShowProfileMenu(false)}
+                />
+                <div 
+                  className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-scale-up"
+                >
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-[#0D2C5B] truncate">{currentMember?.full_name}</p>
+                      {isAdmin && (
+                        <span className="text-[9px] font-extrabold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full border border-amber-200">
+                          ADMIN
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-gray-500 truncate">@{currentMember?.username}</p>
+                    <p className="text-[10px] text-[#E84020] font-semibold mt-0.5">ID: {currentMember?.member_id}</p>
                   </div>
-                  <p className="text-[11px] text-gray-500 truncate">@{currentMember?.username}</p>
-                  <p className="text-[10px] text-[#E84020] font-semibold mt-0.5">ID: {currentMember?.member_id}</p>
-                </div>
 
-                {/* Administration Dropdown Menu Section */}
-                {isAdmin && (
-                  <>
-                    <div className="px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 flex items-center justify-between">
-                      <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-amber-600" />
-                        Admin Controls
-                      </span>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="text-[10px] font-bold text-amber-700 hover:underline"
-                      >
-                        Dashboard →
-                      </Link>
-                    </div>
+                  {/* Administration Dropdown Menu Section */}
+                  {isAdmin && (
+                    <>
+                      <div className="px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 flex items-center justify-between">
+                        <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-amber-600" />
+                          Admin Controls
+                        </span>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="text-[10px] font-bold text-amber-700 hover:underline"
+                        >
+                          Dashboard →
+                        </Link>
+                      </div>
 
-                    <div className="py-1 bg-amber-50/20 border-b border-gray-100">
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
-                        Admin Reports
-                      </Link>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <Users className="w-3.5 h-3.5 text-amber-600" />
-                        User Management
-                      </Link>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <BookOpen className="w-3.5 h-3.5 text-amber-600" />
-                        Resource Management
-                      </Link>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-amber-600" />
-                        Event Management
-                      </Link>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <Trophy className="w-3.5 h-3.5 text-amber-600" />
-                        Challenges & Winners
-                      </Link>
-                      <Link
-                        href="/community/admin"
-                        onClick={() => setShowProfileMenu(false)}
-                        className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
-                      >
-                        <Briefcase className="w-3.5 h-3.5 text-amber-600" />
-                        Hiring & Jobs
-                      </Link>
-                    </div>
-                  </>
-                )}
+                      <div className="py-1 bg-amber-50/20 border-b border-gray-100">
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
+                          Admin Reports
+                        </Link>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <Users className="w-3.5 h-3.5 text-amber-600" />
+                          User Management
+                        </Link>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                          Resource Management
+                        </Link>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                          Event Management
+                        </Link>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <Trophy className="w-3.5 h-3.5 text-amber-600" />
+                          Challenges & Winners
+                        </Link>
+                        <Link
+                          href="/community/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                        >
+                          <Briefcase className="w-3.5 h-3.5 text-amber-600" />
+                          Hiring & Jobs
+                        </Link>
+                      </div>
+                    </>
+                  )}
 
-                {/* Standard Creator Links */}
-                <div className="py-1">
-                  <Link
-                    href="/community/profile"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
-                  >
-                    <User className="w-3.5 h-3.5 text-gray-400" />
-                    My Creator Profile
-                  </Link>
-                  <Link
-                    href="/community/leaderboard"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
-                  >
-                    <Award className="w-3.5 h-3.5 text-gray-400" />
-                    Community Leaderboard
-                  </Link>
-                </div>
-
-                {/* Verified Admin Status Indicator */}
-                {isAdmin && (
-                  <div className="border-t border-amber-100 bg-amber-50/70 px-4 py-2 text-[11px] text-amber-900 font-bold flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Admin Access Active</span>
-                    </div>
-                    <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-extrabold">VERIFIED</span>
+                  {/* Standard Creator Links */}
+                  <div className="py-1">
+                    <Link
+                      href="/community/profile"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                    >
+                      <User className="w-3.5 h-3.5 text-gray-400" />
+                      My Creator Profile
+                    </Link>
+                    <Link
+                      href="/community/leaderboard"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                    >
+                      <Award className="w-3.5 h-3.5 text-gray-400" />
+                      Community Leaderboard
+                    </Link>
                   </div>
-                )}
 
-                {/* Sign Out */}
-                <div className="border-t border-gray-100 pt-1">
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      handleSignOut();
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 text-left font-medium transition-colors cursor-pointer"
-                  >
-                    <LogOut className="w-3.5 h-3.5 text-red-500" />
-                    Sign Out
-                  </button>
+                  {/* Verified Admin Status Indicator */}
+                  {isAdmin && (
+                    <div className="border-t border-amber-100 bg-amber-50/70 px-4 py-2 text-[11px] text-amber-900 font-bold flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Admin Access Active</span>
+                      </div>
+                      <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-extrabold">VERIFIED</span>
+                    </div>
+                  )}
+
+                  {/* Sign In / Switch Account & Sign Out */}
+                  <div className="border-t border-gray-100 pt-1">
+                    <Link
+                      href="/community/auth?mode=login"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-[#0D2C5B] hover:bg-blue-50/60 text-left font-semibold transition-colors cursor-pointer"
+                    >
+                      <LogIn className="w-3.5 h-3.5 text-[#0D2C5B]" />
+                      Sign In / Switch Account
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        handleSignOut();
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 text-left font-medium transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5 text-red-500" />
+                      Sign Out
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>
