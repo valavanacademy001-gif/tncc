@@ -57,6 +57,9 @@
   --lp-accent-blue:         #0D2C5B;
   --lp-accent-blue-bg:      #EEF2FF;
   --lp-accent-blue-border:  rgba(13, 44, 91, 0.25);
+  --lp-bg-cta:              var(--navy);
+  --lp-bg-footer:           var(--navy);
+  --lp-border-footer:       rgba(255, 255, 255, 0.1);
 
   /* Neutrals */
   --white:       #FFFFFF;
@@ -150,6 +153,9 @@
   --lp-accent-blue:         #38BDF8;
   --lp-accent-blue-bg:      rgba(56, 189, 248, 0.15);
   --lp-accent-blue-border:  rgba(56, 189, 248, 0.35);
+  --lp-bg-cta:              #101318;
+  --lp-bg-footer:           #0D1117;
+  --lp-border-footer:       #303B49;
 
   /* Neutrals mapped for dark surfaces */
   --white:       #1D2430;

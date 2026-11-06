@@ -117,6 +117,8 @@ async function runAudit() {
       '#about',
       '#benefits',
       '#faq',
+      '#final-cta',
+      'footer',
     ];
 
     console.log(`\n--- Dark Mode Section Background Audit (${device.name}) ---`);

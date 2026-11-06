@@ -260,12 +260,14 @@ export default function FinalCTA() {
 
   return (
     <section
+      id="final-cta"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        background: 'var(--navy)',
+        background: 'var(--lp-bg-cta)',
+        borderTop: '1px solid var(--lp-border)',
         position: 'relative',
         overflow: 'hidden',
         padding: '96px 0',

@@ -26,7 +26,7 @@ const footerNav = {
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--navy)', color: 'white' }}>
+    <footer style={{ background: 'var(--lp-bg-footer)', color: 'white', borderTop: '1px solid var(--lp-border-footer)' }}>
       {/* Main footer */}
       <div className="container" style={{ padding: '80px 24px 48px' }}>
         <div style={{
@@ -154,7 +154,7 @@ export default function Footer() {
         <div style={{
           marginTop: '64px',
           paddingTop: '24px',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
+          borderTop: '1px solid var(--lp-border-footer)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
