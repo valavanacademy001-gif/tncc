@@ -25,6 +25,125 @@ interface PostCardProps {
   post: CommunityPost;
 }
 
+function PostCaptionWithMore({
+  authorUsername,
+  caption,
+  hashtags = [],
+}: {
+  authorUsername: string;
+  caption: string;
+  hashtags?: string[];
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const cleanCaption = (caption || '').trim();
+  const isMultiLine = cleanCaption.includes('\n');
+  const firstLine = cleanCaption.split('\n')[0].trim();
+  const hashtagsCount = hashtags?.length || 0;
+  const totalLength = cleanCaption.length + (hashtags ? hashtags.join(' ').length : 0);
+
+  // If text or combined hashtags exceed normal card line threshold
+  const isLong = totalLength > 85 || isMultiLine || (cleanCaption.length > 55 && hashtagsCount > 1);
+
+  if (!isLong) {
+    return (
+      <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal">
+        <Link
+          href={`/community/portfolio/${authorUsername}`}
+          className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+        >
+          {authorUsername}
+        </Link>
+        <span className="whitespace-pre-line">{cleanCaption}</span>
+        {hashtags && hashtags.length > 0 && (
+          <span className="ml-1.5 inline">
+            {hashtags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] hover:text-[#E84020] mr-1.5 cursor-pointer transition-colors"
+              >
+                {tag}
+              </span>
+            ))}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  if (isExpanded) {
+    return (
+      <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal space-y-1.5">
+        <div>
+          <Link
+            href={`/community/portfolio/${authorUsername}`}
+            className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+          >
+            {authorUsername}
+          </Link>
+          <span className="whitespace-pre-line">{cleanCaption}</span>
+          <button
+            type="button"
+            onClick={() => setIsExpanded(false)}
+            className="text-gray-400 hover:text-[#0D2C5B] font-semibold text-xs ml-2 inline-block cursor-pointer transition-colors"
+          >
+            less
+          </button>
+        </div>
+
+        {hashtags && hashtags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {hashtags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="text-[11px] font-semibold text-[#1B3F7E] hover:text-[#E84020] bg-blue-50/80 hover:bg-blue-100/80 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Collapsed View (pixel-perfect to Instagram reference image)
+  let previewText = cleanCaption;
+  let showFirstTag = false;
+
+  if (isMultiLine) {
+    previewText = firstLine.length > 80 ? `${firstLine.slice(0, 80).trim()}` : firstLine;
+  } else if (cleanCaption.length > 80) {
+    previewText = `${cleanCaption.slice(0, 80).trim()}`;
+  } else if (hashtagsCount > 0) {
+    showFirstTag = true;
+  }
+
+  return (
+    <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal">
+      <Link
+        href={`/community/portfolio/${authorUsername}`}
+        className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+      >
+        {authorUsername}
+      </Link>
+      <span>{previewText}</span>
+      {showFirstTag && hashtags[0] && (
+        <span className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] ml-1.5 inline">
+          {hashtags[0]}
+        </span>
+      )}
+      <button
+        type="button"
+        onClick={() => setIsExpanded(true)}
+        className="text-gray-400 hover:text-gray-600 font-medium text-xs ml-1 inline-block cursor-pointer transition-colors"
+      >
+        ... more
+      </button>
+    </div>
+  );
+}
+
 export default function PostCard({ post }: PostCardProps) {
   const { toggleLike, toggleSave, isFollowing, toggleFollow, currentMember, deletePost, isAdmin } = useCommunity();
   const [showComments, setShowComments] = useState(false);
@@ -298,31 +417,13 @@ export default function PostCard({ post }: PostCardProps) {
         </button>
       </div>
 
-      {/* 4. Caption & Hashtags */}
-      <div className="px-4 pb-4 space-y-2">
-        <p className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal">
-          <Link
-            href={`/community/portfolio/${post.author.username}`}
-            className="font-bold text-[#0D2C5B] mr-2 hover:underline"
-          >
-            {post.author.username}
-          </Link>
-          {post.caption}
-        </p>
-
-        {/* Hashtags */}
-        {post.hashtags && post.hashtags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {post.hashtags.map((tag, idx) => (
-              <span
-                key={idx}
-                className="text-[11px] font-medium text-[#1B3F7E] hover:text-[#E84020] cursor-pointer"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+      {/* 4. Caption & Hashtags with Instagram-style "... more" expander */}
+      <div className="px-4 pb-4 space-y-1.5">
+        <PostCaptionWithMore
+          authorUsername={post.author.username}
+          caption={post.caption}
+          hashtags={post.hashtags}
+        />
 
         {/* Timestamp */}
         <div className="pt-1 text-[10px] text-gray-400">
