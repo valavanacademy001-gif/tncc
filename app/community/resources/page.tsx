@@ -35,8 +35,8 @@ export default function ResourcesPage() {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
           <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#00B5C8]/10 text-[#00B5C8] border border-[#00B5C8]/20">
             CREATOR RESOURCE VAULT
           </span>
@@ -49,7 +49,7 @@ export default function ResourcesPage() {
         </div>
 
         {/* Search & Admin Quick Action */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full lg:w-auto">
           {isAdmin && (
             <Link
               href="/community/admin"
@@ -59,7 +59,7 @@ export default function ResourcesPage() {
               <span>+ Add Resource</span>
             </Link>
           )}
-          <div className="relative max-w-xs w-full">
+          <div className="relative w-full sm:max-w-xs">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"

@@ -278,13 +278,14 @@ function TNSilhouette() {
   return (
     <div style={{
       position: 'absolute',
-      right: '-5%',
+      right: '0%',
       top: '50%',
       transform: 'translateY(-50%)',
-      width: '55%',
+      width: '50%',
       height: '90%',
       pointerEvents: 'none',
       opacity: 0.04,
+      overflow: 'hidden',
     }}>
       <svg viewBox="0 0 300 600" style={{ width: '100%', height: '100%' }} aria-hidden="true">
         <path

@@ -164,10 +164,10 @@ export default function HowItWorks() {
         >
           <Link
             href="/community/auth?mode=register"
-            className="btn btn-primary btn-lg"
+            className="btn btn-primary btn-lg inline-flex items-center justify-center max-w-full text-center"
           >
-            JOIN THE COMMUNITY – IT&apos;S FREE
-            <ArrowRight size={18} />
+            <span>JOIN THE COMMUNITY – IT&apos;S FREE</span>
+            <ArrowRight size={18} className="shrink-0 ml-1.5" />
           </Link>
         </motion.div>
       </div>

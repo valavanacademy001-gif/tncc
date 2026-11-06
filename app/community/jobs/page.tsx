@@ -41,8 +41,8 @@ export default function JobsPage() {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
           <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#0D2C5B]/10 text-[#0D2C5B] border border-[#0D2C5B]/20">
             CREATIVE CAREERS IN TAMIL NADU
           </span>
@@ -55,7 +55,7 @@ export default function JobsPage() {
         </div>
 
         {/* Search & Admin Action */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full lg:w-auto">
           {isAdmin && (
             <Link
               href="/community/admin"
@@ -65,7 +65,7 @@ export default function JobsPage() {
               <span>+ Post Job</span>
             </Link>
           )}
-          <div className="relative max-w-xs w-full">
+          <div className="relative w-full sm:max-w-xs">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -79,8 +79,8 @@ export default function JobsPage() {
       </div>
 
       {/* Filter Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+      <div className="flex flex-wrap items-center justify-between gap-3 max-w-full">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar max-w-full">
           {jobCategories.map((cat) => {
             const isActive = activeCategory === cat;
             return (
@@ -120,7 +120,7 @@ export default function JobsPage() {
           <p className="text-xs text-gray-500 mt-1">Try resetting the filters or check back soon.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredJobs.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}

@@ -81,19 +81,19 @@ export default function ProfileView() {
 
       {/* Profile Header Card */}
       <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-6 sm:p-8 shadow-sm -mt-20 sm:-mt-24 relative z-10 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-5 min-w-0">
             <img
               src={currentMember?.avatar_url || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80'}
               alt={currentMember?.full_name}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white dark:border-[#1D2430] shadow-xl bg-gray-100 dark:bg-gray-800 shrink-0"
             />
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA]">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] truncate">
                   {currentMember?.full_name}
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#E84020] text-white">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#E84020] text-white shrink-0">
                   Lvl {memberLevel.level}
                 </span>
               </div>
@@ -124,7 +124,7 @@ export default function ProfileView() {
           </div>
 
           {/* Profile Action Buttons */}
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap shrink-0">
             <Link
               href="/community/auth?mode=login"
               className="px-3.5 py-2 bg-[#F8F6F1] dark:bg-[#171C24] hover:bg-[#E84020] text-[#0D2C5B] dark:text-[#F5F7FA] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-[#303846] flex items-center gap-1.5 active:scale-95 shadow-sm"

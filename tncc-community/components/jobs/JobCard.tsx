@@ -82,12 +82,12 @@ export default function JobCard({ job }: JobCardProps) {
         </div>
 
         {/* Action button */}
-        <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-4 mt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2">
           <span className="text-[10px] text-gray-400">
             Posted {new Date(job.posted_date).toLocaleDateString()}
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setShowModal(true)}
               className="text-xs font-bold text-gray-600 hover:text-[#0D2C5B] px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50"

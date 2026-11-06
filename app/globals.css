@@ -270,18 +270,19 @@ body {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 12px 24px;
   border-radius: var(--radius-full);
   font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
   border: none;
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
   text-decoration: none;
-  white-space: nowrap;
+  max-width: 100%;
 }
 
 .btn-primary {
@@ -334,8 +335,8 @@ body {
 }
 
 .btn-lg {
-  padding: 16px 32px;
-  font-size: 1rem;
+  padding: 14px 28px;
+  font-size: 0.95rem;
   border-radius: var(--radius-full);
 }
 
@@ -343,6 +344,25 @@ body {
   padding: 8px 16px;
   font-size: 0.8125rem;
   border-radius: var(--radius-full);
+}
+
+@media (max-width: 640px) {
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.875rem;
+    white-space: normal;
+    text-align: center;
+  }
+  .btn-lg {
+    padding: 11px 20px;
+    font-size: 0.875rem;
+    white-space: normal;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
 }
 
 /* ============================================================
