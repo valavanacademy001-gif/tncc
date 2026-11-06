@@ -186,7 +186,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
   };
 
   const content = (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white dark:bg-[#1D2430] rounded-2xl shadow-sm border border-gray-200 dark:border-[#303846] overflow-hidden">
       {/* Hidden File Inputs */}
       <input
         ref={imageInputRef}
@@ -213,9 +213,9 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
 
       {/* Header if modal */}
       {!isInline && (
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-gray-100 dark:border-[#303846]">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-sm text-[#0D2C5B]">Create Community Post</span>
+            <span className="font-bold text-xs sm:text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">Create Community Post</span>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E84020]/10 text-[#E84020]">
               +10 XP
             </span>
@@ -223,7 +223,8 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
           {onClose && (
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-[#171C24] transition-colors"
+              aria-label="Close composer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -231,20 +232,20 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4">
+      <form onSubmit={handleSubmit} className="p-3.5 sm:p-5 space-y-3.5 sm:space-y-4">
         {/* Author row & Category selector */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <img
               src={currentMember?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
               alt={currentMember?.full_name}
-              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-gray-200 dark:border-[#303846] shrink-0"
             />
-            <div>
-              <p className="text-xs font-bold text-[#0D2C5B] leading-tight">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] leading-tight truncate">
                 {currentMember?.full_name}
               </p>
-              <p className="text-[11px] text-gray-400">
+              <p className="text-[11px] text-gray-400 dark:text-gray-400 truncate">
                 @{currentMember?.username} · {currentMember?.location}
               </p>
             </div>
@@ -254,7 +255,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as any)}
-            className="text-xs bg-[#F8F6F1] font-semibold text-[#0D2C5B] px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none"
+            className="text-xs bg-[#F8F6F1] dark:bg-[#171C24] font-semibold text-[#0D2C5B] dark:text-[#F5F7FA] px-2.5 sm:px-3 py-1.5 rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none shrink-0 max-w-[125px] sm:max-w-none text-ellipsis"
           >
             <option value="Showcase">🎨 Showcase</option>
             <option value="Graphic Design">📐 Graphic Design</option>
@@ -272,12 +273,12 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Share your creative process, latest design, video breakdown, or ask the community..."
-          className="w-full text-sm text-[#0D2C5B] placeholder:text-gray-400 border-none focus:ring-0 focus:outline-none resize-none bg-transparent"
+          className="w-full text-xs sm:text-sm text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 border-none focus:ring-0 focus:outline-none resize-none bg-transparent leading-relaxed"
         />
 
         {/* Error Message Alert */}
         {uploadError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl text-xs text-red-700 dark:text-red-300 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="font-semibold">{uploadError}</p>
@@ -285,7 +286,8 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
             <button
               type="button"
               onClick={() => setUploadError(null)}
-              className="text-red-400 hover:text-red-600"
+              className="text-red-400 hover:text-red-600 dark:hover:text-red-200"
+              aria-label="Dismiss error"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -298,18 +300,20 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            className={`p-3.5 bg-[#F8F6F1] rounded-2xl space-y-3 border transition-all ${
-              isDragging ? 'border-[#E84020] bg-orange-50/50' : 'border-gray-200'
+            className={`p-3 sm:p-3.5 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl space-y-3 border transition-all ${
+              isDragging 
+                ? 'border-[#E84020] bg-orange-50/50 dark:bg-orange-950/20' 
+                : 'border-gray-200 dark:border-[#303846]'
             }`}
           >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-gray-800">
+                <span className="text-xs font-bold text-gray-800 dark:text-[#F5F7FA]">
                   Attached Media {mediaType === 'video' ? '(Video)' : '(Image)'}
                 </span>
                 {isGoogleDriveUrl(mediaUrl) && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200">
-                    <HardDrive className="w-3 h-3 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                    <HardDrive className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                     Google Drive
                   </span>
                 )}
@@ -317,16 +321,16 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
 
               {/* Aspect Ratio Selector */}
               <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-[11px] text-gray-500 mr-1">Aspect:</span>
+                <span className="text-[11px] text-gray-500 dark:text-gray-400 mr-1">Aspect:</span>
                 {(['portrait', 'square', 'landscape'] as const).map((ratio) => (
                   <button
                     key={ratio}
                     type="button"
                     onClick={() => setAspectRatio(ratio)}
-                    className={`px-2 py-0.5 rounded text-[11px] capitalize font-medium ${
+                    className={`px-2 py-0.5 rounded text-[11px] capitalize font-medium transition-colors ${
                       aspectRatio === ratio
-                        ? 'bg-[#0D2C5B] text-white'
-                        : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318]'
+                        : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#303846]'
                     }`}
                   >
                     {ratio === 'portrait' ? '4:5' : ratio === 'square' ? '1:1' : '16:9'}
@@ -337,15 +341,15 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
 
             {/* Upload Progress Bar */}
             {isUploading && (
-              <div className="space-y-1.5 p-3 bg-white rounded-xl border border-gray-200">
-                <div className="flex items-center justify-between text-xs text-gray-600">
+              <div className="space-y-1.5 p-3 bg-white dark:bg-[#1D2430] rounded-xl border border-gray-200 dark:border-[#303846]">
+                <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300">
                   <span className="flex items-center gap-1.5 font-semibold">
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-[#E84020]" />
                     Uploading to Supabase Storage...
                   </span>
-                  <span className="font-bold text-[#0D2C5B]">{uploadProgress}%</span>
+                  <span className="font-bold text-[#0D2C5B] dark:text-[#00B5C8]">{uploadProgress}%</span>
                 </div>
-                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-gray-100 dark:bg-[#171C24] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-[#0D2C5B] to-[#E84020] transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
@@ -363,20 +367,20 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                   setMediaUrl(e.target.value);
                   const parsed = parseGoogleDriveUrl(e.target.value);
                   if (parsed.isGoogleDrive) {
-                    setMediaType('image'); // default to image or let user select
+                    setMediaType('image');
                   }
                 }}
-                placeholder="Paste direct URL or Google Drive share link (https://...)"
-                className="w-full text-xs px-3.5 py-2.5 bg-white rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+                placeholder="Paste direct URL or Google Drive link (https://...)"
+                className="w-full text-xs px-3.5 py-2.5 bg-white dark:bg-[#1D2430] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
               />
 
               {/* Google Drive Sharing Notice */}
               {gdrive.isGoogleDrive && (
-                <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center justify-between gap-2">
+                <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
-                    <HardDrive className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <HardDrive className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>
-                      Public link detected. Please ensure sharing is set to <strong>"Anyone with the link can view"</strong> in Drive.
+                      Public link detected. Ensure sharing is set to <strong>&quot;Anyone with the link can view&quot;</strong>.
                     </span>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
@@ -384,7 +388,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                       type="button"
                       onClick={() => setMediaType('image')}
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        mediaType === 'image' ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-700'
+                        mediaType === 'image' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-[#1D2430] text-emerald-700 dark:text-emerald-300'
                       }`}
                     >
                       Image
@@ -393,7 +397,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                       type="button"
                       onClick={() => setMediaType('video')}
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        mediaType === 'video' ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-700'
+                        mediaType === 'video' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-[#1D2430] text-emerald-700 dark:text-emerald-300'
                       }`}
                     >
                       Video
@@ -405,7 +409,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
 
             {/* Live Media Preview Box */}
             {(previewBlobUrl || mediaUrl) && (
-              <div className="relative rounded-xl overflow-hidden max-h-56 bg-black border border-gray-200 flex items-center justify-center">
+              <div className="relative rounded-xl overflow-hidden max-h-56 bg-black border border-gray-200 dark:border-[#303846] flex items-center justify-center">
                 {mediaType === 'video' ? (
                   gdrive.isGoogleDrive ? (
                     <div className="p-6 text-center text-white flex flex-col items-center gap-2">
@@ -435,8 +439,9 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                 <button
                   type="button"
                   onClick={handleClearMedia}
-                  className="absolute top-2.5 right-2.5 p-1.5 bg-black/70 hover:bg-black text-white rounded-full text-xs transition-colors shadow-lg"
+                  className="absolute top-2.5 right-2.5 p-1.5 bg-black/70 hover:bg-black text-white rounded-full text-xs transition-colors shadow-lg cursor-pointer"
                   title="Remove media"
+                  aria-label="Remove media"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -444,7 +449,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
             )}
 
             {/* Quick Demo Image Presets */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
               <span className="text-[10px] text-gray-400 shrink-0">Sample Presets:</span>
               {PRESET_IMAGES.map((img) => (
                 <button
@@ -455,7 +460,7 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
                     setPreviewBlobUrl(null);
                     setMediaType('image');
                   }}
-                  className="text-[10px] font-medium bg-white hover:bg-orange-50 hover:text-[#E84020] px-2 py-1 rounded-md border border-gray-200 shrink-0 transition-colors"
+                  className="text-[10px] font-medium bg-white dark:bg-[#1D2430] hover:bg-orange-50 dark:hover:bg-orange-950/30 text-gray-700 dark:text-gray-300 hover:text-[#E84020] dark:hover:text-[#E84020] px-2 py-1 rounded-md border border-gray-200 dark:border-[#303846] shrink-0 transition-colors cursor-pointer"
                 >
                   {img.label}
                 </button>
@@ -465,51 +470,52 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
         )}
 
         {/* Hashtags input */}
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8F6F1] rounded-lg border border-gray-200 text-xs">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8F6F1] dark:bg-[#171C24] rounded-lg border border-gray-200 dark:border-[#303846] text-xs">
           <Hash className="w-3.5 h-3.5 text-gray-400 shrink-0" />
           <input
             type="text"
             value={hashtags}
             onChange={(e) => setHashtags(e.target.value)}
             placeholder="#TamilDesign #MotionGraphics"
-            className="w-full bg-transparent focus:outline-none text-[#0D2C5B]"
+            className="w-full bg-transparent focus:outline-none text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
         </div>
 
         {/* Automatic Portfolio Checkbox */}
-        <label className="flex items-center gap-2.5 cursor-pointer text-xs select-none">
+        <label className="flex items-center gap-2 cursor-pointer text-xs select-none">
           <input
             type="checkbox"
             checked={isShowcase}
             onChange={(e) => setIsShowcase(e.target.checked)}
-            className="w-4 h-4 text-[#E84020] rounded border-gray-300 focus:ring-[#E84020]"
+            className="w-4 h-4 text-[#E84020] rounded border-gray-300 dark:border-gray-600 focus:ring-[#E84020] shrink-0"
           />
-          <span className="font-semibold text-gray-700">
+          <span className="font-semibold text-gray-700 dark:text-gray-300 truncate">
             Showcase in My Portfolio automatically
           </span>
-          <span className="text-[10px] text-gray-400 hidden sm:inline">
+          <span className="text-[10px] text-gray-400 hidden sm:inline shrink-0">
             (No need to upload twice)
           </span>
         </label>
 
-        {/* Action Toolbar & Submit */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-          <div className="flex items-center gap-2">
+        {/* Action Toolbar & Submit - Mobile Overflow Proof */}
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-[#303846]">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
             {/* Direct Image File Picker Button */}
             <button
               type="button"
               onClick={() => {
                 imageInputRef.current?.click();
               }}
-              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 ${
                 mediaType === 'image' && (mediaUrl || previewBlobUrl)
-                  ? 'bg-orange-50 text-[#E84020]'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
+                  ? 'bg-orange-50 dark:bg-orange-950/30 text-[#E84020]'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] hover:text-[#0D2C5B] dark:hover:text-white'
               }`}
               title="Upload Photo"
+              aria-label="Upload Photo"
             >
-              <ImageIcon className="w-4 h-4 text-[#E84020]" />
-              <span className="inline">Photo</span>
+              <ImageIcon className="w-4 h-4 text-[#E84020] shrink-0" />
+              <span className="hidden xs:inline">Photo</span>
             </button>
 
             {/* Direct Video File Picker Button */}
@@ -518,43 +524,47 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
               onClick={() => {
                 videoInputRef.current?.click();
               }}
-              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 ${
                 mediaType === 'video' && (mediaUrl || previewBlobUrl)
-                  ? 'bg-orange-50 text-[#E84020]'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#0D2C5B]'
+                  ? 'bg-orange-50 dark:bg-orange-950/30 text-[#E84020]'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] hover:text-[#0D2C5B] dark:hover:text-white'
               }`}
               title="Upload Video"
+              aria-label="Upload Video"
             >
-              <Video className="w-4 h-4 text-[#0D2C5B]" />
-              <span className="inline">Video</span>
+              <Video className="w-4 h-4 text-[#0D2C5B] dark:text-[#00B5C8] shrink-0" />
+              <span className="hidden xs:inline">Video</span>
             </button>
 
             {/* Toggle URL / Drive link input */}
             <button
               type="button"
               onClick={() => setShowMediaInput((prev) => !prev)}
-              className="p-2 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-[#0D2C5B] transition-colors"
+              className="p-2 rounded-lg text-xs font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#171C24] hover:text-[#0D2C5B] dark:hover:text-white transition-colors cursor-pointer shrink-0"
               title="Paste Link / Google Drive"
+              aria-label="Paste Link or Google Drive"
             >
               <Globe className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center shrink-0">
             <button
               type="submit"
               disabled={!caption.trim() || isUploading}
-              className="px-5 py-2 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-full text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5 active:scale-95 cursor-pointer disabled:cursor-not-allowed"
+              className="h-9 sm:h-10 px-3 sm:px-4 bg-[#E84020] hover:bg-[#FF5733] disabled:opacity-50 text-white rounded-full text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5 active:scale-95 cursor-pointer disabled:cursor-not-allowed shrink-0"
+              aria-label="Post to Community"
             >
               {isUploading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Uploading...</span>
+                  <span className="text-[11px] sm:text-xs">Uploading...</span>
                 </>
               ) : (
                 <>
-                  <span>Post to Community</span>
-                  <span className="px-1.5 py-0.2 text-[9px] bg-white/20 rounded-full font-extrabold">
+                  <span className="inline sm:hidden">Post</span>
+                  <span className="hidden sm:inline">Post to Community</span>
+                  <span className="px-1.5 py-0.5 text-[9px] bg-white/20 rounded-full font-extrabold shrink-0">
                     +10 XP
                   </span>
                 </>

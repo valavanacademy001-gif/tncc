@@ -3,15 +3,17 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================================
    TNCC DESIGN SYSTEM — TAMIL NADU CREATORS CLUB
    ============================================================ */
 
 /* ============================================================
-   COLOR TOKENS
+   COLOR TOKENS & THEME VARIABLES
    ============================================================ */
 :root {
-  /* Brand Core */
+  /* Brand Core (Preserved across all themes) */
   --navy:        #0D2C5B;
   --navy-dark:   #081A3A;
   --navy-mid:    #1B3F7E;
@@ -24,6 +26,18 @@
   --yellow:      #F5A623;
   --yellow-mid:  #FFB84D;
   --yellow-light:#FFF8EC;
+
+  /* Theme Surfaces (Light Mode Default) */
+  --background:  #FFFFFF;
+  --foreground:  #0D2C5B;
+  --bg-page:     #FDFCFB;
+  --bg-surface:  #FFFFFF;
+  --bg-elevated: #F8F6F1;
+  --border-subtle: #E8E8E8;
+  --border-default: #E2E8F0;
+  --text-main:   #0D2C5B;
+  --text-muted:  #6B7280;
+  --text-subtle: #9CA3AF;
 
   /* Neutrals */
   --white:       #FFFFFF;
@@ -41,10 +55,6 @@
   --success:     #10B981;
   --warning:     #F59E0B;
   --error:       #EF4444;
-
-  /* Background */
-  --background:  #FFFFFF;
-  --foreground:  #0D2C5B;
 
   /* Typography */
   --font-display: var(--font-display-custom), 'Juturu', sans-serif;
@@ -80,6 +90,47 @@
   --duration-base:   300ms;
   --duration-slow:   600ms;
   --duration-xslow:  900ms;
+}
+
+/* ============================================================
+   DARK THEME SYSTEM TOKENS (Per Specification)
+   Main background: #101318
+   Secondary background: #171C24
+   Card surface: #1D2430
+   Primary text: #F5F7FA
+   Secondary text: #A8B0BC
+   Border: #303846
+   ============================================================ */
+.dark {
+  --background:  #101318;
+  --foreground:  #F5F7FA;
+  --bg-page:     #101318;
+  --bg-surface:  #1D2430;
+  --bg-elevated: #171C24;
+  --border-subtle: #303846;
+  --border-default: #374151;
+  --text-main:   #F5F7FA;
+  --text-muted:  #A8B0BC;
+  --text-subtle: #6B7280;
+
+  /* Neutrals mapped for dark surfaces */
+  --white:       #1D2430;
+  --cream:       #171C24;
+  --gray-100:    #171C24;
+  --gray-200:    #252E3E;
+  --gray-300:    #303846;
+  --gray-400:    #6B7280;
+  --gray-500:    #A8B0BC;
+  --gray-600:    #CBD5E1;
+  --gray-700:    #E2E8F0;
+  --gray-800:    #F8FAFC;
+
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.55);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.65);
+
+  color-scheme: dark;
 }
 
 /* ============================================================
@@ -119,6 +170,26 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Responsive overflow protection & fluid text */
+h1, h2, h3, h4, h5, h6, p, a, label {
+  overflow-wrap: break-word;
+}
+
+/* Safe area insets for mobile bottom navigation */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Clean scrollbar suppression for horizontal category tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 section[id], div[id] {

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { X, ArrowRight, Briefcase, User2, Zap, MapPin, Calendar, LogOut } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUser } from '@/lib/user-context';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -85,24 +86,27 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 height={40}
                 style={{ objectFit: 'contain', height: 'auto', width: 'auto', maxHeight: '36px' }}
               />
-              <button
-                onClick={onClose}
-                style={{
-                  background: 'var(--gray-100)',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: 'var(--navy)',
-                }}
-                aria-label="Close menu"
-              >
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <ThemeToggle />
+                <button
+                  onClick={onClose}
+                  style={{
+                    background: 'var(--gray-100)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'var(--navy)',
+                  }}
+                  aria-label="Close menu"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             {/* Nav items */}

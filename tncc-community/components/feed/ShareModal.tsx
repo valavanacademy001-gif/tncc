@@ -99,60 +99,61 @@ export default function ShareModal({ post, onClose }: ShareModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 overflow-hidden relative animate-scale-up"
+        className="bg-white dark:bg-[#1D2430] rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-gray-100 dark:border-[#303846] overflow-hidden relative animate-scale-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-[#303846]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#0D2C5B]/10 flex items-center justify-center text-[#0D2C5B]">
+            <div className="w-8 h-8 rounded-full bg-[#0D2C5B]/10 dark:bg-[#00B5C8]/10 flex items-center justify-center text-[#0D2C5B] dark:text-[#00B5C8]">
               <Share2 className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm sm:text-base text-[#0D2C5B]">Share Post</h3>
-              <p className="text-[11px] text-gray-500">Share this creative work with fellow creators</p>
+              <h3 className="font-extrabold text-sm sm:text-base text-[#0D2C5B] dark:text-[#F5F7FA]">Share Post</h3>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">Share this creative work with fellow creators</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-gray-100 dark:bg-[#171C24] hover:bg-gray-200 dark:hover:bg-[#252E3D] text-gray-500 dark:text-gray-300 flex items-center justify-center transition-colors cursor-pointer"
+            aria-label="Close share modal"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Creator Snippet Preview */}
-        <div className="my-4 p-3 bg-[#F8F6F1] rounded-2xl border border-gray-200 flex items-center gap-3">
+        <div className="my-4 p-3 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl border border-gray-200 dark:border-[#303846] flex items-center gap-3">
           <img
             src={post.author.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}
             alt={post.author.full_name}
-            className="w-10 h-10 rounded-full object-cover border border-white shadow-sm shrink-0"
+            className="w-10 h-10 rounded-full object-cover border border-white dark:border-[#303846] shadow-sm shrink-0"
           />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-xs text-[#0D2C5B] truncate">{post.author.full_name}</span>
-              <span className="text-[10px] text-gray-400">@{post.author.username}</span>
+              <span className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA] truncate">{post.author.full_name}</span>
+              <span className="text-[10px] text-gray-400 dark:text-gray-400">@{post.author.username}</span>
             </div>
-            <p className="text-[11px] text-gray-600 truncate mt-0.5">{post.caption}</p>
+            <p className="text-[11px] text-gray-600 dark:text-gray-300 truncate mt-0.5">{post.caption}</p>
           </div>
         </div>
 
         {/* Social Sharing Channels */}
-        <div className="grid grid-cols-2 gap-2.5 my-4">
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5 my-4">
           {shareChannels.map((ch) => (
             <button
               key={ch.id}
               onClick={ch.action}
-              className="flex items-center gap-3 p-3 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all text-left group active:scale-98"
+              className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 rounded-2xl border border-gray-100 dark:border-[#303846] hover:border-gray-200 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#171C24] transition-all text-left group active:scale-98 cursor-pointer"
             >
-              <div className={`w-9 h-9 rounded-xl ${ch.iconBg} flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105`}>
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${ch.iconBg} flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105`}>
                 {ch.iconSvg}
               </div>
               <div className="min-w-0 flex-1">
-                <span className="font-bold text-xs text-[#0D2C5B] block truncate group-hover:text-[#E84020] transition-colors">
+                <span className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA] block truncate group-hover:text-[#E84020] dark:group-hover:text-[#00B5C8] transition-colors">
                   {ch.name}
                 </span>
-                <span className="text-[10px] text-gray-400 block truncate">
+                <span className="text-[10px] text-gray-400 dark:text-gray-400 block truncate">
                   {ch.subtitle}
                 </span>
               </div>
@@ -162,30 +163,30 @@ export default function ShareModal({ post, onClose }: ShareModalProps) {
 
         {/* Instagram Copy Toast feedback */}
         {copiedForInstagram && (
-          <div className="mb-3 px-3.5 py-2 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-200 flex items-center gap-2 text-xs text-[#bc1888] font-bold animate-fade-in">
+          <div className="mb-3 px-3.5 py-2 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-200 dark:border-pink-900/40 flex items-center gap-2 text-xs text-[#bc1888] font-bold animate-fade-in">
             <Check className="w-4 h-4 text-pink-600 shrink-0" />
             <span>Link copied! Open Instagram and paste in your Story sticker or DM.</span>
           </div>
         )}
 
         {/* Copy Link Direct Bar */}
-        <div className="pt-3 border-t border-gray-100">
-          <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">
+        <div className="pt-3 border-t border-gray-100 dark:border-[#303846]">
+          <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 block">
             Direct Link
           </label>
-          <div className="flex items-center gap-2 p-1.5 pl-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div className="flex items-center gap-2 p-1.5 pl-3 bg-gray-50 dark:bg-[#171C24] rounded-xl border border-gray-200 dark:border-[#303846]">
             <input
               type="text"
               readOnly
               value={postUrl}
-              className="flex-1 min-w-0 bg-transparent text-xs text-gray-600 select-all outline-none truncate"
+              className="flex-1 min-w-0 bg-transparent text-xs text-gray-600 dark:text-gray-300 select-all outline-none truncate"
             />
             <button
               onClick={handleCopyLink}
-              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
                 copied
                   ? 'bg-emerald-600 text-white'
-                  : 'bg-[#0D2C5B] hover:bg-[#E84020] text-white'
+                  : 'bg-[#0D2C5B] dark:bg-[#00B5C8] hover:bg-[#E84020] text-white dark:text-[#101318]'
               }`}
             >
               {copied ? (

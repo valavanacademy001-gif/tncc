@@ -25,9 +25,9 @@ export default function ChallengeCard({ challenge }: { challenge: CommunityChall
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+    <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
       {/* Clean Thumbnail WITHOUT any overlay buttons/badges */}
-      <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+      <div className="relative aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
         <img
           src={challenge.thumbnail_url}
           alt={challenge.title}
@@ -53,24 +53,24 @@ export default function ChallengeCard({ challenge }: { challenge: CommunityChall
           </div>
 
           {/* Title */}
-          <h3 className="font-bold text-base text-[#0D2C5B] group-hover:text-[#E84020] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
+          <h3 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA] group-hover:text-[#E84020] dark:group-hover:text-[#00B5C8] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
             {challenge.title}
           </h3>
 
           {/* Minimal 2-line Description */}
-          <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 min-h-[2rem]">
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 min-h-[2rem]">
             {challenge.description}
           </p>
 
           {/* Minimal Prize summary badge */}
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0D2C5B] bg-[#FFF8EC] border border-orange-100 px-3 py-1.5 rounded-xl">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0D2C5B] dark:text-[#F5F7FA] bg-[#FFF8EC] dark:bg-[#171C24] border border-orange-100 dark:border-[#303846] px-3 py-1.5 rounded-xl">
             <Trophy className="w-3.5 h-3.5 text-[#E84020] shrink-0" />
             <span className="truncate">1st Place: {challenge.prizes.first}</span>
           </div>
         </div>
 
         {/* Footer Meta & "Details" Action Button */}
-        <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+        <div className="pt-3 border-t border-gray-100 dark:border-[#303846] flex items-center justify-between gap-2">
           <div className="flex items-center gap-1 text-[11px] text-gray-400">
             <Clock className="w-3.5 h-3.5" />
             <span>{new Date(challenge.submission_deadline).toLocaleDateString()}</span>
@@ -78,7 +78,7 @@ export default function ChallengeCard({ challenge }: { challenge: CommunityChall
 
           <Link
             href={`/community/challenges/${challenge.id}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0D2C5B] hover:bg-[#E84020] text-white rounded-xl text-xs font-bold transition-all shadow-sm group/btn shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0D2C5B] dark:bg-[#00B5C8] hover:bg-[#E84020] text-white dark:text-[#101318] rounded-xl text-xs font-bold transition-all shadow-sm group/btn shrink-0"
           >
             <span>Details</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />

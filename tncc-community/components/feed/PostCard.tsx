@@ -47,10 +47,10 @@ function PostCaptionWithMore({
 
   if (!isLong) {
     return (
-      <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal">
+      <div className="text-xs sm:text-sm text-gray-800 dark:text-[#F5F7FA] leading-relaxed font-normal">
         <Link
           href={`/community/portfolio/${authorUsername}`}
-          className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+          className="font-bold text-[#0D2C5B] dark:text-[#00B5C8] mr-1.5 hover:underline inline"
         >
           {authorUsername}
         </Link>
@@ -60,7 +60,7 @@ function PostCaptionWithMore({
             {hashtags.map((tag, idx) => (
               <span
                 key={idx}
-                className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] hover:text-[#E84020] mr-1.5 cursor-pointer transition-colors"
+                className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] dark:text-[#38BDF8] hover:text-[#E84020] mr-1.5 cursor-pointer transition-colors"
               >
                 {tag}
               </span>
@@ -73,11 +73,11 @@ function PostCaptionWithMore({
 
   if (isExpanded) {
     return (
-      <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal space-y-1.5">
+      <div className="text-xs sm:text-sm text-gray-800 dark:text-[#F5F7FA] leading-relaxed font-normal space-y-1.5">
         <div>
           <Link
             href={`/community/portfolio/${authorUsername}`}
-            className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+            className="font-bold text-[#0D2C5B] dark:text-[#00B5C8] mr-1.5 hover:underline inline"
           >
             {authorUsername}
           </Link>
@@ -85,7 +85,7 @@ function PostCaptionWithMore({
           <button
             type="button"
             onClick={() => setIsExpanded(false)}
-            className="text-gray-400 hover:text-[#0D2C5B] font-semibold text-xs ml-2 inline-block cursor-pointer transition-colors"
+            className="text-gray-400 hover:text-[#0D2C5B] dark:hover:text-[#00B5C8] font-semibold text-xs ml-2 inline-block cursor-pointer transition-colors"
           >
             less
           </button>
@@ -96,7 +96,7 @@ function PostCaptionWithMore({
             {hashtags.map((tag, idx) => (
               <span
                 key={idx}
-                className="text-[11px] font-semibold text-[#1B3F7E] hover:text-[#E84020] bg-blue-50/80 hover:bg-blue-100/80 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
+                className="text-[11px] font-semibold text-[#1B3F7E] dark:text-[#38BDF8] hover:text-[#E84020] bg-blue-50/80 dark:bg-blue-950/40 hover:bg-blue-100/80 dark:hover:bg-blue-900/60 px-2 py-0.5 rounded-md cursor-pointer transition-colors"
               >
                 {tag}
               </span>
@@ -120,23 +120,23 @@ function PostCaptionWithMore({
   }
 
   return (
-    <div className="text-xs sm:text-sm text-gray-800 leading-relaxed font-normal">
+    <div className="text-xs sm:text-sm text-gray-800 dark:text-[#F5F7FA] leading-relaxed font-normal">
       <Link
         href={`/community/portfolio/${authorUsername}`}
-        className="font-bold text-[#0D2C5B] mr-1.5 hover:underline inline"
+        className="font-bold text-[#0D2C5B] dark:text-[#00B5C8] mr-1.5 hover:underline inline"
       >
         {authorUsername}
       </Link>
       <span>{previewText}</span>
       {showFirstTag && hashtags[0] && (
-        <span className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] ml-1.5 inline">
+        <span className="text-[11px] sm:text-xs font-semibold text-[#1B3F7E] dark:text-[#38BDF8] ml-1.5 inline">
           {hashtags[0]}
         </span>
       )}
       <button
         type="button"
         onClick={() => setIsExpanded(true)}
-        className="text-gray-400 hover:text-gray-600 font-medium text-xs ml-1 inline-block cursor-pointer transition-colors"
+        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-medium text-xs ml-1 inline-block cursor-pointer transition-colors"
       >
         ... more
       </button>
@@ -203,29 +203,29 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <article
       id={post.id}
-      className="max-w-[540px] w-full mx-auto bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+      className="max-w-[540px] w-full mx-auto bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
     >
       {/* 1. Header: Author details & Follow button */}
-      <div className="p-4 flex items-center justify-between border-b border-gray-50">
+      <div className="p-3.5 sm:p-4 flex items-center justify-between border-b border-gray-100 dark:border-[#303846]">
         <Link
           href={`/community/portfolio/${post.author.username}`}
-          className="flex items-center gap-3 group min-w-0"
+          className="flex items-center gap-2.5 sm:gap-3 group min-w-0"
         >
           <img
             src={post.author.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}
             alt={post.author.full_name}
-            className="w-10 h-10 rounded-full object-cover border border-gray-200 group-hover:ring-2 group-hover:ring-[#0D2C5B]/20 transition-all shrink-0"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-gray-200 dark:border-[#303846] group-hover:ring-2 group-hover:ring-[#0D2C5B]/20 dark:group-hover:ring-[#00B5C8]/20 transition-all shrink-0"
           />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs font-bold text-[#0D2C5B] group-hover:text-[#E84020] transition-colors truncate">
+              <span className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] group-hover:text-[#E84020] dark:group-hover:text-[#00B5C8] transition-colors truncate">
                 {post.author.full_name}
               </span>
               <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#E84020]/10 text-[#E84020] shrink-0">
                 ⚡ {post.author.total_xp}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-gray-400 truncate mt-0.5">
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-400 dark:text-gray-400 truncate mt-0.5">
               <span>@{post.author.username}</span>
               <span>·</span>
               <span>{post.author.location.split(',')[0]}</span>
@@ -233,7 +233,7 @@ export default function PostCard({ post }: PostCardProps) {
           </div>
         </Link>
 
-        {/* Replaced duplicate showcase buttons with interactive Follow button */}
+        {/* Follow / Admin / Delete actions */}
         <div className="flex items-center gap-2 shrink-0">
           {currentMember?.username !== post.author.username ? (
             <div className="flex items-center gap-1.5">
@@ -244,10 +244,10 @@ export default function PostCard({ post }: PostCardProps) {
                   e.stopPropagation();
                   toggleFollow(post.author.username);
                 }}
-                className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 active:scale-95 shadow-sm ${
+                className={`px-3 sm:px-3.5 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer ${
                   isFollowing(post.author.username)
-                    ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
-                    : 'bg-[#0D2C5B] text-white hover:bg-[#E84020]'
+                    ? 'bg-gray-100 dark:bg-[#171C24] text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900 border border-gray-200 dark:border-[#303846]'
+                    : 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] hover:bg-[#E84020]'
                 }`}
               >
                 {isFollowing(post.author.username) ? 'Following' : '+ Follow'}
@@ -260,8 +260,9 @@ export default function PostCard({ post }: PostCardProps) {
                       deletePost(post.id);
                     }
                   }}
-                  className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  className="p-1.5 rounded-full text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
                   title="Admin Delete Post"
+                  aria-label="Admin Delete Post"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -269,7 +270,7 @@ export default function PostCard({ post }: PostCardProps) {
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
+              <span className="text-[10px] font-bold text-gray-400 bg-gray-100 dark:bg-[#171C24] dark:border dark:border-[#303846] px-2.5 py-1 rounded-full">
                 You
               </span>
               <button
@@ -279,8 +280,9 @@ export default function PostCard({ post }: PostCardProps) {
                     deletePost(post.id);
                   }
                 }}
-                className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                className="p-1.5 rounded-full text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
                 title="Delete your post"
+                aria-label="Delete your post"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -289,7 +291,7 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      {/* 2. Media Container (constrained to accurate ratio and max height, with double tap to like & video player) */}
+      {/* 2. Media Container */}
       {post.media_url && (
         <div className="relative w-full">
           {post.media_type === 'video' ? (
@@ -299,7 +301,6 @@ export default function PostCard({ post }: PostCardProps) {
                 aspectRatioClass={getAspectRatioClass(post.aspect_ratio)}
                 onDoubleTap={handleDoubleTapLike}
               />
-              {/* Double-tap animated heart feedback for video */}
               <AnimatePresence>
                 {showHeartBurst && (
                   <motion.div
@@ -318,7 +319,7 @@ export default function PostCard({ post }: PostCardProps) {
             </div>
           ) : (
             <div 
-              className={`relative w-full bg-[#0D2C5B]/5 overflow-hidden flex items-center justify-center mx-auto select-none touch-manipulation cursor-pointer ${getAspectRatioClass(post.aspect_ratio)}`}
+              className={`relative w-full bg-[#0D2C5B]/5 dark:bg-[#171C24] overflow-hidden flex items-center justify-center mx-auto select-none touch-manipulation cursor-pointer ${getAspectRatioClass(post.aspect_ratio)}`}
               onDoubleClick={handleDoubleTapLike}
               onTouchEnd={handleTouchEnd}
             >
@@ -332,7 +333,6 @@ export default function PostCard({ post }: PostCardProps) {
                 }}
               />
 
-              {/* Google Drive indicator badge if applicable */}
               {isGoogleDriveUrl(post.media_url) && (
                 <div 
                   className="absolute top-2.5 right-2.5 p-1.5 rounded-md bg-black/60 backdrop-blur-xs text-white z-10"
@@ -342,7 +342,6 @@ export default function PostCard({ post }: PostCardProps) {
                 </div>
               )}
 
-              {/* Double-tap animated heart feedback */}
               <AnimatePresence>
                 {showHeartBurst && (
                   <motion.div
@@ -364,21 +363,22 @@ export default function PostCard({ post }: PostCardProps) {
       )}
 
       {/* 3. Interaction Bar */}
-      <div className="px-4 pt-3 pb-2 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="px-3.5 sm:px-4 pt-3 pb-2 flex items-center justify-between">
+        <div className="flex items-center gap-3 sm:gap-4">
           {/* Like Button */}
           <button
             onClick={() => toggleLike(post.id)}
-            className="flex items-center gap-1.5 text-xs font-semibold group transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold group transition-colors cursor-pointer"
+            aria-label={post.is_liked ? 'Unlike post' : 'Like post'}
           >
             <Heart
               className={`w-5 h-5 transition-transform active:scale-125 ${
                 post.is_liked
                   ? 'fill-[#E84020] text-[#E84020]'
-                  : 'text-gray-600 group-hover:text-[#E84020]'
+                  : 'text-gray-600 dark:text-gray-300 group-hover:text-[#E84020]'
               }`}
             />
-            <span className={post.is_liked ? 'text-[#E84020] font-bold' : 'text-gray-600'}>
+            <span className={post.is_liked ? 'text-[#E84020] font-bold' : 'text-gray-600 dark:text-gray-300'}>
               {post.likes_count}
             </span>
           </button>
@@ -386,39 +386,42 @@ export default function PostCard({ post }: PostCardProps) {
           {/* Comment Button */}
           <button
             onClick={() => setShowComments(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-[#0D2C5B] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[#0D2C5B] dark:hover:text-[#00B5C8] transition-colors cursor-pointer"
+            aria-label="View comments"
           >
             <MessageCircle className="w-5 h-5" />
             <span>{post.comments_count}</span>
           </button>
 
-          {/* Share Button (opens WhatsApp, Instagram, Facebook, X options) */}
+          {/* Share Button */}
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-[#0D2C5B] transition-colors group"
+            className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[#0D2C5B] dark:hover:text-[#00B5C8] transition-colors group cursor-pointer"
             title="Share post"
+            aria-label="Share post"
           >
             <Share2 className="w-4 h-4 transition-transform group-hover:scale-110" />
-            <span className="text-[11px]">Share</span>
+            <span className="text-[11px] hidden xs:inline">Share</span>
           </button>
         </div>
 
         {/* Bookmark / Save Button */}
         <button
           onClick={() => toggleSave(post.id)}
-          className="text-gray-500 hover:text-[#0D2C5B] transition-colors"
+          className="text-gray-500 dark:text-gray-400 hover:text-[#0D2C5B] dark:hover:text-[#00B5C8] transition-colors cursor-pointer p-1"
           title="Save to bookmarks"
+          aria-label={post.is_saved ? 'Remove from bookmarks' : 'Save to bookmarks'}
         >
           <Bookmark
             className={`w-5 h-5 transition-all ${
-              post.is_saved ? 'fill-[#0D2C5B] text-[#0D2C5B]' : ''
+              post.is_saved ? 'fill-[#0D2C5B] dark:fill-[#00B5C8] text-[#0D2C5B] dark:text-[#00B5C8]' : ''
             }`}
           />
         </button>
       </div>
 
-      {/* 4. Caption & Hashtags with Instagram-style "... more" expander */}
-      <div className="px-4 pb-4 space-y-1.5">
+      {/* 4. Caption & Hashtags */}
+      <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 space-y-1.5">
         <PostCaptionWithMore
           authorUsername={post.author.username}
           caption={post.caption}
@@ -426,7 +429,7 @@ export default function PostCard({ post }: PostCardProps) {
         />
 
         {/* Timestamp */}
-        <div className="pt-1 text-[10px] text-gray-400">
+        <div className="pt-1 text-[10px] text-gray-400 dark:text-gray-500">
           {new Date(post.created_at).toLocaleDateString(undefined, {
             month: 'short',
             day: 'numeric',

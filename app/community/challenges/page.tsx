@@ -23,10 +23,10 @@ export default function ChallengesPage() {
           <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#E84020]/10 text-[#E84020] border border-[#E84020]/20">
             CREATIVE COMPETITIONS & XP
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight mt-1">
             Community Design & Video Challenges
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             Submit original works, compete on leaderboards, win cash prizes & boost your TNCC XP.
           </p>
         </div>
@@ -44,15 +44,15 @@ export default function ChallengesPage() {
           )}
 
           {/* Status Filters */}
-          <div className="flex items-center p-1 bg-white rounded-xl border border-gray-200 self-start sm:self-auto shadow-sm">
+          <div className="flex items-center p-1 bg-white dark:bg-[#1D2430] rounded-xl border border-gray-200 dark:border-[#303846] self-start sm:self-auto shadow-sm">
             {(['All', 'Active', 'Upcoming', 'Completed'] as const).map((filter) => (
               <button
                 key={filter}
                 onClick={() => setStatusFilter(filter)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   statusFilter === filter
-                    ? 'bg-[#0D2C5B] text-white shadow'
-                    : 'text-gray-500 hover:text-gray-900'
+                    ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {filter}

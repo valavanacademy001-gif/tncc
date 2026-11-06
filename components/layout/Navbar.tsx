@@ -8,6 +8,7 @@ import { Menu, X, Search, Briefcase, User, ExternalLink, Sparkles, ShieldCheck, 
 import MobileMenu from './MobileMenu';
 import { mockCreators, mockProjects } from '@/lib/mock-data';
 import { useUser } from '@/lib/user-context';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 export default function Navbar() {
   const { user, switchRole, logout } = useUser();
@@ -368,13 +369,17 @@ export default function Navbar() {
                     <Sparkles size={14} />
                     <span>Join Free</span>
                   </Link>
-
                 </>
               )}
+
+              {/* Global Theme Switcher */}
+              <ThemeToggle className="ml-1" />
             </div>
 
             {/* Mobile Actions */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="mobile-actions-wrapper">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className="mobile-actions-wrapper">
+              <ThemeToggle />
+
               <button
                 onClick={() => setMobileSearchOpen(true)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--navy)' }}

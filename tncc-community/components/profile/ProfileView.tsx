@@ -80,44 +80,44 @@ export default function ProfileView() {
       </div>
 
       {/* Profile Header Card */}
-      <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm -mt-20 sm:-mt-24 relative z-10 space-y-6">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-6 sm:p-8 shadow-sm -mt-20 sm:-mt-24 relative z-10 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-end gap-5">
             <img
               src={currentMember?.avatar_url || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80'}
               alt={currentMember?.full_name}
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white shadow-xl bg-gray-100"
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white dark:border-[#1D2430] shadow-xl bg-gray-100 dark:bg-gray-800 shrink-0"
             />
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0D2C5B]">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA]">
                   {currentMember?.full_name}
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#E84020] text-white">
                   Lvl {memberLevel.level}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-gray-500">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                 @{currentMember?.username} · {currentMember?.location}
               </p>
-              <div className="flex items-center gap-2 pt-1 text-xs text-gray-500">
+              <div className="flex items-center gap-2 pt-1 text-xs text-gray-500 dark:text-gray-400">
                 <span className="text-[#00B5C8] font-bold">{memberLevel.title}</span>
                 <span>•</span>
                 <span>Tamil Nadu Creators Club Member</span>
               </div>
               <div className="flex items-center gap-3 pt-1.5 text-xs">
                 <div className="flex items-center gap-1">
-                  <span className="font-extrabold text-[#0D2C5B] text-sm">
+                  <span className="font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] text-sm">
                     {currentMember?.followers_count ?? 320}
                   </span>
-                  <span className="text-gray-500 font-medium">Followers</span>
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Followers</span>
                 </div>
-                <span className="text-gray-300">·</span>
+                <span className="text-gray-300 dark:text-gray-600">·</span>
                 <div className="flex items-center gap-1">
-                  <span className="font-extrabold text-[#0D2C5B] text-sm">
+                  <span className="font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] text-sm">
                     {currentMember?.following_count ?? 78}
                   </span>
-                  <span className="text-gray-500 font-medium">Following</span>
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Following</span>
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function ProfileView() {
           <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             <Link
               href="/community/auth?mode=login"
-              className="px-3.5 py-2 bg-[#F8F6F1] hover:bg-[#E84020] text-[#0D2C5B] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center gap-1.5 active:scale-95 shadow-sm"
+              className="px-3.5 py-2 bg-[#F8F6F1] dark:bg-[#171C24] hover:bg-[#E84020] text-[#0D2C5B] dark:text-[#F5F7FA] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-[#303846] flex items-center gap-1.5 active:scale-95 shadow-sm"
               title="Sign in or switch account"
             >
               <LogIn className="w-3.5 h-3.5" />
@@ -136,7 +136,7 @@ export default function ProfileView() {
 
             <button
               onClick={() => setShowEditModal(true)}
-              className="px-4 py-2 bg-[#F8F6F1] hover:bg-[#0D2C5B] text-[#0D2C5B] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center gap-1.5 active:scale-95 shadow-sm"
+              className="px-4 py-2 bg-[#F8F6F1] dark:bg-[#171C24] hover:bg-[#0D2C5B] text-[#0D2C5B] dark:text-[#F5F7FA] hover:text-white rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-[#303846] flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer"
             >
               <Edit3 className="w-3.5 h-3.5" />
               <span>Edit Profile</span>
@@ -146,18 +146,18 @@ export default function ProfileView() {
 
         {/* Bio */}
         {currentMember?.bio && (
-          <p className="text-xs sm:text-sm text-gray-700 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 max-w-2xl leading-relaxed">
             {currentMember.bio}
           </p>
         )}
 
         {/* Skills & Social Handles */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-gray-100 dark:border-[#303846]">
           <div className="flex flex-wrap gap-1.5 items-center">
             {currentMember?.skills?.map((skill, idx) => (
               <span
                 key={idx}
-                className="text-xs font-semibold bg-[#F8F6F1] text-gray-700 px-3 py-1 rounded-lg border border-gray-200"
+                className="text-xs font-semibold bg-[#F8F6F1] dark:bg-[#171C24] text-gray-700 dark:text-gray-300 px-3 py-1 rounded-lg border border-gray-200 dark:border-[#303846]"
               >
                 {skill}
               </span>
@@ -178,36 +178,36 @@ export default function ProfileView() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 pt-4 border-t border-gray-100">
-          <div className="p-3 bg-[#FFF8EC] rounded-2xl border border-orange-100 text-center">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Total XP</span>
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 pt-4 border-t border-gray-100 dark:border-[#303846]">
+          <div className="p-3 bg-[#FFF8EC] dark:bg-[#252015] rounded-2xl border border-orange-100 dark:border-[#303846] text-center">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Total XP</span>
             <p className="text-lg font-extrabold text-[#E84020] mt-0.5">⚡ {currentMember?.total_xp}</p>
           </div>
-          <div className="p-3 bg-[#F8F6F1] rounded-2xl border border-gray-200 text-center">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Followers</span>
-            <p className="text-lg font-extrabold text-[#0D2C5B] mt-0.5">{currentMember?.followers_count ?? 320}</p>
+          <div className="p-3 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl border border-gray-200 dark:border-[#303846] text-center">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Followers</span>
+            <p className="text-lg font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{currentMember?.followers_count ?? 320}</p>
           </div>
-          <div className="p-3 bg-[#F8F6F1] rounded-2xl border border-gray-200 text-center">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Posts</span>
-            <p className="text-lg font-extrabold text-[#0D2C5B] mt-0.5">{myPosts.length}</p>
+          <div className="p-3 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl border border-gray-200 dark:border-[#303846] text-center">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Posts</span>
+            <p className="text-lg font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{myPosts.length}</p>
           </div>
-          <div className="p-3 bg-[#F8F6F1] rounded-2xl border border-gray-200 text-center">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Likes Earned</span>
-            <p className="text-lg font-extrabold text-[#0D2C5B] mt-0.5">{totalLikes}</p>
+          <div className="p-3 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl border border-gray-200 dark:border-[#303846] text-center">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Likes Earned</span>
+            <p className="text-lg font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{totalLikes}</p>
           </div>
-          <div className="p-3 bg-[#F8F6F1] rounded-2xl border border-gray-200 text-center">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Challenges</span>
-            <p className="text-lg font-extrabold text-[#0D2C5B] mt-0.5">{currentMember?.challenges_count || 0}</p>
+          <div className="p-3 bg-[#F8F6F1] dark:bg-[#171C24] rounded-2xl border border-gray-200 dark:border-[#303846] text-center">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Challenges</span>
+            <p className="text-lg font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{currentMember?.challenges_count || 0}</p>
           </div>
-          <div className="p-3 bg-[#E6F9FC] rounded-2xl border border-cyan-100 text-center col-span-2 sm:col-span-1">
-            <span className="text-[10px] uppercase font-bold text-gray-500">Podium Wins</span>
+          <div className="p-3 bg-[#E6F9FC] dark:bg-[#12252a] rounded-2xl border border-cyan-100 dark:border-[#303846] text-center col-span-2 sm:col-span-1">
+            <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">Podium Wins</span>
             <p className="text-lg font-extrabold text-[#00B5C8] mt-0.5">👑 {currentMember?.wins_count || 0}</p>
           </div>
         </div>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-gray-200 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 border-b border-gray-200 dark:border-[#303846] overflow-x-auto pb-1 no-scrollbar">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -215,16 +215,16 @@ export default function ProfileView() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-4 py-3 border-b-2 text-xs sm:text-sm font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-2 px-4 py-3 border-b-2 text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer ${
                 isActive
-                  ? 'border-[#E84020] text-[#0D2C5B]'
-                  : 'border-transparent text-gray-500 hover:text-gray-900'
+                  ? 'border-[#E84020] text-[#0D2C5B] dark:text-[#00B5C8]'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-[#E84020]' : 'text-gray-400'}`} />
               <span>{tab.label}</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] ${
-                isActive ? 'bg-[#0D2C5B] text-white' : 'bg-gray-100 text-gray-600'
+                isActive ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318]' : 'bg-gray-100 dark:bg-[#171C24] text-gray-600 dark:text-gray-300'
               }`}>
                 {tab.count}
               </span>

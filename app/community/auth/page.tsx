@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useCommunity } from '@/tncc-community/lib/community-context';
 import { AUTHORIZED_ADMIN_EMAILS } from '@/tncc-community/lib/admin-config';
 import { createClient } from '@/lib/supabase/client';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -239,28 +240,31 @@ function AuthContent() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center p-4 py-8 bg-[#FAF8F5]">
-      {/* Brand & Return Link */}
+    <div className="w-full min-h-screen flex flex-col items-center justify-center p-4 py-8 bg-[#FAF8F5] dark:bg-[#101318] transition-colors">
+      {/* Brand, Return Link & Theme Toggle */}
       <div className="mb-6 flex flex-col items-center gap-2">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/brand/logo.webp"
-            alt="Tamil Nadu Creators Club"
-            width={160}
-            height={44}
-            style={{ objectFit: 'contain', height: 'auto', maxHeight: '42px', width: 'auto' }}
-            priority
-          />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/brand/logo.webp"
+              alt="Tamil Nadu Creators Club"
+              width={160}
+              height={44}
+              style={{ objectFit: 'contain', height: 'auto', maxHeight: '42px', width: 'auto' }}
+              priority
+            />
+          </Link>
+          <ThemeToggle />
+        </div>
         <Link
           href="/"
-          className="text-xs font-semibold text-gray-500 hover:text-[#0D2C5B] transition-colors"
+          className="text-xs font-semibold text-gray-500 hover:text-[#0D2C5B] dark:text-gray-400 dark:hover:text-[#00B5C8] transition-colors"
         >
           ← Return to Landing Page
         </Link>
       </div>
 
-      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200/80 dark:border-[#303846] shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative overflow-hidden transition-colors">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#0D2C5B] via-[#E84020] to-[#00B5C8]" />
 
@@ -270,14 +274,14 @@ function AuthContent() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>TNCC Creative Ecosystem</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-[#0D2C5B] tracking-tight">
+          <h1 className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight">
             {mode === 'signup'
               ? 'Join TNCC Creator Community'
               : mode === 'login'
               ? 'Sign In to Your Account'
               : 'Reset Your Password'}
           </h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {mode === 'signup'
               ? 'Earn XP, compete in challenges & showcase your portfolio across Tamil Nadu.'
               : mode === 'login'
@@ -329,7 +333,7 @@ function AuthContent() {
           {mode === 'signup' && (
             <>
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Full Name *</label>
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Full Name *</label>
                 <div className="relative">
                   <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -338,13 +342,13 @@ function AuthContent() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Enter your name"
-                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Creator Username</label>
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Creator Username</label>
                 <div className="relative">
                   <span className="text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold">@</span>
                   <input
@@ -355,13 +359,13 @@ function AuthContent() {
                     autoCapitalize="none"
                     autoCorrect="off"
                     spellCheck={false}
-                    className="w-full text-xs sm:text-sm pl-8 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                    className="w-full text-xs sm:text-sm pl-8 pr-4 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Location in Tamil Nadu</label>
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Location in Tamil Nadu</label>
                 <div className="relative">
                   <MapPin className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -369,13 +373,13 @@ function AuthContent() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="Enter your location (e.g. Chennai, Tamil Nadu)"
-                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Creative Skills (comma separated)</label>
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Creative Skills (comma separated)</label>
                 <div className="relative">
                   <Tag className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -383,7 +387,7 @@ function AuthContent() {
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
                     placeholder="Enter your skills (e.g. Graphic Design, UI/UX, 3D Art)"
-                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                    className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
                   />
                 </div>
               </div>
@@ -391,7 +395,7 @@ function AuthContent() {
           )}
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1">
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
               {mode === 'signup' ? 'Email Address *' : 'Email Address or Username *'}
             </label>
             <div className="relative">
@@ -406,7 +410,7 @@ function AuthContent() {
                 autoCorrect="off"
                 spellCheck={false}
                 autoComplete="email"
-                className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                className="w-full text-xs sm:text-sm pl-9 pr-4 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
               />
             </div>
           </div>
@@ -414,7 +418,7 @@ function AuthContent() {
           {mode !== 'forgot' && (
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-bold text-gray-700">Password *</label>
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">Password *</label>
                 {mode === 'login' && (
                   <button
                     type="button"
@@ -422,7 +426,7 @@ function AuthContent() {
                       setMode('forgot');
                       setErrorMsg('');
                     }}
-                    className="text-[11px] text-[#E84020] font-semibold hover:underline"
+                    className="text-[11px] text-[#E84020] font-semibold hover:underline cursor-pointer"
                   >
                     Forgot Password?
                   </button>
@@ -440,12 +444,13 @@ function AuthContent() {
                   autoCorrect="off"
                   spellCheck={false}
                   autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                  className="w-full text-xs sm:text-sm pl-9 pr-10 py-2.5 bg-[#F8F6F1] rounded-xl border border-gray-200 focus:outline-none focus:border-[#0D2C5B] transition-colors"
+                  className="w-full text-xs sm:text-sm pl-9 pr-10 py-2.5 bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -472,7 +477,7 @@ function AuthContent() {
         </form>
 
         {/* Switch mode */}
-        <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-100">
+        <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-[#303846]">
           {mode === 'signup' ? (
             <p>
               Already have an account?{' '}
@@ -483,7 +488,7 @@ function AuthContent() {
                   setErrorMsg('');
                   setSuccessMsg('');
                 }}
-                className="font-bold text-[#0D2C5B] hover:underline cursor-pointer"
+                className="font-bold text-[#0D2C5B] dark:text-[#00B5C8] hover:underline cursor-pointer"
               >
                 Sign In
               </button>

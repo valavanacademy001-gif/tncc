@@ -57,6 +57,7 @@ export const metadata: Metadata = {
 };
 
 import { UserProvider } from "@/lib/user-context";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -64,15 +65,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${displayFont.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${displayFont.variable} h-full`}>
       <head>
         <link rel="preload" href="/regional_map_logo.glb?v=4" as="fetch" crossOrigin="anonymous" />
         <link rel="preload" href="/draco/draco_decoder.wasm" as="fetch" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var theme = localStorage.getItem('tncc_theme');
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                  document.documentElement.style.colorScheme = 'dark';
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  document.documentElement.style.colorScheme = 'light';
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
       </head>
-      <body className="min-h-full antialiased" style={{ fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)" }}>
-        <UserProvider>
-          {children}
-        </UserProvider>
+      <body className="min-h-full antialiased bg-white dark:bg-[#101318] text-[#0D2C5B] dark:text-[#F5F7FA] transition-colors duration-200" style={{ fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)" }}>
+        <ThemeProvider>
+          <UserProvider>
+            {children}
+          </UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

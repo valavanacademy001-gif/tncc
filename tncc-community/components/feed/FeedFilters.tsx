@@ -42,18 +42,19 @@ export default function FeedFilters({
     <div className="space-y-3 mb-6">
       {/* Search Bar on Mobile / Feed top */}
       <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search creator posts, captions, hashtags or discussions..."
-          className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-[#0D2C5B] shadow-sm"
+          placeholder="Search posts, hashtags, discussions..."
+          className="w-full pl-10 pr-12 py-2.5 bg-white dark:bg-[#1D2430] rounded-xl border border-gray-200 dark:border-[#303846] text-xs sm:text-sm text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] shadow-sm transition-colors"
         />
         {searchQuery && (
           <button
             onClick={() => onSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer p-1"
+            aria-label="Clear search"
           >
             Clear
           </button>
@@ -61,19 +62,19 @@ export default function FeedFilters({
       </div>
 
       {/* Filter Tabs & Category Dropdown */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        {/* Main Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+        {/* Main Tabs - Scrollable with no ugly scrollbars */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
           {tabs.map((tab) => {
             const isActive = activeFilter === tab.label;
             return (
               <button
                 key={tab.label}
                 onClick={() => onFilterChange(tab.label)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
+                className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
                   isActive
-                    ? 'bg-[#0D2C5B] text-white shadow-sm'
-                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                    ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-sm'
+                    : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] border border-gray-200 dark:border-[#303846]'
                 }`}
               >
                 {tab.icon}
@@ -84,14 +85,14 @@ export default function FeedFilters({
         </div>
 
         {/* Sub-category selector */}
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end shrink-0">
           <select
             value={categoryFilter}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="text-xs bg-white text-gray-700 font-semibold px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+            className="text-xs bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200 font-semibold px-3 py-1.5 rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] cursor-pointer"
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
+              <option key={cat} value={cat} className="bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200">
                 {cat}
               </option>
             ))}

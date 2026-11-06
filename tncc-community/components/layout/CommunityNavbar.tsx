@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCommunity } from '../../lib/community-context';
 import { useUser } from '@/lib/user-context';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 import { 
   Sparkles, 
   Search, 
@@ -50,17 +51,17 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-200">
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#171C24]/95 backdrop-blur-md border-b border-gray-100 dark:border-[#303846] transition-colors duration-200">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand & Community Tag */}
-        <div className="flex items-center gap-3">
-          <Link href="/community" className="flex items-center gap-2.5 group">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <Link href="/community" className="flex items-center gap-2 group">
             <Image
               src="/brand/logo.webp"
               alt="Tamil Nadu Creators Club"
-              width={145}
-              height={44}
-              style={{ objectFit: 'contain', height: 'auto', maxHeight: '38px', width: 'auto' }}
+              width={130}
+              height={38}
+              style={{ objectFit: 'contain', height: 'auto', maxHeight: '34px', width: 'auto' }}
               className="transition-transform group-hover:scale-105"
               priority
             />
@@ -74,25 +75,28 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
             <input
               type="text"
               placeholder="Search posts, creators, resources & challenges..."
-              className="w-full pl-9 pr-4 py-2 text-xs md:text-sm bg-[#F8F6F1] hover:bg-gray-100 focus:bg-white rounded-full border border-gray-200 focus:border-[#0D2C5B] focus:outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2 text-xs md:text-sm bg-[#F8F6F1] dark:bg-[#1D2430] hover:bg-gray-100 dark:hover:bg-[#252E3E] focus:bg-white dark:focus:bg-[#1D2430] rounded-full border border-gray-200 dark:border-[#303846] text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] focus:outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Right Action Icons & Member Status */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Light / Dark Mode Toggle */}
+          <ThemeToggle />
+
           {/* XP Badge & Meter */}
           <Link 
             href="/community/leaderboard"
-            className="h-8.5 sm:h-9 flex items-center gap-1.5 sm:gap-2 px-3 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-xs hover:shadow transition-all group shrink-0"
+            className="h-8 sm:h-9 flex items-center gap-1.5 px-2.5 sm:px-3 rounded-full bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] text-white shadow-xs hover:shadow transition-all group shrink-0"
             title="Your Total Experience Points"
           >
-            <div className="w-5 h-5 rounded-full bg-[#E84020] flex items-center justify-center text-xs text-white shrink-0">
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#E84020] flex items-center justify-center text-[10px] sm:text-xs text-white shrink-0">
               ⚡
             </div>
             <div className="flex items-center text-left">
               <span 
-                className="text-xs sm:text-sm font-extrabold leading-none text-[#FFF8EC] group-hover:text-white"
+                className="text-[11px] sm:text-xs md:text-sm font-extrabold leading-none text-[#FFF8EC] group-hover:text-white"
                 suppressHydrationWarning
               >
                 {currentMember?.total_xp || 0} XP
@@ -104,7 +108,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {onOpenComposer && (
             <button
               onClick={onOpenComposer}
-              className="h-8.5 sm:h-9 hidden sm:flex items-center justify-center gap-1.5 px-3.5 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-full text-xs font-bold transition-all shadow-xs hover:shadow active:scale-95 shrink-0 cursor-pointer"
+              className="h-8 sm:h-9 hidden sm:flex items-center justify-center gap-1.5 px-3 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-full text-xs font-bold transition-all shadow-xs hover:shadow active:scale-95 shrink-0 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Post</span>
@@ -115,7 +119,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {isAdmin && (
             <Link
               href="/community/admin"
-              className="h-8.5 sm:h-9 hidden md:flex items-center justify-center gap-1.5 px-3.5 rounded-full bg-[#0D2C5B] hover:bg-[#1B3F7E] text-white font-extrabold text-xs shadow-xs hover:shadow transition-all shrink-0 border border-white/10"
+              className="h-8 sm:h-9 hidden md:flex items-center justify-center gap-1.5 px-3 rounded-full bg-[#0D2C5B] dark:bg-[#1D2430] hover:bg-[#1B3F7E] text-white font-extrabold text-xs shadow-xs hover:shadow transition-all shrink-0 border border-white/10 dark:border-white/20"
               title="Open TNCC Administration Suite"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
@@ -126,23 +130,23 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {/* Sign Out Button in Header */}
           <button
             onClick={handleSignOut}
-            className="h-8.5 sm:h-9 hidden sm:flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-red-600 px-3 rounded-full hover:bg-red-50/70 border border-transparent hover:border-red-200 transition-all cursor-pointer shrink-0"
+            className="h-8 sm:h-9 hidden sm:flex items-center justify-center gap-1 text-xs font-semibold text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 px-2.5 rounded-full hover:bg-red-50/70 dark:hover:bg-red-950/30 transition-all cursor-pointer shrink-0"
             title="Sign out"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
+            <span className="hidden lg:inline">Sign Out</span>
           </button>
 
           {/* Member Profile Avatar & Dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-[#0D2C5B]/20 transition-all"
+              className="flex items-center gap-1.5 p-1 rounded-full hover:ring-2 hover:ring-[#0D2C5B]/20 dark:hover:ring-white/20 transition-all cursor-pointer"
             >
               <img
                 src={currentMember?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
                 alt={currentMember?.full_name}
-                className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
               />
               <ChevronDown className="w-3.5 h-3.5 text-gray-400 hidden sm:block" />
             </button>
@@ -154,43 +158,43 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                   onClick={() => setShowProfileMenu(false)}
                 />
                 <div 
-                  className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-scale-up"
+                  className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1D2430] rounded-2xl shadow-xl border border-gray-100 dark:border-[#303846] py-2 z-50 animate-scale-up"
                 >
-                  <div className="px-4 py-2 border-b border-gray-100">
+                  <div className="px-4 py-2 border-b border-gray-100 dark:border-[#303846]">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-bold text-[#0D2C5B] truncate">{currentMember?.full_name}</p>
+                      <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] truncate">{currentMember?.full_name}</p>
                       {isAdmin && (
-                        <span className="text-[9px] font-extrabold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full border border-amber-200">
+                        <span className="text-[9px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 px-1.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-700">
                           ADMIN
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-gray-500 truncate">@{currentMember?.username}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">@{currentMember?.username}</p>
                     <p className="text-[10px] text-[#E84020] font-semibold mt-0.5">ID: {currentMember?.member_id}</p>
                   </div>
 
                   {/* Administration Dropdown Menu Section */}
                   {isAdmin && (
                     <>
-                      <div className="px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 flex items-center justify-between">
-                        <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1">
-                          <ShieldCheck className="w-3 h-3 text-amber-600" />
+                      <div className="px-4 py-1.5 bg-amber-50/80 dark:bg-amber-950/40 border-b border-amber-200/50 dark:border-amber-800/40 flex items-center justify-between">
+                        <span className="text-[10px] font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                           Admin Controls
                         </span>
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="text-[10px] font-bold text-amber-700 hover:underline"
+                          className="text-[10px] font-bold text-amber-700 dark:text-amber-400 hover:underline"
                         >
                           Dashboard →
                         </Link>
                       </div>
 
-                      <div className="py-1 bg-amber-50/20 border-b border-gray-100">
+                      <div className="py-1 bg-amber-50/20 dark:bg-amber-950/20 border-b border-gray-100 dark:border-[#303846]">
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
                           Admin Reports
@@ -198,7 +202,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <Users className="w-3.5 h-3.5 text-amber-600" />
                           User Management
@@ -206,7 +210,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <BookOpen className="w-3.5 h-3.5 text-amber-600" />
                           Resource Management
@@ -214,7 +218,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <Calendar className="w-3.5 h-3.5 text-amber-600" />
                           Event Management
@@ -222,7 +226,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <Trophy className="w-3.5 h-3.5 text-amber-600" />
                           Challenges & Winners
@@ -230,7 +234,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         <Link
                           href="/community/admin"
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 hover:bg-amber-100/60 font-semibold"
+                          className="flex items-center gap-2 px-4 py-1.5 text-xs text-gray-800 dark:text-gray-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold"
                         >
                           <Briefcase className="w-3.5 h-3.5 text-amber-600" />
                           Hiring & Jobs
@@ -244,7 +248,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                     <Link
                       href="/community/profile"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       <User className="w-3.5 h-3.5 text-gray-400" />
                       My Creator Profile
@@ -252,7 +256,7 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                     <Link
                       href="/community/leaderboard"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       <Award className="w-3.5 h-3.5 text-gray-400" />
                       Community Leaderboard
@@ -261,23 +265,23 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
 
                   {/* Verified Admin Status Indicator */}
                   {isAdmin && (
-                    <div className="border-t border-amber-100 bg-amber-50/70 px-4 py-2 text-[11px] text-amber-900 font-bold flex items-center justify-between">
+                    <div className="border-t border-amber-100 dark:border-amber-800/50 bg-amber-50/70 dark:bg-amber-950/40 px-4 py-2 text-[11px] text-amber-900 dark:text-amber-300 font-bold flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Admin Access Active</span>
                       </div>
-                      <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-extrabold">VERIFIED</span>
+                      <span className="text-[10px] bg-amber-200/80 dark:bg-amber-800 text-amber-900 dark:text-amber-200 px-1.5 py-0.5 rounded font-extrabold">VERIFIED</span>
                     </div>
                   )}
 
                   {/* Sign In / Switch Account & Sign Out */}
-                  <div className="border-t border-gray-100 pt-1">
+                  <div className="border-t border-gray-100 dark:border-[#303846] pt-1">
                     <Link
                       href="/community/auth?mode=login"
                       onClick={() => setShowProfileMenu(false)}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-[#0D2C5B] hover:bg-blue-50/60 text-left font-semibold transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-[#0D2C5B] dark:text-[#00CDE0] hover:bg-blue-50/60 dark:hover:bg-blue-950/40 text-left font-semibold transition-colors cursor-pointer"
                     >
-                      <LogIn className="w-3.5 h-3.5 text-[#0D2C5B]" />
+                      <LogIn className="w-3.5 h-3.5 text-[#0D2C5B] dark:text-[#00CDE0]" />
                       Sign In / Switch Account
                     </Link>
                     <button
@@ -285,9 +289,9 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
                         setShowProfileMenu(false);
                         handleSignOut();
                       }}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 text-left font-medium transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 text-left font-medium transition-colors cursor-pointer"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-red-500" />
+                      <LogOut className="w-3.5 h-3.5 text-red-500 dark:text-red-400" />
                       Sign Out
                     </button>
                   </div>

@@ -536,8 +536,8 @@ export default function AdminDashboardClient() {
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 mt-8 overflow-x-auto pb-1 border-t border-white/10 pt-4">
+        {/* Navigation Tabs - Responsive Scroll with hidden scrollbar */}
+        <div className="flex items-center gap-2 mt-8 overflow-x-auto pb-1 border-t border-white/10 pt-4 no-scrollbar">
           {[
             { id: 'reports', name: 'Admin Reports', icon: BarChart3, count: null },
             { id: 'users', name: 'User Management', icon: Users, count: allMembers.length },
@@ -554,7 +554,7 @@ export default function AdminDashboardClient() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   isActive
                     ? 'bg-white text-[#0D2C5B] shadow-md'
                     : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -583,44 +583,44 @@ export default function AdminDashboardClient() {
       {activeTab === 'reports' && (
         <div className="space-y-6">
           {/* Key Metric Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            <div className="bg-white dark:bg-[#1D2430] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-[#303846] shadow-sm">
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
                 Total Members
               </span>
-              <p className="text-2xl font-extrabold text-[#0D2C5B] mt-1">{reports.totalMembers}</p>
-              <span className="text-[10px] text-green-600 font-bold mt-1 inline-block">
+              <p className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">{reports.totalMembers}</p>
+              <span className="text-[10px] text-green-600 dark:text-green-400 font-bold mt-1 inline-block">
                 ↑ Statewide Tamil Nadu
               </span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-[#1D2430] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-[#303846] shadow-sm">
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
                 Creative Posts
               </span>
-              <p className="text-2xl font-extrabold text-[#0D2C5B] mt-1">{reports.totalPosts}</p>
-              <span className="text-[10px] text-blue-600 font-bold mt-1 inline-block">
+              <p className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">{reports.totalPosts}</p>
+              <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold mt-1 inline-block">
                 Verified portfolio pieces
               </span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-[#1D2430] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-[#303846] shadow-sm">
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
                 Total XP Awarded
               </span>
               <p className="text-2xl font-extrabold text-[#E84020] mt-1">
                 ⚡ {reports.totalXpAwarded}
               </p>
-              <span className="text-[10px] text-amber-600 font-bold mt-1 inline-block">
+              <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold mt-1 inline-block">
                 Merit recognized
               </span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-[#1D2430] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-[#303846] shadow-sm">
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
                 Active Bounties
               </span>
-              <p className="text-2xl font-extrabold text-[#0D2C5B] mt-1">
+              <p className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">
                 {reports.activeChallenges}
               </p>
-              <span className="text-[10px] text-purple-600 font-bold mt-1 inline-block">
+              <span className="text-[10px] text-purple-600 dark:text-purple-400 font-bold mt-1 inline-block">
                 {reports.totalSubmissions} submissions entered
               </span>
             </div>
@@ -722,23 +722,23 @@ export default function AdminDashboardClient() {
           TAB 2: USER MANAGEMENT
           ============================================================ */}
       {activeTab === 'users' && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-100 dark:border-[#303846] p-4 sm:p-6 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-bold text-lg text-[#0D2C5B]">Verified Creator Directory</h2>
-              <p className="text-xs text-gray-500">
+              <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Verified Creator Directory</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Manage roles, award merit XP, and moderate community members.
               </p>
             </div>
             <div className="flex items-center gap-2.5">
               <div className="relative max-w-xs w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
                   placeholder="Search creator by name or city..."
-                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0D2C5B]"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] border border-gray-200 dark:border-[#303846] rounded-xl focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
                 />
               </div>
               <button
@@ -746,7 +746,7 @@ export default function AdminDashboardClient() {
                   setEditingCreator(null);
                   setShowCreatorModal(true);
                 }}
-                className="px-3.5 py-2 bg-[#0D2C5B] hover:bg-[#1B3F7E] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 shadow-sm"
+                className="px-3.5 py-2 bg-[#0D2C5B] dark:bg-[#00B5C8] hover:bg-[#1B3F7E] text-white dark:text-[#101318] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>+ Assign New Creator</span>
@@ -756,7 +756,7 @@ export default function AdminDashboardClient() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100">
+              <thead className="bg-gray-50 dark:bg-[#171C24] text-gray-500 dark:text-gray-400 font-semibold border-b border-gray-100 dark:border-[#303846]">
                 <tr>
                   <th className="p-3">Creator</th>
                   <th className="p-3">Member ID</th>
