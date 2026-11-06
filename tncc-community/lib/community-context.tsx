@@ -103,6 +103,7 @@ interface CommunityContextType {
   reviewSubmission: (submissionId: string, status: 'approved' | 'rejected', feedback?: string) => Promise<boolean>;
   getAllSubmissions: () => ChallengeSubmission[];
   updateMemberRole: (memberId: string, role: MemberRole) => void;
+  saveMember: (memberData: any) => Promise<CommunityMember>;
   deleteMember: (memberId: string) => void;
   awardBonusXP: (memberId: string, amount: number, reason: string) => void;
   getAdminReports: () => any;
@@ -1227,6 +1228,27 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const saveMember = async (memberData: any): Promise<CommunityMember> => {
+    try {
+      const method = memberData.id ? 'PUT' : 'POST';
+      await fetch('/api/community/admin/users', {
+        method,
+        headers: getAdminHeaders(),
+        body: JSON.stringify(memberData),
+      });
+    } catch (e) {
+      console.warn('Backend sync warning for saveMember:', e);
+    }
+    const saved = communityDb.saveMember(memberData);
+    setAllMembers(communityDb.getMembers());
+    addToast({
+      type: 'success',
+      title: memberData.id ? 'Creator Profile Updated' : 'New Creator Assigned',
+      message: `${saved.full_name}'s creator details have been saved.`,
+    });
+    return saved;
+  };
+
   const deleteMember = (memberId: string) => {
     communityDb.deleteMember(memberId);
     setAllMembers(communityDb.getMembers());
@@ -1320,6 +1342,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         reviewSubmission,
         getAllSubmissions,
         updateMemberRole,
+        saveMember,
         deleteMember,
         awardBonusXP,
         getAdminReports,

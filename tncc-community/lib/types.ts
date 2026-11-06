@@ -1,4 +1,4 @@
-export type MemberRole = 'member' | 'admin';
+export type MemberRole = 'member' | 'admin' | 'student' | 'moderator';
 
 export interface CommunityMember {
   id: string;
@@ -7,6 +7,14 @@ export interface CommunityMember {
   username: string;
   full_name: string;
   email?: string;
+  password?: string;
+  phone?: string;
+  occupation?: string;
+  gender?: string;
+  age?: number;
+  dob?: string;
+  login_streak?: number;
+  learning_stage?: string;
   avatar_url: string;
   cover_url: string;
   bio: string;

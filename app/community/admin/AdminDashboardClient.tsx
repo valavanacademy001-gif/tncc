@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCommunity } from '@/tncc-community/lib/community-context';
 import {
@@ -31,6 +31,12 @@ import {
   Gift,
   AlertTriangle,
   XCircle,
+  Image as ImageIcon,
+  UserPlus,
+  Copy,
+  CheckCheck,
+  UploadCloud,
+  FolderOpen,
 } from 'lucide-react';
 import {
   CommunityResource,
@@ -40,6 +46,8 @@ import {
   MemberRole,
   ResourceCategory,
 } from '@/tncc-community/lib/types';
+import AdminMediaUploader from '@/tncc-community/components/admin/AdminMediaUploader';
+import CreatorEditModal from '@/tncc-community/components/admin/CreatorEditModal';
 
 export default function AdminDashboardClient() {
   const {
@@ -68,14 +76,93 @@ export default function AdminDashboardClient() {
     reviewSubmission,
     getAllSubmissions,
     updateMemberRole,
+    saveMember,
     deleteMember,
     awardBonusXP,
     getAdminReports,
   } = useCommunity();
 
   const [activeTab, setActiveTab] = useState<
-    'reports' | 'users' | 'resources' | 'events' | 'challenges' | 'jobs' | 'referrals'
+    'reports' | 'users' | 'resources' | 'events' | 'challenges' | 'jobs' | 'referrals' | 'media'
   >('reports');
+
+  // Media Gallery state
+  const [mediaItems, setMediaItems] = useState<any[]>([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [mediaFilter, setMediaFilter] = useState<'all' | 'image' | 'video'>('all');
+  const [mediaSearch, setMediaSearch] = useState('');
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const mediaFileInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchMedia = async () => {
+    try {
+      setLoadingMedia(true);
+      const res = await fetch('/api/community/admin/media');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.media)) {
+          setMediaItems(data.media);
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to fetch admin media:', e);
+    } finally {
+      setLoadingMedia(false);
+    }
+  };
+
+  const handleUploadMediaFile = async (file: File) => {
+    if (!file) return;
+    setIsUploadingMedia(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('member_id', 'admin_media');
+      formData.append('bucket', 'community-media');
+
+      const res = await fetch('/api/community/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          fetchMedia();
+        }
+      }
+    } catch (err) {
+      console.error('Media upload error:', err);
+    } finally {
+      setIsUploadingMedia(false);
+    }
+  };
+
+  const copyToClipboard = (url: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      setCopiedUrl(url);
+      setTimeout(() => setCopiedUrl(null), 2500);
+    }
+  };
+
+  const handleDeleteMedia = async (item: any) => {
+    if (!confirm(`Delete media asset "${item.name}"?`)) return;
+    try {
+      const q = item.id?.startsWith('local-')
+        ? `url=${encodeURIComponent(item.url)}`
+        : `fileName=${encodeURIComponent(item.name)}`;
+      const res = await fetch(`/api/community/admin/media?${q}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        fetchMedia();
+      }
+    } catch (e) {
+      console.error('Delete media error:', e);
+    }
+  };
 
   // Referral management state
   const [adminReferrals, setAdminReferrals] = useState<any[]>([]);
@@ -99,6 +186,7 @@ export default function AdminDashboardClient() {
 
   useEffect(() => {
     fetchAdminReferrals();
+    fetchMedia();
   }, []);
 
   // Search & filter states
@@ -106,6 +194,9 @@ export default function AdminDashboardClient() {
   const [resourceCategoryFilter, setResourceCategoryFilter] = useState('All');
 
   // Modals state
+  const [showCreatorModal, setShowCreatorModal] = useState(false);
+  const [editingCreator, setEditingCreator] = useState<any | null>(null);
+
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [editingResource, setEditingResource] = useState<CommunityResource | null>(null);
 
@@ -455,6 +546,7 @@ export default function AdminDashboardClient() {
             { id: 'challenges', name: 'Challenges & Winners', icon: Trophy, count: challenges.length },
             { id: 'jobs', name: 'Hiring & Jobs', icon: Briefcase, count: jobs.length },
             { id: 'referrals', name: 'Referrals & Earn', icon: Gift, count: adminReferrals.length },
+            { id: 'media', name: 'Media Gallery', icon: ImageIcon, count: mediaItems.length },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -638,15 +730,27 @@ export default function AdminDashboardClient() {
                 Manage roles, award merit XP, and moderate community members.
               </p>
             </div>
-            <div className="relative max-w-xs w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
-                placeholder="Search creator by name or city..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0D2C5B]"
-              />
+            <div className="flex items-center gap-2.5">
+              <div className="relative max-w-xs w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  placeholder="Search creator by name or city..."
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0D2C5B]"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setEditingCreator(null);
+                  setShowCreatorModal(true);
+                }}
+                className="px-3.5 py-2 bg-[#0D2C5B] hover:bg-[#1B3F7E] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 shadow-sm"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ Assign New Creator</span>
+              </button>
             </div>
           </div>
 
@@ -696,6 +800,16 @@ export default function AdminDashboardClient() {
                     </td>
                     <td className="p-3 text-right">
                       <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => {
+                            setEditingCreator(member);
+                            setShowCreatorModal(true);
+                          }}
+                          className="p-1.5 text-gray-500 hover:text-[#0D2C5B] hover:bg-gray-100 rounded-lg transition-colors"
+                          title="Edit Creator Profile"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
                         <button
                           onClick={() => {
                             setXpTargetMember(member);
@@ -1388,6 +1502,233 @@ export default function AdminDashboardClient() {
       )}
 
       {/* ============================================================
+          TAB 8: MEDIA GALLERY (ADMIN ONLY)
+          ============================================================ */}
+      {activeTab === 'media' && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="font-bold text-lg text-[#0D2C5B]">Community Media Asset Library</h2>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Admin Only
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Upload creative banners, posters, stock clips, and copy public URLs with 1-click clipboard feedback.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <input
+                type="file"
+                ref={mediaFileInputRef}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleUploadMediaFile(e.target.files[0]);
+                  }
+                }}
+                className="hidden"
+                accept="image/png,image/jpeg,image/webp,video/mp4"
+              />
+              <button
+                type="button"
+                onClick={() => mediaFileInputRef.current?.click()}
+                disabled={isUploadingMedia}
+                className="px-4 py-2 bg-[#E84020] hover:bg-[#FF5733] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+              >
+                {isUploadingMedia ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  <>
+                    <UploadCloud className="w-4 h-4" />
+                    <span>Upload New Asset</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={fetchMedia}
+                className="p-2 text-gray-500 hover:text-[#0D2C5B] hover:bg-gray-100 rounded-xl transition-all"
+                title="Refresh Media Gallery"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Filters & Search */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-gray-100">
+            <div className="flex items-center gap-1.5">
+              {[
+                { id: 'all', label: 'All Assets', count: mediaItems.length },
+                { id: 'image', label: 'Images', count: mediaItems.filter((m) => m.media_type === 'image').length },
+                { id: 'video', label: 'Videos', count: mediaItems.filter((m) => m.media_type === 'video').length },
+              ].map((filter) => (
+                <button
+                  key={filter.id}
+                  onClick={() => setMediaFilter(filter.id as any)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                    mediaFilter === filter.id
+                      ? 'bg-[#0D2C5B] text-white shadow-xs'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  <span>{filter.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      mediaFilter === filter.id ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'
+                    }`}
+                  >
+                    {filter.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="relative max-w-xs w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input
+                type="text"
+                value={mediaSearch}
+                onChange={(e) => setMediaSearch(e.target.value)}
+                placeholder="Search assets by file name..."
+                className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0D2C5B]"
+              />
+            </div>
+          </div>
+
+          {/* Media Grid */}
+          {loadingMedia ? (
+            <div className="py-16 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#0D2C5B]" />
+              <span className="text-xs">Loading media assets from storage...</span>
+            </div>
+          ) : mediaItems.filter((item) => {
+              if (mediaFilter !== 'all' && item.media_type !== mediaFilter) return false;
+              if (mediaSearch) {
+                const q = mediaSearch.toLowerCase();
+                return item.name?.toLowerCase().includes(q) || item.url?.toLowerCase().includes(q);
+              }
+              return true;
+            }).length === 0 ? (
+            <div className="py-14 text-center border-2 border-dashed border-gray-200 rounded-2xl p-6">
+              <FolderOpen className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+              <p className="text-xs font-bold text-gray-600">No media assets found</p>
+              <p className="text-[11px] text-gray-400 mt-1">Upload images or videos to populate your admin gallery.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {mediaItems
+                .filter((item) => {
+                  if (mediaFilter !== 'all' && item.media_type !== mediaFilter) return false;
+                  if (mediaSearch) {
+                    const q = mediaSearch.toLowerCase();
+                    return item.name?.toLowerCase().includes(q) || item.url?.toLowerCase().includes(q);
+                  }
+                  return true;
+                })
+                .map((item) => {
+                  const isCopied = copiedUrl === item.url;
+                  return (
+                    <div
+                      key={item.id || item.url}
+                      className="group bg-gray-50 border border-gray-200 hover:border-[#0D2C5B] rounded-2xl overflow-hidden transition-all shadow-xs hover:shadow-md flex flex-col justify-between"
+                    >
+                      <div className="relative aspect-[4/3] bg-gray-900/10 overflow-hidden">
+                        {item.media_type === 'video' ? (
+                          <video
+                            src={item.url}
+                            className="w-full h-full object-cover"
+                            muted
+                            loop
+                            playsInline
+                            onMouseEnter={(e) => (e.target as HTMLVideoElement).play().catch(() => {})}
+                            onMouseLeave={(e) => (e.target as HTMLVideoElement).pause()}
+                          />
+                        ) : (
+                          <img
+                            src={item.url}
+                            alt={item.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        )}
+
+                        <span
+                          className={`absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded-md uppercase backdrop-blur-md shadow-xs ${
+                            item.media_type === 'video'
+                              ? 'bg-purple-600/90 text-white'
+                              : 'bg-black/60 text-white'
+                          }`}
+                        >
+                          {item.media_type}
+                        </span>
+
+                        {item.category && (
+                          <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-white/90 text-gray-800 shadow-xs">
+                            {item.category}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="p-3 space-y-2">
+                        <div>
+                          <p className="text-xs font-bold text-[#0D2C5B] truncate" title={item.name}>
+                            {item.name}
+                          </p>
+                          <p className="text-[10px] text-gray-400 font-mono mt-0.5">
+                            {item.file_size ? `${Math.round(item.file_size / 1024)} KB` : 'Cloud Asset'}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 pt-1 border-t border-gray-200">
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(item.url)}
+                            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition-all ${
+                              isCopied
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200'
+                            }`}
+                          >
+                            {isCopied ? (
+                              <>
+                                <CheckCheck className="w-3.5 h-3.5" />
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5 text-gray-500" />
+                                <span>Copy URL</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMedia(item)}
+                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete Asset"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============================================================
           MODAL 1: RESOURCE CREATE/EDIT
           ============================================================ */}
       {showResourceModal && (
@@ -1451,16 +1792,13 @@ export default function AdminDashboardClient() {
                 />
               </div>
 
-              <div>
-                <label className="font-bold text-gray-700 block mb-1">Preview Image URL</label>
-                <input
-                  type="url"
-                  required
-                  value={resForm.thumbnail_url}
-                  onChange={(e) => setResForm({ ...resForm, thumbnail_url: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-xl"
-                />
-              </div>
+              <AdminMediaUploader
+                label="Preview Image / Thumbnail"
+                value={resForm.thumbnail_url}
+                onChange={(url) => setResForm({ ...resForm, thumbnail_url: url })}
+                aspectRatio="banner"
+                helperText="Upload, paste direct image URL, or pick from gallery"
+              />
 
               <div>
                 <label className="font-bold text-gray-700 block mb-1">Description</label>
@@ -1615,6 +1953,14 @@ export default function AdminDashboardClient() {
                   className="w-full px-3 py-2 border rounded-xl"
                 />
               </div>
+
+              <AdminMediaUploader
+                label="Company Logo / Project Image"
+                value={jobForm.company_logo_url}
+                onChange={(url) => setJobForm({ ...jobForm, company_logo_url: url })}
+                aspectRatio="square"
+                helperText="Upload logo, paste direct URL, or pick from gallery"
+              />
 
               <div>
                 <label className="font-bold text-gray-700 block mb-1">Description</label>
@@ -1930,6 +2276,314 @@ export default function AdminDashboardClient() {
           </div>
         </div>
       )}
+
+      {/* ============================================================
+          MODAL 5: EVENT CREATE/EDIT
+          ============================================================ */}
+      {showEventModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
+            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+              {editingEvent ? 'Edit Community Event' : 'Create New Event'}
+            </h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Schedule workshops, meetups, and creative webinars for Tamil creators.
+            </p>
+
+            <form onSubmit={handleSaveEvent} className="space-y-3.5 text-xs">
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Event Title</label>
+                <input
+                  type="text"
+                  required
+                  value={evtForm.title}
+                  onChange={(e) => setEvtForm({ ...evtForm, title: e.target.value })}
+                  placeholder="e.g. TNCC Offline Meetup: Chennai Film Creators"
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              <AdminMediaUploader
+                label="Event Banner Image"
+                value={evtForm.banner_url}
+                onChange={(url) => setEvtForm({ ...evtForm, banner_url: url })}
+                aspectRatio="banner"
+                helperText="Upload event graphic, paste image URL, or pick from gallery"
+              />
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Event Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={evtForm.event_date}
+                    onChange={(e) => setEvtForm({ ...evtForm, event_date: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Time Slot</label>
+                  <input
+                    type="text"
+                    required
+                    value={evtForm.event_time}
+                    onChange={(e) => setEvtForm({ ...evtForm, event_time: e.target.value })}
+                    placeholder="e.g. 6:00 PM - 8:30 PM"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Location / Venue</label>
+                  <input
+                    type="text"
+                    required
+                    value={evtForm.location}
+                    onChange={(e) => setEvtForm({ ...evtForm, location: e.target.value })}
+                    placeholder="e.g. Anna Nagar, Chennai / Google Meet"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Status</label>
+                  <select
+                    value={evtForm.status}
+                    onChange={(e) => setEvtForm({ ...evtForm, status: e.target.value as any })}
+                    className="w-full px-3 py-2 border rounded-xl"
+                  >
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Registration / RSVP Link</label>
+                <input
+                  type="url"
+                  required
+                  value={evtForm.registration_url}
+                  onChange={(e) => setEvtForm({ ...evtForm, registration_url: e.target.value })}
+                  placeholder="https://meet.google.com/..."
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Description</label>
+                <textarea
+                  rows={3}
+                  value={evtForm.description}
+                  onChange={(e) => setEvtForm({ ...evtForm, description: e.target.value })}
+                  placeholder="Agenda, speakers, prerequisites..."
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="evt_online"
+                  checked={evtForm.is_online}
+                  onChange={(e) => setEvtForm({ ...evtForm, is_online: e.target.checked })}
+                  className="rounded text-[#0D2C5B]"
+                />
+                <label htmlFor="evt_online" className="text-xs text-gray-700 font-medium cursor-pointer">
+                  Online Event (Displays Virtual Meeting tag)
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowEventModal(false)}
+                  className="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 hover:bg-gray-200 font-bold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-white bg-[#0D2C5B] hover:bg-[#1B3F7E] font-bold"
+                >
+                  Save Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================
+          MODAL 6: CHALLENGE CREATE/EDIT
+          ============================================================ */}
+      {showChallengeModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
+            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+              {editingChallenge ? 'Edit Creative Challenge' : 'Launch New Bounty Challenge'}
+            </h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Inspire community competition with cash rewards, merit badges, and XP.
+            </p>
+
+            <form onSubmit={handleSaveChallenge} className="space-y-3.5 text-xs">
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Challenge Title</label>
+                <input
+                  type="text"
+                  required
+                  value={chalForm.title}
+                  onChange={(e) => setChalForm({ ...chalForm, title: e.target.value })}
+                  placeholder="e.g. Tamil Typography Risograph Poster Challenge"
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              <AdminMediaUploader
+                label="Challenge Banner / Thumbnail"
+                value={chalForm.thumbnail_url}
+                onChange={(url) => setChalForm({ ...chalForm, thumbnail_url: url })}
+                aspectRatio="banner"
+                helperText="Upload banner graphic, paste URL, or pick from gallery"
+              />
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Category</label>
+                  <select
+                    value={chalForm.category}
+                    onChange={(e) => setChalForm({ ...chalForm, category: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl"
+                  >
+                    <option value="Design & Motion">Design & Motion</option>
+                    <option value="Brand Identity">Brand Identity</option>
+                    <option value="Video Editing">Video Editing</option>
+                    <option value="3D & Generative AI">3D & Generative AI</option>
+                    <option value="Tamil Typography">Tamil Typography</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Deadline Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={chalForm.submission_deadline}
+                    onChange={(e) => setChalForm({ ...chalForm, submission_deadline: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-200/60 space-y-2">
+                <span className="font-bold text-amber-900 block text-[11px] uppercase tracking-wider">
+                  🏆 Prize Pool & Bonus XP Rewards
+                </span>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="font-bold text-gray-700 block text-[10px] mb-0.5">🥇 1st Place</label>
+                    <input
+                      type="text"
+                      value={chalForm.first_prize}
+                      onChange={(e) => setChalForm({ ...chalForm, first_prize: e.target.value })}
+                      placeholder="₹15,000 + 200 XP"
+                      className="w-full px-2 py-1.5 bg-white border border-amber-200 rounded-lg text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold text-gray-700 block text-[10px] mb-0.5">🥈 2nd Place</label>
+                    <input
+                      type="text"
+                      value={chalForm.second_prize}
+                      onChange={(e) => setChalForm({ ...chalForm, second_prize: e.target.value })}
+                      placeholder="₹7,500 + 100 XP"
+                      className="w-full px-2 py-1.5 bg-white border border-amber-200 rounded-lg text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold text-gray-700 block text-[10px] mb-0.5">🥉 3rd Place</label>
+                    <input
+                      type="text"
+                      value={chalForm.third_prize}
+                      onChange={(e) => setChalForm({ ...chalForm, third_prize: e.target.value })}
+                      placeholder="₹3,000 + 50 XP"
+                      className="w-full px-2 py-1.5 bg-white border border-amber-200 rounded-lg text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <label className="font-bold text-gray-600 block text-[10px]">Participation XP</label>
+                    <input
+                      type="number"
+                      value={chalForm.xp_reward}
+                      onChange={(e) => setChalForm({ ...chalForm, xp_reward: Number(e.target.value) })}
+                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-[#E84020]"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold text-gray-600 block text-[10px]">Status</label>
+                    <select
+                      value={chalForm.status}
+                      onChange={(e) => setChalForm({ ...chalForm, status: e.target.value as any })}
+                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Upcoming">Upcoming</option>
+                      <option value="Submission Closed">Submission Closed</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Challenge Brief / Description</label>
+                <textarea
+                  rows={3}
+                  value={chalForm.description}
+                  onChange={(e) => setChalForm({ ...chalForm, description: e.target.value })}
+                  placeholder="Rules, theme guidelines, deliverables..."
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowChallengeModal(false)}
+                  className="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 hover:bg-gray-200 font-bold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-white bg-[#0D2C5B] hover:bg-[#1B3F7E] font-bold"
+                >
+                  Save Challenge
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================
+          MODAL 7: ASSIGN / EDIT CREATOR PROFILE
+          ============================================================ */}
+      <CreatorEditModal
+        member={editingCreator}
+        isOpen={showCreatorModal}
+        onClose={() => setShowCreatorModal(false)}
+        onSave={async (data) => {
+          await saveMember(data);
+        }}
+      />
     </div>
   );
 }

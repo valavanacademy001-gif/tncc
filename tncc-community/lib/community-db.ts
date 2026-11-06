@@ -1919,6 +1919,55 @@ export class CommunityDatabase {
     return this.members[index];
   }
 
+  public saveMember(memberData: Partial<CommunityMember> & { id?: string; email: string; full_name: string }): CommunityMember {
+    const cleanEmail = memberData.email.trim().toLowerCase();
+    const existingIndex = this.members.findIndex(
+      (m) => (memberData.id && m.id === memberData.id) || (m.email && m.email.toLowerCase() === cleanEmail)
+    );
+
+    if (existingIndex !== -1) {
+      const updated = {
+        ...this.members[existingIndex],
+        ...memberData,
+      };
+      this.members[existingIndex] = updated;
+      saveToStorage('members', this.members);
+      return updated;
+    }
+
+    const newMember: CommunityMember = {
+      id: memberData.id || `mem-${Date.now()}`,
+      member_id: memberData.member_id || `TNCC-2026-${String(Date.now()).slice(-3)}`,
+      username: (memberData.username || cleanEmail.split('@')[0] || `creator_${Date.now().toString().slice(-4)}`).toLowerCase().replace(/[^a-z0-9_]/g, '_'),
+      full_name: memberData.full_name,
+      email: cleanEmail,
+      avatar_url: memberData.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+      cover_url: memberData.cover_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+      bio: memberData.bio || 'Tamil Nadu creator crafting impactful visuals and stories.',
+      location: memberData.location || 'Chennai, Tamil Nadu',
+      skills: memberData.skills || ['Creator', 'Visual Design'],
+      total_xp: memberData.total_xp !== undefined ? memberData.total_xp : 50,
+      role: memberData.role || 'member',
+      created_at: new Date().toISOString(),
+      occupation: memberData.occupation,
+      phone: memberData.phone,
+      gender: memberData.gender,
+      age: memberData.age,
+      dob: memberData.dob,
+      login_streak: memberData.login_streak || 0,
+      learning_stage: memberData.learning_stage || 'Stage 0: Free Member',
+      posts_count: 0,
+      wins_count: 0,
+      challenges_count: 0,
+      followers_count: 120,
+      following_count: 50,
+    };
+
+    this.members.unshift(newMember);
+    saveToStorage('members', this.members);
+    return newMember;
+  }
+
   public deleteMember(memberId: string): boolean {
     const prevLen = this.members.length;
     this.members = this.members.filter((m) => m.id !== memberId);
