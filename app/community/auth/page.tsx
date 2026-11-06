@@ -142,7 +142,8 @@ function AuthContent() {
           return;
         }
 
-        const res = await loginMember(email.trim().toLowerCase(), password);
+        const cleanEmail = email.trim().toLowerCase();
+        const res = await loginMember(cleanEmail, password);
         if (!res.success) {
           const isEmailNotConfirmed = res.error?.toLowerCase().includes('not confirmed');
           setErrorMsg(
@@ -154,21 +155,41 @@ function AuthContent() {
           return;
         }
 
+        const isUserAdmin =
+          res.member?.role === 'admin' ||
+          cleanEmail === 'suganeshsugu07@gmail.com' ||
+          cleanEmail === 'suganeshsugu07@gmailcom';
+
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('tncc_active_user_email', cleanEmail);
+          if (res.member?.id) {
+            localStorage.setItem('tncc_current_member_id', res.member.id);
+          }
+          document.cookie = `tncc_active_user_email=${cleanEmail}; path=/; max-age=604800; SameSite=Lax`;
+          if (res.member?.id) {
+            document.cookie = `tncc_member_id=${res.member.id}; path=/; max-age=604800; SameSite=Lax`;
+          }
+          if (isUserAdmin) {
+            localStorage.setItem('tncc_admin_session', 'true');
+            document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
+          }
+        }
+
         setSuccessMsg(
-          res.member?.role === 'admin' 
+          isUserAdmin 
             ? '🛡️ Verified Administrator sign-in. Launching admin workspace...' 
             : `Welcome back, ${res.member?.full_name || 'Creator'}! Launching community...`
         );
 
         setTimeout(() => {
           const nextUrl = searchParams.get('next');
-          const targetUrl = nextUrl || (res.member?.role === 'admin' ? '/community/admin' : '/community');
+          const targetUrl = nextUrl || (isUserAdmin ? '/community/admin' : '/community');
           if (typeof window !== 'undefined') {
             window.location.href = targetUrl;
           } else {
             router.push(targetUrl);
           }
-        }, 500);
+        }, 200);
       } else {
         // Real Supabase password reset
         if (!email.trim()) {

@@ -154,6 +154,21 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
 
   const loadAll = () => {
     communityDb.init();
+
+    // Reconcile active member ID if saved in localStorage or cookies
+    let activeEmail = '';
+    if (typeof window !== 'undefined') {
+      activeEmail = (localStorage.getItem('tncc_active_user_email') || '').toLowerCase().trim();
+    }
+    if (activeEmail) {
+      const match = communityDb.getMembers().find(
+        (m) => m.email && m.email.toLowerCase() === activeEmail
+      );
+      if (match) {
+        communityDb.setCurrentMemberId(match.id);
+      }
+    }
+
     const curr = communityDb.getCurrentMember();
     setCurrentMember(curr);
     setAllMembers(communityDb.getMembers());
@@ -164,7 +179,11 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     setEvents(communityDb.getEvents());
 
     // Strict Admin check: strictly verified admin role and email
-    const isAuthorized = curr?.role === 'admin' || checkIsAdmin(curr?.email);
+    const isAuthorized =
+      curr?.role === 'admin' ||
+      checkIsAdmin(curr?.email) ||
+      checkIsAdmin(activeEmail) ||
+      (typeof window !== 'undefined' && localStorage.getItem('tncc_admin_session') === 'true');
     setIsAdmin(Boolean(isAuthorized));
 
     // Refresh live posts from backend
@@ -324,9 +343,18 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
           const fallbackRes = communityDb.loginMember(resolvedEmail);
           if (fallbackRes.success && fallbackRes.member) {
             const member = fallbackRes.member;
+            communityDb.setCurrentMemberId(member.id);
             setCurrentMember(member);
-            const isUserAdmin = checkIsAdmin(resolvedEmail);
+            const isUserAdmin = checkIsAdmin(resolvedEmail) || member.role === 'admin';
             setIsAdmin(isUserAdmin);
+
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('tncc_active_user_email', resolvedEmail);
+              localStorage.setItem('tncc_current_member_id', member.id);
+              if (isUserAdmin) {
+                localStorage.setItem('tncc_admin_session', 'true');
+              }
+            }
 
             // Establish session cookies immediately
             if (typeof document !== 'undefined') {
@@ -379,9 +407,18 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (member) {
+        communityDb.setCurrentMemberId(member.id);
         setCurrentMember(member);
-        const isUserAdmin = checkIsAdmin(resolvedEmail);
+        const isUserAdmin = checkIsAdmin(resolvedEmail) || member.role === 'admin';
         setIsAdmin(isUserAdmin);
+
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('tncc_active_user_email', resolvedEmail);
+          localStorage.setItem('tncc_current_member_id', member.id);
+          if (isUserAdmin) {
+            localStorage.setItem('tncc_admin_session', 'true');
+          }
+        }
 
         if (typeof document !== 'undefined') {
           document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
@@ -484,16 +521,47 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     category: CommunityPost['category'];
     is_showcase: boolean;
   }) => {
-    // 1. Optimistic update
-    const result = communityDb.createPost(data);
-    setPosts(communityDb.getPosts());
-    setAllMembers(communityDb.getMembers());
     const curr = communityDb.getCurrentMember();
-    setCurrentMember({ ...curr });
+
+    // 1. Optimistic post addition
+    const optimisticPost: CommunityPost = {
+      id: `temp-${Date.now()}`,
+      member_id: curr.id,
+      author: {
+        username: curr.username,
+        full_name: curr.full_name,
+        avatar_url: curr.avatar_url,
+        location: curr.location,
+        total_xp: (curr.total_xp || 0) + 10,
+        followers_count: curr.followers_count || 120,
+      },
+      caption: data.caption,
+      media_url: data.media_url,
+      media_type: data.media_type,
+      aspect_ratio: data.aspect_ratio,
+      hashtags: data.hashtags,
+      category: data.category,
+      is_showcase: data.is_showcase,
+      likes_count: 0,
+      comments_count: 0,
+      saves_count: 0,
+      created_at: new Date().toISOString(),
+      is_liked: false,
+      is_saved: false,
+    };
+
+    setPosts((prev) => [optimisticPost, ...prev]);
+
+    try {
+      communityDb.createPost(data);
+    } catch {}
+
+    const updatedCurr = { ...curr, total_xp: (curr.total_xp || 0) + 10, posts_count: (curr.posts_count || 0) + 1 };
+    setCurrentMember(updatedCurr);
 
     addToast({
       type: 'xp',
-      title: `+${result.xpAwarded} XP Earned!`,
+      title: '+10 XP Earned!',
       message: 'Creative post published to TNCC statewide feed.',
     });
 
@@ -525,7 +593,9 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
   const deletePost = async (postId: string): Promise<void> => {
     // 1. Optimistic removal
     setPosts((prev) => prev.filter((p) => p.id !== postId));
-    communityDb.deletePost(postId);
+    try {
+      communityDb.deletePost(postId);
+    } catch {}
 
     addToast({
       type: 'info',
@@ -565,8 +635,13 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
         })
       );
 
-      // 2. Local storage persistence
-      const res = communityDb.toggleLike(postId);
+      // 2. Safe local storage persistence
+      let res: any = null;
+      try {
+        res = communityDb.toggleLike(postId);
+      } catch (err) {
+        // Safe fallback if post is only in Supabase
+      }
 
       // 3. Send to live Supabase backend
       const response = await fetch(`/api/community/posts/${postId}/like`, {
@@ -614,12 +689,27 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     const curr = communityDb.getCurrentMember();
 
     // 1. Optimistic toggle
-    const saved = communityDb.toggleSave(postId);
-    setPosts(communityDb.getPosts());
+    let isNowSaved = false;
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p.id !== postId) return p;
+        isNowSaved = !p.is_saved;
+        return {
+          ...p,
+          is_saved: isNowSaved,
+          saves_count: Math.max(0, (p.saves_count || 0) + (isNowSaved ? 1 : -1)),
+        };
+      })
+    );
+
+    try {
+      communityDb.toggleSave(postId);
+    } catch {}
+
     addToast({
       type: 'info',
-      title: saved ? 'Saved to Bookmarks' : 'Removed from Bookmarks',
-      message: saved ? 'Post saved to your creative collection.' : 'Removed.',
+      title: isNowSaved ? 'Saved to Bookmarks' : 'Removed from Bookmarks',
+      message: isNowSaved ? 'Post saved to your creative collection.' : 'Removed from bookmarks.',
     });
 
     // 2. Persist to Supabase
@@ -653,8 +743,30 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     const curr = communityDb.getCurrentMember();
 
     // 1. Optimistic comment
-    const comment = communityDb.addComment(postId, text);
-    setPosts(communityDb.getPosts());
+    let comment: PostComment;
+    try {
+      comment = communityDb.addComment(postId, text);
+    } catch {
+      comment = {
+        id: `comm-${Date.now()}`,
+        post_id: postId,
+        member_id: curr.id,
+        author: {
+          username: curr.username,
+          full_name: curr.full_name,
+          avatar_url: curr.avatar_url,
+        },
+        comment_text: text,
+        created_at: new Date().toISOString(),
+      };
+    }
+
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId ? { ...p, comments_count: (p.comments_count || 0) + 1 } : p
+      )
+    );
+
     addToast({
       type: 'success',
       title: 'Comment Added',
@@ -696,8 +808,16 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
     const curr = communityDb.getCurrentMember();
 
     // 1. Optimistic delete
-    communityDb.deleteComment(postId, commentId);
-    setPosts(communityDb.getPosts());
+    try {
+      communityDb.deleteComment(postId, commentId);
+    } catch {}
+
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId ? { ...p, comments_count: Math.max(0, (p.comments_count || 1) - 1) } : p
+      )
+    );
+
     addToast({
       type: 'info',
       title: 'Comment Deleted',

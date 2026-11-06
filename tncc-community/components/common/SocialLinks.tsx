@@ -69,9 +69,20 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Instagram (@${member.username})`}
-          className={`flex items-center font-bold border border-[#FCE4EC] bg-[#FFF0F5] text-[#E1306C] hover:bg-[#E1306C] hover:text-white hover:border-[#E1306C] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#FCE4EC] bg-[#FFF0F5] text-[#E1306C] shadow-2xs transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          style={{ transition: 'all 0.15s ease' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#E1306C';
+            e.currentTarget.style.color = '#ffffff';
+            e.currentTarget.style.borderColor = '#E1306C';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#FFF0F5';
+            e.currentTarget.style.color = '#E1306C';
+            e.currentTarget.style.borderColor = '#FCE4EC';
+          }}
         >
-          <InstagramIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <InstagramIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Instagram</span>}
         </a>
       ) : onEditClick ? (
@@ -82,7 +93,7 @@ export default function SocialLinks({
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#E1306C] hover:border-[#E1306C] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3 shrink-0" />
-          <InstagramIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <InstagramIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Add Instagram</span>}
         </button>
       ) : null}
@@ -94,9 +105,20 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`LinkedIn (@${member.username})`}
-          className={`flex items-center font-bold border border-[#E1EFFE] bg-[#F0F7FD] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#E1EFFE] bg-[#F0F7FD] text-[#0A66C2] shadow-2xs transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          style={{ transition: 'all 0.15s ease' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#0A66C2';
+            e.currentTarget.style.color = '#ffffff';
+            e.currentTarget.style.borderColor = '#0A66C2';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#F0F7FD';
+            e.currentTarget.style.color = '#0A66C2';
+            e.currentTarget.style.borderColor = '#E1EFFE';
+          }}
         >
-          <LinkedinIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <LinkedinIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>LinkedIn</span>}
         </a>
       ) : onEditClick ? (
@@ -107,7 +129,7 @@ export default function SocialLinks({
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0A66C2] hover:border-[#0A66C2] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3 shrink-0" />
-          <LinkedinIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <LinkedinIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Add LinkedIn</span>}
         </button>
       ) : null}
@@ -119,9 +141,20 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Behance Portfolio (@${member.username})`}
-          className={`flex items-center font-bold border border-[#E1EBFF] bg-[#F0F5FF] text-[#0057FF] hover:bg-[#0057FF] hover:text-white hover:border-[#0057FF] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#E1EBFF] bg-[#F0F5FF] text-[#0057FF] shadow-2xs transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          style={{ transition: 'all 0.15s ease' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#0057FF';
+            e.currentTarget.style.color = '#ffffff';
+            e.currentTarget.style.borderColor = '#0057FF';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#F0F5FF';
+            e.currentTarget.style.color = '#0057FF';
+            e.currentTarget.style.borderColor = '#E1EBFF';
+          }}
         >
-          <BehanceIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <BehanceIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Behance</span>}
         </a>
       ) : onEditClick ? (
@@ -132,7 +165,7 @@ export default function SocialLinks({
           className={`flex items-center font-semibold border border-dashed border-gray-300 bg-[#F8F6F1] text-gray-500 hover:text-[#0057FF] hover:border-[#0057FF] transition-all cursor-pointer ${sizeClasses[size]}`}
         >
           <Plus className="w-3 h-3 shrink-0" />
-          <BehanceIcon className={`${iconSizes[size]} text-current shrink-0`} />
+          <BehanceIcon className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Add Behance</span>}
         </button>
       ) : null}
@@ -144,9 +177,20 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           title={`Website (${website})`}
-          className={`flex items-center font-bold border border-[#CCF4F8] bg-[#E6F9FC] text-[#008A99] hover:bg-[#0D2C5B] hover:text-white hover:border-[#0D2C5B] shadow-2xs hover:shadow-sm transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          className={`flex items-center font-bold border border-[#CCF4F8] bg-[#E6F9FC] text-[#008A99] shadow-2xs transition-all active:scale-95 cursor-pointer ${sizeClasses[size]}`}
+          style={{ transition: 'all 0.15s ease' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#0D2C5B';
+            e.currentTarget.style.color = '#ffffff';
+            e.currentTarget.style.borderColor = '#0D2C5B';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#E6F9FC';
+            e.currentTarget.style.color = '#008A99';
+            e.currentTarget.style.borderColor = '#CCF4F8';
+          }}
         >
-          <Globe className={`${iconSizes[size]} text-current shrink-0`} />
+          <Globe className={`${iconSizes[size]} shrink-0`} />
           {showLabels && <span>Website</span>}
         </a>
       )}
