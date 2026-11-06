@@ -1024,10 +1024,17 @@ export class CommunityDatabase {
     let membersUpdated = false;
     this.members = this.members.map((m) => {
       const defaultCounts = seedFollowers[m.id] || { followers: 240, following: 60 };
-      if (m.followers_count === undefined || m.following_count === undefined) {
+      const fallbackEmail =
+        m.email ||
+        (m.username.toLowerCase() === 'suganesh_admin' || m.username.toLowerCase() === 'suganesh'
+          ? 'suganeshsugu07@gmail.com'
+          : `${m.username.toLowerCase()}@gmail.com`);
+
+      if (m.followers_count === undefined || m.following_count === undefined || !m.email) {
         membersUpdated = true;
         return {
           ...m,
+          email: fallbackEmail,
           followers_count: m.followers_count ?? defaultCounts.followers,
           following_count: m.following_count ?? defaultCounts.following,
         };
@@ -1207,17 +1214,28 @@ export class CommunityDatabase {
 
     const isAdmin = checkIsAdmin(clean);
 
-    // Look for existing member
+    // Look for existing member by email, handle, member_id, or username
     let member = this.members.find(
       (m) =>
         (m.email && m.email.toLowerCase() === clean) ||
         (m.email && m.email.toLowerCase() === clean.replace('@gmail.com', '@gmailcom')) ||
         m.username.toLowerCase() === clean ||
-        m.username.toLowerCase() === clean.replace(/^@/, '')
+        m.username.toLowerCase() === clean.replace(/^@/, '') ||
+        (m.member_id && m.member_id.toLowerCase() === clean) ||
+        (clean.includes('@') && m.username.toLowerCase() === clean.split('@')[0]) ||
+        (`${m.username.toLowerCase()}@gmail.com` === clean)
     );
 
     // If logging in with the authorized admin email or username and not in list yet:
-    if (!member && (isAdmin || clean === 'suganeshsugu07@gmail.com')) {
+    if (
+      !member &&
+      (isAdmin ||
+        clean === 'suganeshsugu07@gmail.com' ||
+        clean === 'suganeshsugu07@gmailcom' ||
+        clean === 'suganesh_admin' ||
+        clean === '@suganesh_admin' ||
+        clean === 'suganesh')
+    ) {
       member = this.registerMember({
         full_name: 'Suganesh',
         username: 'suganesh_admin',
@@ -1229,7 +1247,7 @@ export class CommunityDatabase {
     }
 
     // If logging in with test001 and not in list yet:
-    if (!member && (clean === 'test001@gmail.com' || clean === 'test001')) {
+    if (!member && (clean === 'test001@gmail.com' || clean === 'test001' || clean === '@test001')) {
       member = this.registerMember({
         full_name: 'Test Creator',
         username: 'test001',
@@ -1243,8 +1261,13 @@ export class CommunityDatabase {
     if (!member) {
       return {
         success: false,
-        error: 'Invalid email or password.',
+        error: 'Invalid email, username, or password.',
       };
+    }
+
+    // Ensure member has an email populated
+    if (!member.email) {
+      member.email = `${member.username.toLowerCase()}@gmail.com`;
     }
 
     // Synchronize role with admin authorization

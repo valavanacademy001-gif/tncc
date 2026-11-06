@@ -150,7 +150,7 @@ function AuthContent() {
           setErrorMsg(
             isEmailNotConfirmed
               ? 'Email not confirmed. Please check your inbox or click resend.'
-              : 'Invalid email or password.'
+              : res.error || 'Invalid username, email, or password. Please verify your credentials.'
           );
           setLoading(false);
           return;

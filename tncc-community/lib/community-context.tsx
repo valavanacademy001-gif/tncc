@@ -340,23 +340,31 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
 
       if (authErr) {
         const isEmailNotConfirmed = authErr.message?.toLowerCase().includes('not confirmed');
-        const isUserAuthorizedAdmin = checkIsAdmin(resolvedEmail) || resolvedEmail === 'suganeshsugu07@gmail.com';
+        const isUserAuthorizedAdmin =
+          checkIsAdmin(resolvedEmail) ||
+          checkIsAdmin(clean) ||
+          resolvedEmail === 'suganeshsugu07@gmail.com' ||
+          clean === 'suganeshsugu07@gmail.com';
 
-        // Check fallback in communityDb (for admin, test accounts, or pre-registered creators)
-        const fallbackRes = communityDb.loginMember(resolvedEmail, password);
-        if (
-          fallbackRes.success &&
-          fallbackRes.member &&
-          (isUserAuthorizedAdmin || isEmailNotConfirmed || resolvedEmail === 'test001@gmail.com' || !authErr.message?.toLowerCase().includes('invalid login credentials'))
-        ) {
+        // Check fallback in communityDb across identifier variants: clean (handle/id/username), resolvedEmail, or handle prefix
+        let fallbackRes = communityDb.loginMember(clean, password);
+        if (!fallbackRes.success) {
+          fallbackRes = communityDb.loginMember(resolvedEmail, password);
+        }
+        if (!fallbackRes.success && clean.includes('@')) {
+          fallbackRes = communityDb.loginMember(clean.split('@')[0], password);
+        }
+
+        if (fallbackRes.success && fallbackRes.member) {
           const member = fallbackRes.member;
           communityDb.setCurrentMemberId(member.id);
           setCurrentMember(member);
-          const isUserAdmin = checkIsAdmin(resolvedEmail) || member.role === 'admin';
+          const activeEmail = member.email || resolvedEmail;
+          const isUserAdmin = checkIsAdmin(activeEmail) || checkIsAdmin(clean) || member.role === 'admin';
           setIsAdmin(isUserAdmin);
 
           if (typeof window !== 'undefined') {
-            localStorage.setItem('tncc_active_user_email', resolvedEmail);
+            localStorage.setItem('tncc_active_user_email', activeEmail);
             localStorage.setItem('tncc_current_member_id', member.id);
             if (isUserAdmin) {
               localStorage.setItem('tncc_admin_session', 'true');
@@ -365,7 +373,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
 
           // Establish session cookies immediately
           if (typeof document !== 'undefined') {
-            document.cookie = `tncc_active_user_email=${resolvedEmail}; path=/; max-age=604800; SameSite=Lax`;
+            document.cookie = `tncc_active_user_email=${activeEmail}; path=/; max-age=604800; SameSite=Lax`;
             document.cookie = `tncc_member_id=${member.id}; path=/; max-age=604800; SameSite=Lax`;
             if (isUserAdmin) {
               document.cookie = `tncc_admin_session=true; path=/; max-age=604800; SameSite=Lax`;
@@ -375,7 +383,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
             await fetch('/api/community/auth/session', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: resolvedEmail, memberId: member.id, isAdmin: isUserAdmin }),
+              body: JSON.stringify({ email: activeEmail, memberId: member.id, isAdmin: isUserAdmin }),
             });
           } catch {}
 
@@ -388,7 +396,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
           success: false,
           error: isEmailNotConfirmed
             ? 'Email not confirmed. Please check your inbox or click resend.'
-            : 'Invalid email or password.',
+            : 'Invalid email, username, or password. Please verify your credentials.',
         };
       }
 
