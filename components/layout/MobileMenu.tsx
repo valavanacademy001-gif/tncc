@@ -64,7 +64,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               right: 0,
               bottom: 0,
               width: 'min(360px, 100vw)',
-              background: 'white',
+              background: 'var(--lp-bg-main)',
               zIndex: 200,
               overflowY: 'auto',
               display: 'flex',
@@ -77,7 +77,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '20px 24px',
-              borderBottom: '1px solid var(--gray-200)',
+              borderBottom: '1px solid var(--lp-border-subtle)',
             }}>
               <Image
                 src="/brand/logo.webp"
@@ -91,7 +91,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <button
                   onClick={onClose}
                   style={{
-                    background: 'var(--gray-100)',
+                    background: 'var(--lp-bg-card-elevated)',
                     border: 'none',
                     borderRadius: '50%',
                     width: '36px',
@@ -100,7 +100,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    color: 'var(--navy)',
+                    color: 'var(--lp-text-title)',
                   }}
                   aria-label="Close menu"
                 >
@@ -134,8 +134,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     className="mobile-nav-item"
                   >
                     <div>
-                      <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '1rem' }}>{item.label}</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginTop: '2px' }}>{item.sub}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--lp-text-title)', fontSize: '1rem' }}>{item.label}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--lp-text-muted)', marginTop: '2px' }}>{item.sub}</div>
                     </div>
                     <ArrowRight size={16} color="var(--gray-400)" />
                   </Link>
@@ -143,7 +143,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               ))}
 
               {/* Divider */}
-              <div style={{ height: '1px', background: 'var(--gray-200)', margin: '12px 0' }} />
+              <div style={{ height: '1px', background: 'var(--lp-border-subtle)', margin: '12px 0' }} />
 
               {/* User Authentication state */}
               {user.isAuthenticated ? (
@@ -162,9 +162,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       gap: '12px',
                       padding: '14px 16px',
                       borderRadius: '12px',
-                      background: 'var(--cream)',
+                      background: 'var(--lp-bg-card)',
                       textDecoration: 'none',
-                      border: '1px solid var(--gray-200)',
+                      border: '1px solid var(--lp-border-subtle)',
                     }}
                   >
                     <div style={{
@@ -186,10 +186,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       )}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }} className="truncate">
+                      <div style={{ fontWeight: 600, color: 'var(--lp-text-title)', fontSize: '0.95rem' }} className="truncate">
                         {user.name}
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Open Community Dashboard</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--lp-text-muted)' }}>Open Community Dashboard</div>
                     </div>
                     <ArrowRight size={16} color="var(--gray-400)" />
                   </Link>
@@ -234,10 +234,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       gap: '12px',
                       padding: '14px 16px',
                       borderRadius: '12px',
-                      background: 'var(--cream)',
+                      background: 'var(--lp-bg-card)',
                       textDecoration: 'none',
                       marginBottom: '8px',
-                      border: '1px solid var(--gray-200)',
+                      border: '1px solid var(--lp-border-subtle)',
                     }}
                   >
                     <div style={{
@@ -252,8 +252,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       <User2 size={18} color="white" />
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, color: 'var(--navy)', fontSize: '0.95rem' }}>Member Sign In</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Access your creator account & XP</div>
+                      <div style={{ fontWeight: 600, color: 'var(--lp-text-title)', fontSize: '0.95rem' }}>Member Sign In</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--lp-text-muted)' }}>Access your creator account & XP</div>
                     </div>
                   </Link>
                 </motion.div>
@@ -262,7 +262,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
             {/* Footer CTA */}
             {!user.isAuthenticated && (
-              <div style={{ padding: '20px 24px', borderTop: '1px solid var(--gray-200)' }}>
+              <div style={{ padding: '20px 24px', borderTop: '1px solid var(--lp-border-subtle)' }}>
                 <Link href="/community/auth?mode=register" onClick={onClose} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
                   Join Free Community
                 </Link>

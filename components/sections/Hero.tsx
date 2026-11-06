@@ -115,13 +115,13 @@ function CreatorPreviewCard({
 }) {
   return (
     <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'rgba(255, 255, 255, 0.94)',
+      background: 'var(--lp-bg-card)',
       backdropFilter: 'blur(10px)',
       WebkitBackdropFilter: 'blur(10px)',
       borderRadius: '14px',
       padding: '8px 12px',
       boxShadow: '0 12px 30px rgba(13,44,91,0.13), 0 2px 6px rgba(13,44,91,0.05)',
-      border: '1px solid rgba(13,44,91,0.08)',
+      border: '1px solid var(--lp-border)',
       minWidth: '150px',
       pointerEvents: 'auto',
     }}>
@@ -143,7 +143,7 @@ function CreatorPreviewCard({
           {name[0]}
         </div>
         <div>
-          <div style={{ fontWeight: 700, fontSize: '0.78rem', color: 'var(--navy)', lineHeight: 1.15 }}>{name}</div>
+          <div style={{ fontWeight: 700, fontSize: '0.78rem', color: 'var(--lp-text-title)', lineHeight: 1.15 }}>{name}</div>
           <div style={{ fontSize: '0.65rem', color: 'var(--gray-500)' }}>{title}</div>
         </div>
       </div>
@@ -179,13 +179,13 @@ function ProjectPreviewCard({
 }) {
   return (
     <ElasticEntranceCard delay={delay} floatType={floatType} style={{
-      background: 'rgba(255, 255, 255, 0.94)',
+      background: 'var(--lp-bg-card)',
       backdropFilter: 'blur(10px)',
       WebkitBackdropFilter: 'blur(10px)',
       borderRadius: '14px',
       padding: '9px 12px',
       boxShadow: '0 12px 30px rgba(13,44,91,0.13), 0 2px 6px rgba(13,44,91,0.05)',
-      border: '1px solid rgba(13,44,91,0.08)',
+      border: '1px solid var(--lp-border)',
       minWidth: '170px',
       maxWidth: '190px',
       pointerEvents: 'auto',
@@ -206,11 +206,11 @@ function ProjectPreviewCard({
           Open
         </div>
       </div>
-      <div style={{ fontWeight: 700, fontSize: '0.74rem', color: 'var(--navy)', marginBottom: '5px', lineHeight: 1.25 }}>
+      <div style={{ fontWeight: 700, fontSize: '0.74rem', color: 'var(--lp-text-title)', marginBottom: '5px', lineHeight: 1.25 }}>
         {title}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--navy)', fontSize: '0.82rem' }}>{budget}</span>
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--lp-text-title)', fontSize: '0.82rem' }}>{budget}</span>
         <span style={{ fontSize: '0.62rem', color: 'var(--gray-500)', fontWeight: 500 }}>{proposals}</span>
       </div>
     </ElasticEntranceCard>
@@ -301,14 +301,14 @@ function TNSilhouette() {
 function StatPill({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string; label: string; color: string; delay: number }) {
   return (
     <FloatingCard delay={delay} style={{
-      background: 'white',
+      background: 'var(--lp-bg-card)',
       borderRadius: '100px',
       padding: '10px 16px',
       boxShadow: '0 4px 16px rgba(13,44,91,0.1)',
       display: 'inline-flex',
       alignItems: 'center',
       gap: '8px',
-      border: '1px solid rgba(13,44,91,0.06)',
+      border: '1px solid var(--lp-border)',
     }}>
       <div style={{
         width: '28px',
@@ -322,7 +322,7 @@ function StatPill({ icon: Icon, value, label, color, delay }: { icon: React.Elem
         <Icon size={14} color="white" />
       </div>
       <div>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.875rem', color: 'var(--navy)', lineHeight: 1 }}>{value}</div>
+        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.875rem', color: 'var(--lp-text-title)', lineHeight: 1 }}>{value}</div>
         <div style={{ fontSize: '0.65rem', color: 'var(--gray-500)' }}>{label}</div>
       </div>
     </FloatingCard>
@@ -336,7 +336,7 @@ export default function Hero() {
       style={{
         position: 'relative',
         minHeight: '100vh',
-        background: 'var(--cream)',
+        background: 'var(--lp-bg-hero)',
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
@@ -395,7 +395,7 @@ export default function Hero() {
                 fontWeight: 800,
                 lineHeight: 1.08,
                 letterSpacing: '-0.01em',
-                color: 'var(--navy)',
+                color: 'var(--lp-text-title)',
                 marginBottom: '24px',
               }}
             >
@@ -436,7 +436,7 @@ export default function Hero() {
               style={{
                 fontSize: 'clamp(1rem, 1.2vw, 1.125rem)',
                 lineHeight: 1.6,
-                color: 'var(--gray-600)',
+                color: 'var(--lp-text-body)',
                 maxWidth: '560px',
                 marginBottom: '36px',
               }}

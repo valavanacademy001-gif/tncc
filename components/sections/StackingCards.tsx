@@ -169,7 +169,7 @@ export default function StackingCards() {
     <section
       id="stacking-overview"
       style={{
-        background: '#FAF9F6',
+        background: 'var(--lp-bg-main)',
         position: 'relative',
         width: '100%',
         padding: '72px 0 0',
@@ -192,7 +192,7 @@ export default function StackingCards() {
           <h2
             className="text-display-md"
             style={{
-              color: 'var(--navy)',
+              color: 'var(--lp-text-title)',
               maxWidth: '760px',
               margin: '0 auto 12px',
               lineHeight: 1.05,
@@ -202,7 +202,7 @@ export default function StackingCards() {
           </h2>
           <p
             style={{
-              color: 'var(--gray-500)',
+              color: 'var(--lp-text-muted)',
               fontSize: '1.05rem',
               maxWidth: '580px',
               margin: '0 auto',
@@ -340,7 +340,7 @@ export default function StackingCards() {
                         fontFamily: 'var(--font-display)',
                         fontWeight: 800,
                         fontSize: 'clamp(1.8rem, 3.2vw, 2.7rem)',
-                        color: 'var(--navy)',
+                        color: 'var(--lp-text-title)',
                         lineHeight: 1.14,
                         letterSpacing: '-0.02em',
                         marginBottom: '16px',
@@ -348,7 +348,7 @@ export default function StackingCards() {
                     >
                       {stackingCards[0].title}
                     </h3>
-                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: 'var(--lp-text-body)', marginBottom: '28px', maxWidth: '560px' }}>
                       {stackingCards[0].description}
                     </p>
                     <div className="stacking-card-btn-wrap">
@@ -456,7 +456,7 @@ export default function StackingCards() {
                         fontFamily: 'var(--font-display)',
                         fontWeight: 800,
                         fontSize: 'clamp(1.8rem, 3.2vw, 2.7rem)',
-                        color: 'var(--navy)',
+                        color: 'var(--lp-text-title)',
                         lineHeight: 1.14,
                         letterSpacing: '-0.02em',
                         marginBottom: '16px',
@@ -464,7 +464,7 @@ export default function StackingCards() {
                     >
                       {stackingCards[1].title}
                     </h3>
-                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                    <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: 'var(--lp-text-body)', marginBottom: '28px', maxWidth: '560px' }}>
                       {stackingCards[1].description}
                     </p>
                     <div className="stacking-card-btn-wrap">
@@ -581,7 +581,7 @@ export default function StackingCards() {
                       fontFamily: 'var(--font-display)',
                       fontWeight: 800,
                       fontSize: 'clamp(1.8rem, 3.2vw, 2.7rem)',
-                      color: 'var(--navy)',
+                      color: 'var(--lp-text-title)',
                       lineHeight: 1.14,
                       letterSpacing: '-0.02em',
                       marginBottom: '16px',
@@ -589,7 +589,7 @@ export default function StackingCards() {
                   >
                     {stackingCards[2].title}
                   </h3>
-                  <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: '#374151', marginBottom: '28px', maxWidth: '560px' }}>
+                  <p className="stacking-card-desc" style={{ fontSize: '1.02rem', lineHeight: 1.62, color: 'var(--lp-text-body)', marginBottom: '28px', maxWidth: '560px' }}>
                     {stackingCards[2].description}
                   </p>
                   <div className="stacking-card-btn-wrap">

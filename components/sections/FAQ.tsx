@@ -61,11 +61,11 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.04 }}
       style={{
-        border: `1.5px solid ${open ? 'var(--orange)' : 'var(--gray-200)'}`,
+        border: `1.5px solid ${open ? 'var(--orange)' : 'var(--lp-border)'}`,
         borderRadius: '16px',
         overflow: 'hidden',
         transition: 'border-color 0.2s ease',
-        background: 'white',
+        background: 'var(--lp-bg-card)',
       }}
     >
       <button
@@ -88,7 +88,7 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
           fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: '0.975rem',
-          color: 'var(--navy)',
+          color: 'var(--lp-text-title)',
           lineHeight: 1.4,
           flex: 1,
         }}>
@@ -98,7 +98,7 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
           width: '28px',
           height: '28px',
           borderRadius: '50%',
-          background: open ? 'var(--orange)' : 'var(--gray-100)',
+          background: open ? 'var(--orange)' : 'var(--lp-bg-card-elevated)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -107,7 +107,7 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
         }}>
           <ChevronDown
             size={16}
-            color={open ? 'white' : 'var(--gray-500)'}
+            color={open ? 'white' : 'var(--lp-text-muted)'}
             style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}
           />
         </div>
@@ -125,7 +125,7 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
             <div style={{
               padding: '0 24px 20px',
               fontSize: '0.9rem',
-              color: 'var(--gray-600)',
+              color: 'var(--lp-text-body)',
               lineHeight: 1.7,
             }}>
               {faq.answer}
@@ -139,7 +139,7 @@ function FAQItem({ faq, index }: { faq: typeof communityFAQs[0]; index: number }
 
 export default function FAQ() {
   return (
-    <section id="faq" className="section" style={{ background: 'white' }}>
+    <section id="faq" className="section" style={{ background: 'var(--lp-bg-alt)' }}>
       <div className="container">
         <div style={{
           display: 'grid',
@@ -150,10 +150,10 @@ export default function FAQ() {
           {/* Header */}
           <div className="faq-header">
             <div className="section-label" style={{ marginBottom: '16px' }}>Got questions?</div>
-            <h2 className="text-display-md" style={{ color: 'var(--navy)', marginBottom: '16px', maxWidth: '380px' }}>
+            <h2 className="text-display-md" style={{ color: 'var(--lp-text-title)', marginBottom: '16px', maxWidth: '380px' }}>
               FREQUENTLY ASKED QUESTIONS.
             </h2>
-            <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '24px', maxWidth: '340px' }}>
+            <p style={{ color: 'var(--lp-text-muted)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '24px', maxWidth: '340px' }}>
               Everything you need to know about joining, sharing, competing, and growing inside TNCC.
             </p>
             <a

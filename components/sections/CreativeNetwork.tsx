@@ -100,7 +100,7 @@ export default function CreativeNetwork() {
     <section
       ref={sectionRef}
       style={{
-        background: 'white',
+        background: 'var(--lp-bg-main)',
         position: 'relative',
         paddingTop: '20px',
         paddingBottom: '80px',
@@ -121,7 +121,7 @@ export default function CreativeNetwork() {
                 display: 'flex',
                 gap: '20px',
                 padding: '28px 0',
-                borderBottom: i < stages.length - 1 ? '1px solid var(--gray-200)' : 'none',
+                borderBottom: i < stages.length - 1 ? '1px solid var(--lp-border)' : 'none',
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -142,17 +142,17 @@ export default function CreativeNetwork() {
                   {stage.step}
                 </div>
                 {i < stages.length - 1 && (
-                  <div style={{ width: '2px', flex: 1, minHeight: '40px', background: 'var(--gray-200)', margin: '8px 0' }} />
+                  <div style={{ width: '2px', flex: 1, minHeight: '40px', background: 'var(--lp-border)', margin: '8px 0' }} />
                 )}
               </div>
               <div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: stage.color, marginBottom: '8px' }}>
                   {stage.title}
                 </div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--navy)', marginBottom: '10px', whiteSpace: 'pre-line' }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--lp-text-title)', marginBottom: '10px', whiteSpace: 'pre-line' }}>
                   {stage.headline}
                 </h3>
-                <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', lineHeight: 1.65 }}>
+                <p style={{ color: 'var(--lp-text-body)', fontSize: '0.9rem', lineHeight: 1.65 }}>
                   {stage.body}
                 </p>
               </div>
@@ -184,13 +184,13 @@ export default function CreativeNetwork() {
                         <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', opacity: 0.5 }}>{stage.step}</span>
                         {stage.title}
                       </div>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', color: 'var(--navy)', marginBottom: '20px', lineHeight: 1.1, whiteSpace: 'pre-line' }}>
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', color: 'var(--lp-text-title)', marginBottom: '20px', lineHeight: 1.1, whiteSpace: 'pre-line' }}>
                         {stage.headline}
                       </h3>
-                      <p style={{ color: 'var(--gray-500)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '24px' }}>
+                      <p style={{ color: 'var(--lp-text-body)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '24px' }}>
                         {stage.body}
                       </p>
-                      <div style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--gray-400)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--lp-text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: stage.color, display: 'inline-block' }} />
                         {stage.coords}
                       </div>
@@ -206,7 +206,7 @@ export default function CreativeNetwork() {
                           width: activeStage === i ? '32px' : '8px',
                           height: '8px',
                           borderRadius: '4px',
-                          background: activeStage === i ? stage.color : 'var(--gray-200)',
+                          background: activeStage === i ? stage.color : 'var(--lp-border)',
                           transition: 'all 0.3s ease',
                           cursor: 'pointer',
                         }}
@@ -223,17 +223,17 @@ export default function CreativeNetwork() {
                   width: '400px',
                   height: '400px',
                   borderRadius: '50%',
-                  background: 'var(--cream)',
+                  background: 'var(--lp-bg-card)',
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
                   <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} aria-hidden="true">
-                    <line x1="200" y1="60" x2="340" y2="200" stroke="var(--gray-200)" strokeWidth="1.5" strokeDasharray="4 4" />
-                    <line x1="340" y1="200" x2="200" y2="340" stroke="var(--gray-200)" strokeWidth="1.5" strokeDasharray="4 4" />
-                    <line x1="200" y1="340" x2="60" y2="200" stroke="var(--gray-200)" strokeWidth="1.5" strokeDasharray="4 4" />
-                    <line x1="60" y1="200" x2="200" y2="60" stroke="var(--gray-200)" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="200" y1="60" x2="340" y2="200" stroke="var(--lp-border)" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="340" y1="200" x2="200" y2="340" stroke="var(--lp-border)" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="200" y1="340" x2="60" y2="200" stroke="var(--lp-border)" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="60" y1="200" x2="200" y2="60" stroke="var(--lp-border)" strokeWidth="1.5" strokeDasharray="4 4" />
 
                     {activeStage > 0 && <line x1="200" y1="60" x2="340" y2="200" stroke={stages[1].color} strokeWidth="2" opacity="0.5" />}
                     {activeStage > 1 && <line x1="340" y1="200" x2="200" y2="340" stroke={stages[2].color} strokeWidth="2" opacity="0.5" />}
@@ -244,7 +244,7 @@ export default function CreativeNetwork() {
                     <NetworkNode label="SUBMIT" x={200} y={340} color={stages[2].color} active={activeStage >= 2} />
                     <NetworkNode label="RECOGNIZE" x={60} y={200} color={stages[3].color} active={activeStage >= 3} />
 
-                    <circle cx={200} cy={200} r={34} fill="white" stroke="var(--gray-200)" strokeWidth="1.5" />
+                    <circle cx={200} cy={200} r={34} fill="var(--lp-bg-card-elevated)" stroke="var(--lp-border)" strokeWidth="1.5" />
                     <image
                       href="/brand/tncc-symbol.png"
                       x={184}

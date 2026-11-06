@@ -47,7 +47,7 @@ const communityActivities = [
 
 export default function CategorySection() {
   return (
-    <section id="activities" className="section" style={{ background: '#FFFFFF' }}>
+    <section id="activities" className="section" style={{ background: 'var(--lp-bg-main)' }}>
       <div className="container">
         {/* Header */}
         <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 52px' }}>
@@ -67,7 +67,7 @@ export default function CategorySection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-display-md"
-            style={{ color: 'var(--navy)', marginBottom: '16px' }}
+            style={{ color: 'var(--lp-text-title)', marginBottom: '16px' }}
           >
             ONE COMMUNITY. MANY WAYS TO CREATE.
           </motion.h2>
@@ -76,7 +76,7 @@ export default function CategorySection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            style={{ color: 'var(--gray-500)', fontSize: '1.05rem', lineHeight: 1.6 }}
+            style={{ color: 'var(--lp-text-muted)', fontSize: '1.05rem', lineHeight: 1.6 }}
           >
             Public informational previews of active community programs. Connect, compete, share and discover.
           </motion.p>
@@ -99,8 +99,8 @@ export default function CategorySection() {
                   display: 'flex',
                   flexDirection: 'column',
                   padding: '32px 28px',
-                  background: 'var(--cream)',
-                  border: '1.5px solid rgba(13, 44, 91, 0.08)',
+                  background: 'var(--lp-bg-card-alt)',
+                  border: '1.5px solid var(--lp-border)',
                   borderRadius: '24px',
                   height: '100%',
                   position: 'relative',
@@ -125,8 +125,8 @@ export default function CategorySection() {
                       fontFamily: 'var(--font-display)',
                       fontWeight: 800,
                       fontSize: '1.4rem',
-                      color: 'var(--navy)',
-                      opacity: 0.18,
+                      color: 'var(--lp-text-title)',
+                      opacity: 0.28,
                     }}>
                       {act.num}
                     </span>
@@ -149,7 +149,7 @@ export default function CategorySection() {
                     fontFamily: 'var(--font-display)',
                     fontWeight: 700,
                     fontSize: '1.15rem',
-                    color: 'var(--navy)',
+                    color: 'var(--lp-text-title)',
                     marginBottom: '12px',
                     lineHeight: 1.3,
                   }}>
@@ -159,7 +159,7 @@ export default function CategorySection() {
                   {/* Description */}
                   <p style={{
                     fontSize: '0.875rem',
-                    color: 'var(--gray-600)',
+                    color: 'var(--lp-text-body)',
                     lineHeight: 1.6,
                     marginBottom: '20px',
                     flex: 1,
@@ -174,7 +174,7 @@ export default function CategorySection() {
                     gap: '6px',
                     fontSize: '0.8rem',
                     fontWeight: 600,
-                    color: 'var(--navy)',
+                    color: 'var(--lp-text-title)',
                   }}>
                     <span>Community Activity</span>
                     <ArrowRight size={14} color={act.color} />

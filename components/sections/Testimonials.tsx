@@ -79,7 +79,7 @@ export default function Testimonials() {
     <section
       id="benefits"
       style={{
-        background: '#FFFFFF',
+        background: 'var(--lp-bg-main)',
         padding: '90px 0 100px',
         width: '100%',
         position: 'relative',
@@ -110,7 +110,7 @@ export default function Testimonials() {
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
               fontWeight: 700,
-              color: 'var(--navy)',
+              color: 'var(--lp-text-title)',
               margin: '0 0 14px',
               letterSpacing: '-0.02em',
             }}
@@ -119,7 +119,7 @@ export default function Testimonials() {
           </h2>
           <p
             style={{
-              color: 'var(--gray-500)',
+              color: 'var(--lp-text-muted)',
               fontSize: '1.05rem',
               lineHeight: 1.6,
             }}
@@ -143,9 +143,9 @@ export default function Testimonials() {
               >
                 <div style={{
                   padding: '28px 24px',
-                  background: 'var(--cream)',
+                  background: 'var(--lp-bg-card-alt)',
                   borderRadius: '20px',
-                  border: '1.5px solid rgba(13, 44, 91, 0.08)',
+                  border: '1.5px solid var(--lp-border)',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -169,7 +169,7 @@ export default function Testimonials() {
                       fontFamily: 'var(--font-display)',
                       fontWeight: 800,
                       fontSize: '1.3rem',
-                      color: 'var(--navy)',
+                      color: 'var(--lp-text-title)',
                       opacity: 0.2,
                     }}>
                       {b.num}
@@ -180,7 +180,7 @@ export default function Testimonials() {
                     fontFamily: 'var(--font-display)',
                     fontWeight: 700,
                     fontSize: '1rem',
-                    color: 'var(--navy)',
+                    color: 'var(--lp-text-title)',
                     marginBottom: '8px',
                     lineHeight: 1.3,
                   }}>
@@ -189,7 +189,7 @@ export default function Testimonials() {
 
                   <p style={{
                     fontSize: '0.85rem',
-                    color: 'var(--gray-600)',
+                    color: 'var(--lp-text-body)',
                     lineHeight: 1.6,
                     margin: 0,
                     flex: 1,

@@ -67,9 +67,9 @@ export default function Navbar() {
           right: 0,
           zIndex: 100,
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          background: scrolled || searchFocused ? 'rgba(255,255,255,0.98)' : 'transparent',
+          background: scrolled || searchFocused ? 'var(--lp-nav-bg-scrolled)' : 'transparent',
           backdropFilter: scrolled || searchFocused ? 'blur(12px)' : 'none',
-          boxShadow: scrolled || searchFocused ? '0 1px 0 rgba(13,44,91,0.08)' : 'none',
+          boxShadow: scrolled || searchFocused ? '0 1px 0 var(--lp-nav-border-scrolled)' : 'none',
         }}
       >
         <div className="container">
@@ -134,10 +134,10 @@ export default function Navbar() {
                   top: '110%',
                   left: 0,
                   width: '380px',
-                  background: 'white',
-                  border: '1.5px solid var(--gray-200)',
+                  background: 'var(--lp-bg-card)',
+                  border: '1.5px solid var(--lp-border-subtle)',
                   borderRadius: '16px',
-                  boxShadow: '0 12px 32px rgba(13,44,91,0.12)',
+                  boxShadow: 'var(--shadow-lg)',
                   padding: '16px',
                   display: 'flex',
                   flexDirection: 'column',
@@ -254,7 +254,7 @@ export default function Navbar() {
                     borderRadius: '100px',
                     fontSize: '0.9rem',
                     fontWeight: 500,
-                    color: 'var(--navy)',
+                    color: 'var(--lp-text-title)',
                     textDecoration: 'none',
                     transition: 'all 0.15s ease',
                   }}
@@ -382,7 +382,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => setMobileSearchOpen(true)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--navy)' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--lp-nav-icon)' }}
                 className="mobile-search-btn"
                 aria-label="Open search"
               >
@@ -393,7 +393,7 @@ export default function Navbar() {
               <button
                 onClick={() => setMobileOpen(true)}
                 className="mobile-menu-btn"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--navy)' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--lp-nav-icon)' }}
                 aria-label="Open navigation"
               >
                 <Menu size={24} />
@@ -408,7 +408,7 @@ export default function Navbar() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'white',
+          background: 'var(--lp-bg-main)',
           zIndex: 200,
           padding: '20px 24px',
           display: 'flex',
@@ -417,10 +417,10 @@ export default function Navbar() {
         }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', color: 'var(--navy)' }}>Search TNCC</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.25rem', color: 'var(--lp-text-title)' }}>Search TNCC</div>
             <button
               onClick={() => setMobileSearchOpen(false)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)', padding: '4px' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--lp-text-title)', padding: '4px' }}
             >
               <X size={24} />
             </button>
@@ -490,12 +490,12 @@ export default function Navbar() {
                     key={cat}
                     onClick={() => handleSuggestionClick(cat)}
                     style={{
-                      background: 'var(--cream)',
-                      border: '1px solid var(--gray-200)',
+                      background: 'var(--lp-bg-card-elevated)',
+                      border: '1px solid var(--lp-border)',
                       borderRadius: '100px',
                       padding: '6px 14px',
                       fontSize: '0.8rem',
-                      color: 'var(--navy)',
+                      color: 'var(--lp-text-title)',
                       cursor: 'pointer',
                     }}
                   >
@@ -515,10 +515,12 @@ export default function Navbar() {
           .search-desktop-wrapper { display: block !important; }
           .nav-links-desktop { display: flex !important; }
           .nav-actions-desktop { display: flex !important; }
+          .mobile-actions-wrapper { display: none !important; }
           .mobile-menu-btn, .mobile-search-btn { display: none !important; }
         }
         @media (max-width: 991px) {
           .nav-links-desktop, .nav-actions-desktop { display: none !important; }
+          .mobile-actions-wrapper { display: flex !important; }
           .mobile-menu-btn, .mobile-search-btn { display: block !important; }
         }
         .nav-link:hover {

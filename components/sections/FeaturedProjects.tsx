@@ -69,7 +69,7 @@ export default function FeaturedProjects() {
     <section
       id="featured-opportunities"
       style={{
-        background: '#FFFFFF',
+        background: 'var(--lp-bg-alt)',
         padding: '90px 0 110px',
         width: '100%',
         position: 'relative',
@@ -116,7 +116,7 @@ export default function FeaturedProjects() {
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.4rem, 4.5vw, 3.6rem)',
               fontWeight: 700,
-              color: 'var(--navy)',
+              color: 'var(--lp-text-title)',
               lineHeight: 1.15,
               margin: '0 0 16px',
               letterSpacing: '-0.03em',
@@ -128,7 +128,7 @@ export default function FeaturedProjects() {
           <p
             style={{
               fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
-              color: '#6B7280',
+              color: 'var(--lp-text-body)',
               lineHeight: 1.5,
               margin: 0,
               fontWeight: 400,
@@ -423,11 +423,8 @@ export default function FeaturedProjects() {
             whileHover={isMobile ? undefined : { y: -6, transition: { duration: 0.25 } }}
             className="bento-box-ai-wide"
             style={{
-              background: 'linear-gradient(135deg, #EFF6FF 0%, #FAF5FF 50%, #F5F3FF 100%)',
-              border: '1.5px solid #E2E8F0',
               borderRadius: '28px',
               padding: '38px 32px',
-              color: 'var(--navy)',
               position: 'relative',
               overflow: 'hidden',
               boxShadow: '0 4px 20px rgba(13, 44, 91, 0.05)',
@@ -461,7 +458,7 @@ export default function FeaturedProjects() {
                     </div>
                     <h3
                       style={{
-                        color: 'var(--navy)',
+                        color: 'var(--lp-text-title)',
                         fontFamily: 'var(--font-display)',
                         fontSize: 'clamp(1.75rem, 2.5vw, 2.2rem)',
                         fontWeight: 700,
@@ -473,7 +470,7 @@ export default function FeaturedProjects() {
                     </h3>
                     <p
                       style={{
-                        color: '#64748B',
+                        color: 'var(--lp-text-body)',
                         fontSize: '0.92rem',
                         lineHeight: 1.5,
                         margin: 0,
@@ -486,9 +483,9 @@ export default function FeaturedProjects() {
                   {/* Floating Card (Clean White on Soft Gradient) */}
                   <div
                     style={{
-                      background: '#FFFFFF',
+                      background: 'var(--lp-bg-card)',
                       borderRadius: '16px',
-                      border: '1.5px solid #E2E8F0',
+                      border: '1.5px solid var(--lp-border)',
                       padding: '16px 20px',
                       boxShadow: '0 10px 28px rgba(13, 44, 91, 0.08)',
                       width: '100%',
@@ -498,7 +495,7 @@ export default function FeaturedProjects() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cyan)' }} />
-                        <span style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--navy)', letterSpacing: '0.02em' }}>
+                        <span style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--lp-text-title)', letterSpacing: '0.02em' }}>
                           TNCC SmartMatch AI
                         </span>
                       </div>
@@ -507,15 +504,15 @@ export default function FeaturedProjects() {
                       </span>
                     </div>
 
-                    <div style={{ fontSize: '0.825rem', color: '#64748B', marginBottom: '12px' }}>
+                    <div style={{ fontSize: '0.825rem', color: 'var(--lp-text-body)', marginBottom: '12px' }}>
                       <span style={{ color: 'var(--cyan)', fontWeight: 700 }}>Hi Founder,</span> how can we help your brand today?
                     </div>
 
                     {/* Input Prompt Box */}
                     <div
                       style={{
-                        background: '#F8FAFC',
-                        border: '1.5px solid #E2E8F0',
+                        background: 'var(--lp-bg-card-elevated)',
+                        border: '1.5px solid var(--lp-border)',
                         borderRadius: '10px',
                         padding: '8px 12px',
                         display: 'flex',
@@ -537,7 +534,7 @@ export default function FeaturedProjects() {
                           border: 'none',
                           outline: 'none',
                           fontSize: '0.825rem',
-                          color: 'var(--navy)',
+                          color: 'var(--lp-text-title)',
                           background: 'transparent',
                         }}
                       />
@@ -545,9 +542,9 @@ export default function FeaturedProjects() {
                         <span
                           style={{
                             fontSize: '0.72rem',
-                            color: '#64748B',
-                            background: '#FFFFFF',
-                            border: '1px solid #E2E8F0',
+                            color: 'var(--lp-text-muted)',
+                            background: 'var(--lp-bg-card)',
+                            border: '1px solid var(--lp-border)',
                             padding: '3px 8px',
                             borderRadius: '6px',
                             display: 'flex',
@@ -570,12 +567,12 @@ export default function FeaturedProjects() {
                     position: 'relative',
                     borderRadius: '20px',
                     overflow: 'hidden',
-                    border: '1.5px solid rgba(255, 255, 255, 0.95)',
+                    border: '1.5px solid var(--lp-border)',
                     boxShadow: '0 16px 36px rgba(13, 44, 91, 0.12)',
                     height: '100%',
                     minHeight: '260px',
                     width: '100%',
-                    background: '#FFFFFF',
+                    background: 'var(--lp-bg-card)',
                   }}
                 >
                   <img

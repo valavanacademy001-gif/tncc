@@ -41,17 +41,17 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="section" style={{ background: 'white' }}>
+    <section id="how-it-works" className="section" style={{ background: 'var(--lp-bg-alt)' }}>
       <div className="container">
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '48px', maxWidth: '720px', margin: '0 auto 48px' }}>
           <div className="section-label" style={{ justifyContent: 'center', marginBottom: '16px' }}>
             HOW IT WORKS
           </div>
-          <h2 className="text-display-md" style={{ color: 'var(--navy)', marginBottom: '16px' }}>
+          <h2 className="text-display-md" style={{ color: 'var(--lp-text-title)', marginBottom: '16px' }}>
             YOUR CREATIVE JOURNEY STARTS HERE.
           </h2>
-          <p style={{ color: 'var(--gray-500)', fontSize: '1.05rem', lineHeight: 1.6 }}>
+          <p style={{ color: 'var(--lp-text-muted)', fontSize: '1.05rem', lineHeight: 1.6 }}>
             Four simple steps to connect, share, compete and grow alongside creative minds across Tamil Nadu.
           </p>
         </div>
@@ -61,10 +61,10 @@ export default function HowItWorks() {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: '0',
-          background: 'var(--cream)',
+          background: 'var(--lp-bg-card)',
           borderRadius: '24px',
           overflow: 'hidden',
-          border: '1.5px solid var(--gray-200)',
+          border: '1.5px solid var(--lp-border)',
         }}>
           {steps.map((step, i) => {
             const Icon = step.icon;
@@ -77,7 +77,7 @@ export default function HowItWorks() {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 style={{
                   padding: '32px 26px',
-                  borderRight: i < steps.length - 1 ? '1px solid var(--gray-200)' : 'none',
+                  borderRight: i < steps.length - 1 ? '1px solid var(--lp-border)' : 'none',
                   position: 'relative',
                   transition: 'background 0.2s',
                 }}
@@ -114,7 +114,7 @@ export default function HowItWorks() {
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
                   fontSize: '1.05rem',
-                  color: 'var(--navy)',
+                  color: 'var(--lp-text-title)',
                   marginBottom: '10px',
                   lineHeight: 1.3,
                 }}>
@@ -123,7 +123,7 @@ export default function HowItWorks() {
 
                 <p style={{
                   fontSize: '0.85rem',
-                  color: 'var(--gray-600)',
+                  color: 'var(--lp-text-body)',
                   lineHeight: 1.6,
                 }}>
                   {step.desc}
@@ -174,7 +174,7 @@ export default function HowItWorks() {
 
       <style jsx>{`
         .step-item:hover {
-          background: white;
+          background: var(--lp-bg-card-elevated);
         }
         @media (max-width: 900px) {
           .step-connector { display: none !important; }

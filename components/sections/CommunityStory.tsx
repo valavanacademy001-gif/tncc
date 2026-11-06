@@ -124,7 +124,7 @@ export default function CommunityStory() {
     <section
       id="about"
       style={{
-        background: '#FFFFFF',
+        background: 'var(--lp-bg-alt)',
         position: 'relative',
         overflow: 'hidden',
         padding: '110px 0 90px',
@@ -203,7 +203,7 @@ export default function CommunityStory() {
               fontFamily: 'var(--font-display)',
               fontWeight: 800,
               fontSize: 'clamp(2.2rem, 4.5vw, 3.75rem)',
-              color: 'var(--navy)',
+              color: 'var(--lp-text-title)',
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
               marginBottom: '16px',
@@ -214,7 +214,7 @@ export default function CommunityStory() {
 
           <p
             style={{
-              color: '#4B5563',
+              color: 'var(--lp-text-body)',
               fontSize: 'clamp(1rem, 1.7vw, 1.125rem)',
               lineHeight: 1.6,
               maxWidth: '680px',
@@ -249,10 +249,10 @@ export default function CommunityStory() {
                   padding: '9px 22px',
                   borderRadius: '100px',
                   border: `1.5px solid ${
-                    isSelected ? p.accentColor : '#E5E7EB'
+                    isSelected ? p.accentColor : 'var(--lp-border)'
                   }`,
-                  background: isSelected ? p.accentColor : '#F9FAFB',
-                  color: isSelected ? '#FFFFFF' : '#4B5563',
+                  background: isSelected ? p.accentColor : 'var(--lp-bg-card)',
+                  color: isSelected ? '#FFFFFF' : 'var(--lp-text-body)',
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
                   fontSize: '0.85rem',
@@ -650,7 +650,7 @@ export default function CommunityStory() {
                 flex: active === i ? 2 : 1,
                 borderRadius: '3px',
                 background:
-                  active === i ? p.accentColor : '#E5E7EB',
+                  active === i ? p.accentColor : 'var(--lp-border)',
                 cursor: 'pointer',
                 transition: 'all 0.35s ease',
               }}
@@ -663,14 +663,14 @@ export default function CommunityStory() {
           style={{
             marginTop: '56px',
             paddingTop: '28px',
-            borderTop: '1px solid #E5E7EB',
+            borderTop: '1px solid var(--lp-border)',
             display: 'flex',
             alignItems: 'center',
             gap: '20px',
             flexWrap: 'wrap',
           }}
         >
-          <div style={{ fontSize: '0.85rem', color: '#6B7280' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--lp-text-muted)' }}>
             Organised by
           </div>
           <div
@@ -678,7 +678,7 @@ export default function CommunityStory() {
               fontFamily: 'var(--font-display)',
               fontWeight: 700,
               fontSize: '0.875rem',
-              color: 'var(--navy)',
+              color: 'var(--lp-text-title)',
               letterSpacing: '0.06em',
             }}
           >
@@ -689,13 +689,13 @@ export default function CommunityStory() {
               flex: 1,
               minWidth: '120px',
               height: '1px',
-              background: '#E5E7EB',
+              background: 'var(--lp-border)',
             }}
           />
           <div
             style={{
               fontSize: '0.8rem',
-              color: '#9CA3AF',
+              color: 'var(--lp-text-muted)',
               letterSpacing: '0.06em',
               fontWeight: 500,
             }}
