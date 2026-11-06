@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useCommunity } from '../../lib/community-context';
 import { 
   X, 
@@ -11,6 +11,7 @@ import {
   Layers, 
   Globe, 
   Check,
+  ChevronDown,
   UploadCloud,
   Loader2,
   HardDrive,
@@ -41,6 +42,34 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
   const [category, setCategory] = useState<
     'Showcase' | 'Discussion' | 'Graphic Design' | 'Video Editing' | 'Photography' | 'AI Art' | 'Branding'
   >('Showcase');
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
+
+  const CATEGORIES = [
+    { value: 'Showcase', label: 'Showcase', icon: '🎨', desc: 'Share your work & get feedback' },
+    { value: 'Discussion', label: 'Discussion', icon: '💬', desc: 'Ask questions or start conversations' },
+    { value: 'Graphic Design', label: 'Graphic Design', icon: '📐', desc: 'Posters, UI, branding assets' },
+    { value: 'Video Editing', label: 'Video Editing', icon: '🎬', desc: 'Reels, edits, color grading' },
+    { value: 'Photography', label: 'Photography', icon: '📷', desc: 'Shots, lighting & camera work' },
+    { value: 'AI Art', label: 'AI Art', icon: '🤖', desc: 'AI visuals, prompts & workflow' },
+    { value: 'Branding', label: 'Branding', icon: '🏷️', desc: 'Logo, typography & brand identity' },
+  ] as const;
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) {
+        setCategoryOpen(false);
+      }
+    }
+    if (categoryOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [categoryOpen]);
+
+  const activeCategoryObj = CATEGORIES.find((c) => c.value === category) || CATEGORIES[0];
   const [hashtags, setHashtags] = useState('#TNCCShowcase #TamilCreators');
   const [isShowcase, setIsShowcase] = useState(true);
   const [showMediaInput, setShowMediaInput] = useState(false);
@@ -251,20 +280,62 @@ export default function FeedComposer({ onClose, isInline = false }: FeedComposer
             </div>
           </div>
 
-          {/* Category Dropdown */}
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as any)}
-            className="text-xs bg-[#F8F6F1] dark:bg-[#171C24] font-semibold text-[#0D2C5B] dark:text-[#F5F7FA] px-2.5 sm:px-3 py-1.5 rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none shrink-0 max-w-[125px] sm:max-w-none text-ellipsis"
-          >
-            <option value="Showcase">🎨 Showcase</option>
-            <option value="Graphic Design">📐 Graphic Design</option>
-            <option value="Video Editing">🎬 Video Editing</option>
-            <option value="Photography">📷 Photography</option>
-            <option value="AI Art">🤖 AI Art</option>
-            <option value="Branding">🏷️ Branding</option>
-            <option value="Discussion">💬 Discussion</option>
-          </select>
+          {/* Custom Sleek Category Selector Pill */}
+          <div className="relative shrink-0" ref={categoryRef}>
+            <button
+              type="button"
+              onClick={() => setCategoryOpen((prev) => !prev)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#00B5C8]/10 hover:bg-[#00B5C8]/15 dark:bg-[#00B5C8]/15 dark:hover:bg-[#00B5C8]/25 text-[#0D2C5B] dark:text-[#38BDF8] border border-[#00B5C8]/30 dark:border-[#00B5C8]/40 transition-all cursor-pointer shadow-xs select-none"
+              aria-label="Select post category"
+              aria-expanded={categoryOpen}
+            >
+              <span>{activeCategoryObj.icon}</span>
+              <span>{activeCategoryObj.label}</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-300 transition-transform duration-200 ${
+                  categoryOpen ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {/* Custom Dropdown Popover */}
+            {categoryOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-60 bg-white dark:bg-[#1D2430] border border-gray-200 dark:border-[#303846] rounded-2xl shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  Post Category
+                </div>
+                <div className="space-y-0.5">
+                  {CATEGORIES.map((cat) => {
+                    const isSelected = category === cat.value;
+                    return (
+                      <button
+                        key={cat.value}
+                        type="button"
+                        onClick={() => {
+                          setCategory(cat.value as any);
+                          setCategoryOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer text-left ${
+                          isSelected
+                            ? 'bg-[#00B5C8]/15 text-[#0D2C5B] dark:text-[#38BDF8] font-bold'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#252E3E]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{cat.icon}</span>
+                          <div>
+                            <p className="leading-tight">{cat.label}</p>
+                            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-normal">{cat.desc}</p>
+                          </div>
+                        </div>
+                        {isSelected && <Check className="w-4 h-4 text-[#00B5C8] dark:text-[#38BDF8] shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Text Area */}

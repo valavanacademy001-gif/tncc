@@ -14,57 +14,71 @@ async function verify() {
 
   const page = await context.newPage();
 
-  console.log('Testing /community/auth admin notification minimization...');
-  await page.goto('http://localhost:3000/community/auth?mode=login', { waitUntil: 'networkidle' });
-  
-  // Type admin email
-  const emailInput = page.locator('input[type="text"]');
-  await emailInput.fill('suganeshsugu07@gmail.com');
-  await page.waitForTimeout(500);
-
-  // Check admin banner
-  const adminBanner = page.locator('text=Authorized Admin Account');
-  const isBannerVisible = await adminBanner.isVisible();
-  console.log('Admin banner visible:', isBannerVisible);
-
-  await page.screenshot({
-    path: path.join(__dirname, '../public/audit-evidence/admin_banner_minimal.png'),
-    fullPage: false,
-  });
-
-  console.log('\nTesting /community feed tabs single-line layout on mobile...');
+  console.log('Testing /community feed on mobile (375x812)...');
   await page.goto('http://localhost:3000/community', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
 
-  // Locate the filter tab buttons
-  const allBtn = page.locator('button:has-text("All")').first();
-  const showcaseBtn = page.locator('button:has-text("Showcase")').first();
-  const discussionBtn = page.locator('button:has-text("Discussion")').first();
-  const selectBox = page.locator('select:has-text("All Categories")').first();
+  // 1. Verify "All Categories" is removed
+  const allCategoriesCount = await page.locator('text="All Categories"').count();
+  console.log('Count of "All Categories" on page:', allCategoriesCount);
+  if (allCategoriesCount > 0) {
+    console.error('FAIL: "All Categories" should be completely removed!');
+  } else {
+    console.log('PASS: "All Categories" successfully removed!');
+  }
+
+  // 2. Locate the 4 filter tab buttons specifically inside the feed filters
+  const filterTabs = page.locator('div.flex.items-center.overflow-x-auto button');
+  const allBtn = filterTabs.nth(0);
+  const showcaseBtn = filterTabs.nth(1);
+  const discussionBtn = filterTabs.nth(2);
+  const savedBtn = filterTabs.nth(3);
 
   const allBox = await allBtn.boundingBox();
   const showcaseBox = await showcaseBtn.boundingBox();
   const discussionBox = await discussionBtn.boundingBox();
-  const selectBBox = await selectBox.boundingBox();
+  const savedBox = await savedBtn.boundingBox();
 
   console.log('Tab All Box:', allBox);
   console.log('Tab Showcase Box:', showcaseBox);
   console.log('Tab Discussion Box:', discussionBox);
-  console.log('Category Select Box:', selectBBox);
+  console.log('Tab Saved Box:', savedBox);
 
-  const sameRow = Math.abs(allBox.y - showcaseBox.y) < 5 && Math.abs(allBox.y - selectBBox.y) < 5;
-  console.log('Are All, Showcase, and Category Select on the SAME line?:', sameRow);
+  const sameRow = 
+    Math.abs(allBox.y - showcaseBox.y) < 5 &&
+    Math.abs(allBox.y - discussionBox.y) < 5 &&
+    Math.abs(allBox.y - savedBox.y) < 5;
+  console.log('Are All 4 tabs on the EXACT SAME line?:', sameRow);
 
+  // 3. Test Composer Category Selector Pill
+  const composerCategoryBtn = page.locator('button[aria-label="Select post category"]');
+  const isComposerCategoryVisible = await composerCategoryBtn.isVisible();
+  console.log('Composer Category Selector visible:', isComposerCategoryVisible);
+
+  // Click the category selector to open the popover
+  await composerCategoryBtn.click();
+  await page.waitForTimeout(300);
+
+  const popoverVisible = await page.locator('text="Post Category"').isVisible();
+  console.log('Category dropdown popover opened:', popoverVisible);
+
+  // Take screenshot with popover open
   await page.screenshot({
-    path: path.join(__dirname, '../public/audit-evidence/feed_filters_single_row_mobile.png'),
+    path: path.join(__dirname, '../public/audit-evidence/composer_category_popover.png'),
     fullPage: false,
   });
 
-  // Also test 360px viewport
-  await page.setViewportSize({ width: 360, height: 800 });
+  // Select Discussion from popover
+  const discussionOption = page.locator('button:has-text("Discussion")').last();
+  await discussionOption.click();
   await page.waitForTimeout(300);
+
+  const updatedText = await composerCategoryBtn.innerText();
+  console.log('Composer button text after selection:', updatedText);
+
+  // Take screenshot after selection and showing the clean 4 tabs below
   await page.screenshot({
-    path: path.join(__dirname, '../public/audit-evidence/feed_filters_360px.png'),
+    path: path.join(__dirname, '../public/audit-evidence/feed_filters_and_composer_final.png'),
     fullPage: false,
   });
 

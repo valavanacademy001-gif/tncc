@@ -10,8 +10,8 @@ interface FeedFiltersProps {
   onFilterChange: (filter: FeedFilterType) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  categoryFilter: string;
-  onCategoryChange: (category: string) => void;
+  categoryFilter?: string;
+  onCategoryChange?: (category: string) => void;
 }
 
 export default function FeedFilters({
@@ -19,23 +19,12 @@ export default function FeedFilters({
   onFilterChange,
   searchQuery,
   onSearchChange,
-  categoryFilter,
-  onCategoryChange,
 }: FeedFiltersProps) {
   const tabs: { label: FeedFilterType; icon: React.ReactNode }[] = [
-    { label: 'All', icon: <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
-    { label: 'Showcase', icon: <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
-    { label: 'Discussion', icon: <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
-    { label: 'Saved', icon: <Bookmark className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
-  ];
-
-  const categories = [
-    'All Categories',
-    'Graphic Design',
-    'Video Editing',
-    'Photography',
-    'AI Art',
-    'Branding',
+    { label: 'All', icon: <Layers className="w-3.5 h-3.5" /> },
+    { label: 'Showcase', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { label: 'Discussion', icon: <MessageSquare className="w-3.5 h-3.5" /> },
+    { label: 'Saved', icon: <Bookmark className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -61,43 +50,25 @@ export default function FeedFilters({
         )}
       </div>
 
-      {/* Filter Tabs & Category Dropdown - Single Horizontal Row */}
-      <div className="flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0">
-        {/* Main Tabs */}
-        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          {tabs.map((tab) => {
-            const isActive = activeFilter === tab.label;
-            return (
-              <button
-                key={tab.label}
-                onClick={() => onFilterChange(tab.label)}
-                className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
-                  isActive
-                    ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-xs'
-                    : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] border border-gray-200 dark:border-[#303846]'
-                }`}
-              >
-                {tab.icon}
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Sub-category selector */}
-        <div className="flex items-center shrink-0">
-          <select
-            value={categoryFilter}
-            onChange={(e) => onCategoryChange(e.target.value)}
-            className="text-[11px] sm:text-xs bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200 font-semibold px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] cursor-pointer"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat} className="bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200">
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Filter Tabs - Single Row */}
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0">
+        {tabs.map((tab) => {
+          const isActive = activeFilter === tab.label;
+          return (
+            <button
+              key={tab.label}
+              onClick={() => onFilterChange(tab.label)}
+              className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
+                isActive
+                  ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-xs'
+                  : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] border border-gray-200 dark:border-[#303846]'
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
