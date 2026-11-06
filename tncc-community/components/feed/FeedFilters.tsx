@@ -21,10 +21,10 @@ export default function FeedFilters({
   onSearchChange,
 }: FeedFiltersProps) {
   const tabs: { label: FeedFilterType; icon: React.ReactNode }[] = [
-    { label: 'All', icon: <Layers className="w-3.5 h-3.5" /> },
-    { label: 'Showcase', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Discussion', icon: <MessageSquare className="w-3.5 h-3.5" /> },
-    { label: 'Saved', icon: <Bookmark className="w-3.5 h-3.5" /> },
+    { label: 'All', icon: <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Showcase', icon: <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Discussion', icon: <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Saved', icon: <Bookmark className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
   ];
 
   return (
@@ -50,21 +50,21 @@ export default function FeedFilters({
         )}
       </div>
 
-      {/* Filter Tabs - Single Row */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0">
+      {/* Filter Tabs - Display-responsive Single Row */}
+      <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 w-full">
         {tabs.map((tab) => {
           const isActive = activeFilter === tab.label;
           return (
             <button
               key={tab.label}
               onClick={() => onFilterChange(tab.label)}
-              className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
+              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer select-none whitespace-nowrap ${
                 isActive
                   ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-xs'
                   : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] border border-gray-200 dark:border-[#303846]'
               }`}
             >
-              {tab.icon}
+              <span className="shrink-0">{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           );
