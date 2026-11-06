@@ -114,10 +114,10 @@ export default function CommunityNavbar({ onOpenComposer }: { onOpenComposer?: (
           {isAdmin && (
             <Link
               href="/community/admin"
-              className="h-8.5 sm:h-9 hidden md:flex items-center justify-center gap-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0D2C5B] font-extrabold text-xs shadow-xs hover:shadow transition-all shrink-0"
+              className="h-8.5 sm:h-9 hidden md:flex items-center justify-center gap-1.5 px-3.5 rounded-full bg-[#0D2C5B] hover:bg-[#1B3F7E] text-white font-extrabold text-xs shadow-xs hover:shadow transition-all shrink-0 border border-white/10"
               title="Open TNCC Administration Suite"
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
               <span>Admin Suite</span>
             </Link>
           )}

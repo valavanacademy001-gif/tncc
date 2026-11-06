@@ -67,15 +67,21 @@ export default function CommunitySidebar() {
             href="/community/admin"
             className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all group mb-2 border ${
               pathname.startsWith('/community/admin')
-                ? 'bg-amber-500 text-[#0D2C5B] shadow-md border-amber-600'
-                : 'bg-amber-50/80 text-amber-900 hover:bg-amber-100/80 border-amber-200'
+                ? 'bg-[#E84020] hover:bg-[#FF5733] text-white shadow-md border-[#E84020]'
+                : 'bg-[#E84020]/10 text-[#E84020] hover:bg-[#E84020] hover:text-white border-[#E84020]/20'
             }`}
           >
             <div className="flex items-center gap-3">
-              <ShieldCheck className={`w-4 h-4 ${pathname.startsWith('/community/admin') ? 'text-[#0D2C5B]' : 'text-amber-600'}`} />
+              <ShieldCheck className={`w-4 h-4 transition-colors ${pathname.startsWith('/community/admin') ? 'text-white' : 'text-[#E84020] group-hover:text-white'}`} />
               <span>Admin Hub</span>
             </div>
-            <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider bg-amber-200 text-amber-950">
+            <span
+              className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider transition-colors ${
+                pathname.startsWith('/community/admin')
+                  ? 'bg-white/20 text-white'
+                  : 'bg-[#E84020]/20 text-[#E84020] group-hover:bg-white/20 group-hover:text-white'
+              }`}
+            >
               Admin
             </span>
           </Link>
