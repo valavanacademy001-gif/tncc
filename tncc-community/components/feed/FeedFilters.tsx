@@ -23,10 +23,10 @@ export default function FeedFilters({
   onCategoryChange,
 }: FeedFiltersProps) {
   const tabs: { label: FeedFilterType; icon: React.ReactNode }[] = [
-    { label: 'All', icon: <Layers className="w-3.5 h-3.5" /> },
-    { label: 'Showcase', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Discussion', icon: <MessageSquare className="w-3.5 h-3.5" /> },
-    { label: 'Saved', icon: <Bookmark className="w-3.5 h-3.5" /> },
+    { label: 'All', icon: <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Showcase', icon: <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Discussion', icon: <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
+    { label: 'Saved', icon: <Bookmark className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> },
   ];
 
   const categories = [
@@ -61,19 +61,19 @@ export default function FeedFilters({
         )}
       </div>
 
-      {/* Filter Tabs & Category Dropdown */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
-        {/* Main Tabs - Scrollable with no ugly scrollbars */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
+      {/* Filter Tabs & Category Dropdown - Single Horizontal Row */}
+      <div className="flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 sm:mx-0 sm:px-0">
+        {/* Main Tabs */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {tabs.map((tab) => {
             const isActive = activeFilter === tab.label;
             return (
               <button
                 key={tab.label}
                 onClick={() => onFilterChange(tab.label)}
-                className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
+                className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer select-none ${
                   isActive
-                    ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-sm'
+                    ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-xs'
                     : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#171C24] border border-gray-200 dark:border-[#303846]'
                 }`}
               >
@@ -85,11 +85,11 @@ export default function FeedFilters({
         </div>
 
         {/* Sub-category selector */}
-        <div className="flex items-center justify-end shrink-0">
+        <div className="flex items-center shrink-0">
           <select
             value={categoryFilter}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="text-xs bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200 font-semibold px-3 py-1.5 rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] cursor-pointer"
+            className="text-[11px] sm:text-xs bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200 font-semibold px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] cursor-pointer"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat} className="bg-white dark:bg-[#1D2430] text-gray-700 dark:text-gray-200">

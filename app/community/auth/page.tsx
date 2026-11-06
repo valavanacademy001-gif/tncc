@@ -322,9 +322,9 @@ function AuthContent() {
 
         {/* Administrator notification indicator */}
         {isAdminEmail && (
-          <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-xl flex items-center gap-2.5 text-xs text-amber-900 font-bold animate-pulse">
-            <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>Authorized Administrator Email Detected. Full Admin Suite privileges will unlock on sign-in.</span>
+          <div className="py-1 px-3 bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/50 rounded-full inline-flex items-center gap-1.5 text-[11px] text-amber-900 dark:text-amber-300 font-semibold mx-auto self-center shadow-xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <span>Authorized Admin Account</span>
           </div>
         )}
 

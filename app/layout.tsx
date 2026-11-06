@@ -65,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${displayFont.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth" className={`${dmSans.variable} ${displayFont.variable} h-full`}>
       <head>
         <link rel="preload" href="/regional_map_logo.glb?v=4" as="fetch" crossOrigin="anonymous" />
         <link rel="preload" href="/draco/draco_decoder.wasm" as="fetch" crossOrigin="anonymous" />
