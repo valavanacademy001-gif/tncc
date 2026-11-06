@@ -264,6 +264,24 @@ export const serverStore = {
     return updated;
   },
 
+  addMember(member: CommunityMember): CommunityMember {
+    if (!global.__tncc_server_members) {
+      global.__tncc_server_members = [];
+    }
+    const existingIdx = global.__tncc_server_members.findIndex(
+      (m) => m.id === member.id || m.username.toLowerCase() === member.username.toLowerCase()
+    );
+    if (existingIdx !== -1) {
+      global.__tncc_server_members[existingIdx] = {
+        ...global.__tncc_server_members[existingIdx],
+        ...member,
+      };
+      return global.__tncc_server_members[existingIdx];
+    }
+    global.__tncc_server_members.push(member);
+    return member;
+  },
+
   // --- Posts ---
   getPosts(): CommunityPost[] {
     return global.__tncc_server_posts || [];
