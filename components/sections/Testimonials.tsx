@@ -37,8 +37,8 @@ const benefits = [
     title: 'ACCESS CREATIVE RESOURCES',
     desc: 'Explore useful tools, websites, fonts and tutorials in the vault.',
     icon: BookOpen,
-    color: 'var(--navy)',
-    bg: '#EEF2FF',
+    color: 'var(--lp-accent-blue)',
+    bg: 'var(--lp-accent-blue-bg)',
   },
   {
     num: '05',
@@ -61,8 +61,8 @@ const benefits = [
     title: 'DISCOVER OPPORTUNITIES',
     desc: 'Explore creative job openings and collaborative creative briefs.',
     icon: Briefcase,
-    color: 'var(--navy)',
-    bg: '#EEF2FF',
+    color: 'var(--lp-accent-blue)',
+    bg: 'var(--lp-accent-blue-bg)',
   },
   {
     num: '08',

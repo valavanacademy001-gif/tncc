@@ -48,7 +48,7 @@ async function runAudit() {
     await page.goto('http://localhost:3000/', { waitUntil: 'networkidle' });
     // Reset theme to light mode in localStorage
     await page.evaluate(() => {
-      localStorage.setItem('tncc-theme', 'light');
+      localStorage.setItem('tncc_theme', 'light');
       document.documentElement.classList.remove('dark');
     });
     await page.reload({ waitUntil: 'networkidle' });

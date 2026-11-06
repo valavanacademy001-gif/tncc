@@ -70,8 +70,8 @@ const stackingCards: StackingCardData[] = [
     ctaText: 'SHOWCASE YOUR WORK',
     ctaLink: '/community/auth?mode=register',
     bgColor: '#EEF2FF', // TNCC Brand Navy/Periwinkle Tint
-    accentColor: '#0D2C5B',
-    borderColor: 'rgba(13, 44, 91, 0.25)',
+    accentColor: 'var(--lp-accent-blue)',
+    borderColor: 'var(--lp-accent-blue-border)',
     ctaBg: 'var(--orange)',
     ctaColor: 'white',
     image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1400&auto=format&fit=crop&q=80',

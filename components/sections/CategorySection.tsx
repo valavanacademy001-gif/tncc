@@ -30,8 +30,8 @@ const communityActivities = [
     title: 'CREATOR RESOURCES',
     description: 'Explore useful fonts, design tools, AI websites, tutorials, recorded sessions and creative resources.',
     icon: BookOpen,
-    color: 'var(--navy)',
-    bgColor: '#EEF2FF',
+    color: 'var(--lp-accent-blue)',
+    bgColor: 'var(--lp-accent-blue-bg)',
     badge: 'Curated Vault',
   },
   {

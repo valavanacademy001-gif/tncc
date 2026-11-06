@@ -18,8 +18,8 @@ const steps = [
     title: 'SHARE YOUR CREATIVITY',
     desc: 'Publish your posters, designs, videos, photography and creative projects.',
     icon: UploadCloud,
-    color: 'var(--navy)',
-    bg: '#EEF2FF',
+    color: 'var(--lp-accent-blue)',
+    bg: 'var(--lp-accent-blue-bg)',
   },
   {
     num: '03',

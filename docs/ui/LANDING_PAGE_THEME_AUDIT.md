@@ -44,6 +44,9 @@ Consistent CSS custom properties were implemented to create subtle alternation a
 | `--lp-text-title` | `var(--navy)` (`#0D2C5B`) | `#F5F7FA` | Headings & high-contrast labels |
 | `--lp-text-body` | `var(--gray-600)` (`#4B5563`) | `#B6C0CD` | Paragraphs & secondary text |
 | `--lp-text-muted` | `var(--gray-500)` (`#6B7280`) | `#929EAD` | Captions & inactive icons |
+| `--lp-accent-blue` | `#0D2C5B` | `#38BDF8` | High-contrast Sky Blue accent (Vault, Create, Badges) |
+| `--lp-accent-blue-bg` | `#EEF2FF` | `rgba(56, 189, 248, 0.15)` | Luminous surface for badges & icons |
+| `--lp-accent-blue-border` | `rgba(13, 44, 91, 0.25)` | `rgba(56, 189, 248, 0.35)` | Accent card & pill tag borders |
 | `--lp-nav-bg-scrolled` | `rgba(255, 255, 255, 0.98)` | `rgba(16, 19, 24, 0.95)` | Scrolled header surface |
 
 ---

@@ -34,8 +34,8 @@ const stages = [
     title: 'CREATE YOUR WORK',
     headline: 'Push boundaries with\noriginal concepts.',
     body: 'Turn ideas into high-craft design and video creations. Build original visual compositions, motion graphics, typography hierarchies, or innovative AI artwork.',
-    color: 'var(--navy)',
-    bg: '#EEF2FF',
+    color: 'var(--lp-accent-blue)',
+    bg: 'var(--lp-accent-blue-bg)',
     nodeLabel: 'CREATE',
     coords: '11.00°N · 76.96°E',
   },
@@ -66,9 +66,9 @@ const stages = [
 function NetworkNode({ label, x, y, color, active }: { label: string; x: number; y: number; color: string; active: boolean }) {
   return (
     <g transform={`translate(${x}, ${y})`}>
-      <circle r={active ? 12 : 7} fill={active ? color : 'var(--gray-200)'} style={{ transition: 'all 0.4s ease' }} />
+      <circle r={active ? 12 : 7} fill={active ? color : 'var(--lp-border)'} style={{ transition: 'all 0.4s ease' }} />
       <circle r={active ? 20 : 10} fill={active ? color : 'transparent'} opacity={0.15} style={{ transition: 'all 0.4s ease' }} />
-      <text x={0} y={-20} textAnchor="middle" fontSize={9} fill={active ? color : 'var(--gray-400)'} fontWeight={700} fontFamily="monospace" style={{ transition: 'all 0.4s ease' }}>
+      <text x={0} y={-20} textAnchor="middle" fontSize={9} fill={active ? color : 'var(--lp-text-muted)'} fontWeight={700} fontFamily="monospace" style={{ transition: 'all 0.4s ease' }}>
         {label}
       </text>
     </g>

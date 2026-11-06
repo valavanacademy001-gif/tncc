@@ -190,7 +190,7 @@ export default function Navbar() {
                             borderRadius: '100px',
                             padding: '4px 10px',
                             fontSize: '0.75rem',
-                            color: 'var(--navy)',
+                            color: 'var(--lp-text-title)',
                             cursor: 'pointer',
                           }}
                         >
@@ -222,7 +222,7 @@ export default function Navbar() {
                             {c.name.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div>
-                            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)' }}>{c.name}</div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--lp-text-title)' }}>{c.name}</div>
                             <div style={{ fontSize: '0.68rem', color: 'var(--gray-400)' }}>{c.title}</div>
                           </div>
                         </Link>
@@ -284,7 +284,7 @@ export default function Navbar() {
                         border: '1px solid rgba(13,44,91,0.12)',
                         fontSize: '0.75rem',
                         fontWeight: 700,
-                        color: 'var(--navy)',
+                        color: 'var(--lp-text-title)',
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -339,7 +339,7 @@ export default function Navbar() {
                           user.name[0]
                         )}
                       </div>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)' }}>{user.name.split(' ')[0]}</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--lp-text-title)' }}>{user.name.split(' ')[0]}</span>
                     </Link>
                     <button
                       onClick={() => logout()}

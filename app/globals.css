@@ -54,6 +54,9 @@
   --lp-nav-bg-scrolled:     rgba(255, 255, 255, 0.98);
   --lp-nav-border-scrolled: rgba(13, 44, 91, 0.08);
   --lp-nav-icon:            var(--navy);
+  --lp-accent-blue:         #0D2C5B;
+  --lp-accent-blue-bg:      #EEF2FF;
+  --lp-accent-blue-border:  rgba(13, 44, 91, 0.25);
 
   /* Neutrals */
   --white:       #FFFFFF;
@@ -144,6 +147,9 @@
   --lp-nav-bg-scrolled:     rgba(16, 19, 24, 0.95);
   --lp-nav-border-scrolled: #303B49;
   --lp-nav-icon:            #F5F7FA;
+  --lp-accent-blue:         #38BDF8;
+  --lp-accent-blue-bg:      rgba(56, 189, 248, 0.15);
+  --lp-accent-blue-border:  rgba(56, 189, 248, 0.35);
 
   /* Neutrals mapped for dark surfaces */
   --white:       #1D2430;
