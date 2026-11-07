@@ -122,15 +122,15 @@ export default function ReferralDashboardView() {
       </div>
 
       {/* 2. Shareable Code & Link Box with Brand Colors */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-5 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl p-6 sm:p-7 border border-gray-200/90 dark:border-[#303846] shadow-sm space-y-5 relative overflow-hidden">
         <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-6 rounded-full bg-gradient-to-b from-[#E84020] to-[#FFB84D]" />
-          <h3 className="font-black text-lg text-[#0D2C5B] tracking-tight">Your Shareable Referral Assets</h3>
+          <h3 className="font-black text-lg text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight">Your Shareable Referral Assets</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Permanent Code Card */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF8EC] via-[#FFF0ED]/40 to-white border border-[#FFB84D]/40 shadow-xs relative overflow-hidden group hover:border-[#E84020]/60 transition-all">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF8EC] via-[#FFF0ED]/40 to-white dark:from-[#171C24] dark:via-[#1D2430] dark:to-[#171C24] border border-[#FFB84D]/40 dark:border-[#303846] shadow-xs relative overflow-hidden group hover:border-[#E84020]/60 transition-all">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#E84020]/5 rounded-full blur-xl pointer-events-none" />
             <div className="flex items-center justify-between">
               <div>
@@ -138,7 +138,7 @@ export default function ReferralDashboardView() {
                   <Sparkles className="w-3.5 h-3.5 text-[#E84020]" />
                   <span>Your Referral Code</span>
                 </p>
-                <p className="font-mono font-black text-2xl text-[#0D2C5B] tracking-wider mt-1">{referralCode}</p>
+                <p className="font-mono font-black text-2xl text-[#0D2C5B] dark:text-[#F5F7FA] tracking-wider mt-1">{referralCode}</p>
               </div>
               <button
                 onClick={() => {
@@ -156,14 +156,14 @@ export default function ReferralDashboardView() {
           </div>
 
           {/* Shareable Link Input with Quick Buttons */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#E6F9FC] via-[#E6F9FC]/30 to-white border border-[#00B5C8]/40 shadow-xs flex flex-col justify-between gap-3 relative overflow-hidden group hover:border-[#00B5C8] transition-all">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#E6F9FC] via-[#E6F9FC]/30 to-white dark:from-[#171C24] dark:via-[#1D2430] dark:to-[#171C24] border border-[#00B5C8]/40 dark:border-[#303846] shadow-xs flex flex-col justify-between gap-3 relative overflow-hidden group hover:border-[#00B5C8] transition-all">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#00B5C8]/10 rounded-full blur-xl pointer-events-none" />
             <div>
               <p className="text-[11px] font-extrabold text-[#00B5C8] uppercase tracking-wider flex items-center gap-1.5">
                 <Share2 className="w-3.5 h-3.5 text-[#00B5C8]" />
                 <span>Shareable Invitation Link</span>
               </p>
-              <div className="mt-1 px-3 py-1.5 rounded-xl bg-white/90 border border-[#00B5C8]/25 font-mono text-xs text-[#0D2C5B] select-all truncate font-semibold">
+              <div className="mt-1 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-[#101318] border border-[#00B5C8]/25 font-mono text-xs text-[#0D2C5B] dark:text-[#F5F7FA] select-all truncate font-semibold">
                 {shareUrl}
               </div>
             </div>
@@ -198,20 +198,20 @@ export default function ReferralDashboardView() {
       {/* 3. Referral Metric Stats with Brand Theme Accents */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Invited - Cyan & Navy Accent */}
-        <div className="bg-gradient-to-b from-[#E6F9FC]/60 to-white p-5 rounded-3xl border border-[#00B5C8]/30 border-t-4 border-t-[#00B5C8] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
-          <div className="flex items-center justify-between text-[#0D2C5B]">
+        <div className="bg-gradient-to-b from-[#E6F9FC]/60 to-white dark:from-[#1D2430] dark:to-[#171C24] p-5 rounded-3xl border border-[#00B5C8]/30 dark:border-[#303846] border-t-4 border-t-[#00B5C8] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B] dark:text-[#F5F7FA]">
             <span className="text-xs font-black uppercase tracking-wider text-[#00B5C8]">Total Invited</span>
             <div className="w-8 h-8 rounded-xl bg-[#00B5C8]/15 text-[#00B5C8] flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-3xl font-black text-[#0D2C5B]">{summary?.total_invited || 0}</p>
+          <p className="text-3xl font-black text-[#0D2C5B] dark:text-[#F5F7FA]">{summary?.total_invited || 0}</p>
           <p className="text-[11px] font-semibold text-gray-400">Members registered</p>
         </div>
 
         {/* Card 2: Pending Activity - Yellow/Amber Accent */}
-        <div className="bg-gradient-to-b from-[#FFF8EC]/70 to-white p-5 rounded-3xl border border-[#F5A623]/30 border-t-4 border-t-[#F5A623] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
-          <div className="flex items-center justify-between text-[#0D2C5B]">
+        <div className="bg-gradient-to-b from-[#FFF8EC]/70 to-white dark:from-[#1D2430] dark:to-[#171C24] p-5 rounded-3xl border border-[#F5A623]/30 dark:border-[#303846] border-t-4 border-t-[#F5A623] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B] dark:text-[#F5F7FA]">
             <span className="text-xs font-black uppercase tracking-wider text-[#F5A623]">Pending Activity</span>
             <div className="w-8 h-8 rounded-xl bg-[#F5A623]/15 text-[#F5A623] flex items-center justify-center">
               <Clock className="w-4 h-4" />
@@ -222,10 +222,10 @@ export default function ReferralDashboardView() {
         </div>
 
         {/* Card 3: Successful - Emerald Accent */}
-        <div className="bg-gradient-to-b from-emerald-50/50 to-white p-5 rounded-3xl border border-emerald-500/30 border-t-4 border-t-emerald-500 shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
-          <div className="flex items-center justify-between text-[#0D2C5B]">
+        <div className="bg-gradient-to-b from-emerald-50/50 to-white dark:from-[#1D2430] dark:to-[#171C24] p-5 rounded-3xl border border-emerald-500/30 dark:border-[#303846] border-t-4 border-t-emerald-500 shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B] dark:text-[#F5F7FA]">
             <span className="text-xs font-black uppercase tracking-wider text-emerald-600">Successful</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
@@ -234,8 +234,8 @@ export default function ReferralDashboardView() {
         </div>
 
         {/* Card 4: Referral XP Earned - Brand Orange Accent */}
-        <div className="bg-gradient-to-b from-[#FFF0ED]/70 to-white p-5 rounded-3xl border border-[#E84020]/30 border-t-4 border-t-[#E84020] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
-          <div className="flex items-center justify-between text-[#0D2C5B]">
+        <div className="bg-gradient-to-b from-[#FFF0ED]/70 to-white dark:from-[#1D2430] dark:to-[#171C24] p-5 rounded-3xl border border-[#E84020]/30 dark:border-[#303846] border-t-4 border-t-[#E84020] shadow-xs space-y-1 relative overflow-hidden transition-all hover:shadow-md">
+          <div className="flex items-center justify-between text-[#0D2C5B] dark:text-[#F5F7FA]">
             <span className="text-xs font-black uppercase tracking-wider text-[#E84020]">Referral XP Earned</span>
             <div className="w-8 h-8 rounded-xl bg-[#E84020]/15 text-[#E84020] flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
@@ -249,33 +249,33 @@ export default function ReferralDashboardView() {
       </div>
 
       {/* 4. Referral History Stream */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl p-6 sm:p-7 border border-gray-200/90 dark:border-[#303846] shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-2.5 h-6 rounded-full bg-gradient-to-b from-[#0D2C5B] to-[#00B5C8]" />
-            <h3 className="font-black text-lg text-[#0D2C5B] tracking-tight">Your Invited Creators</h3>
+            <h3 className="font-black text-lg text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight">Your Invited Creators</h3>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#F8F6F1] text-[#0D2C5B] border border-gray-200">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#F8F6F1] dark:bg-[#171C24] text-[#0D2C5B] dark:text-[#F5F7FA] border border-gray-200 dark:border-[#303846]">
             {summary?.history?.length || 0} Records
           </span>
         </div>
 
         {!summary?.history || summary.history.length === 0 ? (
-          <div className="text-center py-12 border-2 border-dashed border-[#FFB84D]/40 bg-gradient-to-b from-[#FFF8EC]/30 to-white rounded-2xl p-6 space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FFF0ED] to-[#FFF8EC] text-[#E84020] border border-[#FFB84D]/40 flex items-center justify-center mx-auto shadow-xs">
+          <div className="text-center py-12 border-2 border-dashed border-[#FFB84D]/40 bg-gradient-to-b from-[#FFF8EC]/30 to-white dark:from-[#1D2430] dark:to-[#171C24] rounded-2xl p-6 space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FFF0ED] to-[#FFF8EC] dark:from-[#171C24] dark:to-[#1D2430] text-[#E84020] border border-[#FFB84D]/40 flex items-center justify-center mx-auto shadow-xs">
               <Gift className="w-7 h-7" />
             </div>
-            <h4 className="font-black text-base text-[#0D2C5B]">No referrals yet</h4>
-            <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+            <h4 className="font-black text-base text-[#0D2C5B] dark:text-[#F5F7FA]">No referrals yet</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
               Share your invite link with talented Tamil creators. Once they publish their first creative post or submit to a challenge, you will automatically earn <span className="font-bold text-[#E84020]">+50 XP</span>!
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-[#303846]">
             {summary.history.map((item) => (
               <div key={item.id} className="py-3.5 flex items-center justify-between text-xs gap-3">
                 <div className="min-w-0">
-                  <p className="font-bold text-[#0D2C5B] truncate">{item.referred_member_name || 'Invited Creator'}</p>
+                  <p className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA] truncate">{item.referred_member_name || 'Invited Creator'}</p>
                   <p className="text-[11px] text-gray-400">
                     Joined on {new Date(item.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>
@@ -306,16 +306,16 @@ export default function ReferralDashboardView() {
       </div>
 
       {/* 5. Rules & Anti-Fraud Notice with Logo Palette */}
-      <div className="bg-gradient-to-br from-[#FFF8EC] via-white to-[#FFF0ED]/40 border border-[#F5A623]/35 rounded-2xl p-5 text-xs text-[#8A5000] space-y-2 relative overflow-hidden shadow-xs">
+      <div className="bg-gradient-to-br from-[#FFF8EC] via-white to-[#FFF0ED]/40 dark:from-[#1D2430] dark:via-[#171C24] dark:to-[#1D2430] border border-[#F5A623]/35 dark:border-[#303846] rounded-2xl p-5 text-xs text-[#8A5000] dark:text-gray-300 space-y-2 relative overflow-hidden shadow-xs">
         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#E84020] via-[#F5A623] to-[#00B5C8]" />
-        <div className="flex items-center gap-2 font-black text-sm text-[#0D2C5B]">
+        <div className="flex items-center gap-2 font-black text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">
           <AlertCircle className="w-4 h-4 text-[#E84020]" />
           <span>TNCC Referral & Earn Policy</span>
         </div>
-        <p className="leading-relaxed text-gray-700">
+        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
           • Referral reward is awarded <strong>only once per referred member</strong> when they successfully publish their first approved creative post or complete a challenge entry.
         </p>
-        <p className="leading-relaxed text-gray-700">
+        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
           • <strong>Zero XP is awarded at signup</strong> to prevent automated bot farming. Self-referrals and duplicate accounts are strictly disqualified.
         </p>
       </div>

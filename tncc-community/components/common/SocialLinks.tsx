@@ -49,19 +49,19 @@ export default function SocialLinks({
   const website = member.website_url;
 
   const sizeClasses = {
-    sm: showLabels ? 'px-2.5 py-1 text-[11px] gap-1.5 rounded-lg' : 'w-7 h-7 rounded-lg justify-center',
+    sm: showLabels ? 'px-2.5 py-1 text-[11px] gap-1.5 rounded-lg' : 'w-6 h-6 rounded-md justify-center shrink-0',
     md: showLabels ? 'px-3 py-1.5 text-xs gap-2 rounded-xl' : 'w-8 h-8 rounded-xl justify-center',
     lg: showLabels ? 'px-4 py-2 text-xs sm:text-sm gap-2.5 rounded-xl' : 'w-9 h-9 rounded-xl justify-center',
   };
 
   const iconSizes = {
-    sm: 'w-3.5 h-3.5',
+    sm: 'w-3 h-3',
     md: 'w-4 h-4',
     lg: 'w-4 h-4 sm:w-5 sm:h-5',
   };
 
   return (
-    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+    <div className={`flex items-center ${showLabels ? 'flex-wrap gap-2' : 'flex-nowrap gap-1'} ${className}`}>
       {/* Instagram */}
       {instagram ? (
         <a

@@ -15,10 +15,10 @@ export default function EventsPage() {
         <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#F5A623]/10 text-[#F5A623] border border-[#F5A623]/20">
           COMMUNITY GATHERINGS
         </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] tracking-tight mt-1">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight mt-1">
           Upcoming TNCC Creator Events & Workshops
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500">
+        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
           Connect with creators in real life and join virtual masterclasses hosted across Tamil Nadu.
         </p>
       </div>

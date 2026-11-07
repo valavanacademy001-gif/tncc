@@ -898,7 +898,7 @@ body {
 @media (min-width: 1024px) {
   .bento-fullwidth-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1fr) !important;
-    grid-template-rows: auto auto auto !important;
+    grid-template-rows: auto auto !important;
   }
 
   .bento-left-1 {
@@ -908,10 +908,6 @@ body {
   .bento-left-2 {
     grid-column: 1 !important;
     grid-row: 2 !important;
-  }
-  .bento-left-3 {
-    grid-column: 1 !important;
-    grid-row: 3 !important;
   }
 
   .bento-center-item {
@@ -926,11 +922,6 @@ body {
   .bento-right-2 {
     grid-column: 3 !important;
     grid-row: 2 !important;
-  }
-
-  .bento-box-ai-wide {
-    grid-column: 2 / span 2 !important;
-    grid-row: 3 !important;
   }
 }
 
@@ -984,10 +975,6 @@ body {
   }
   .bento-box-item.bento-center-item {
     min-height: 260px !important;
-  }
-  .bento-box-ai-wide {
-    padding: 26px 22px !important;
-    border-radius: 22px !important;
   }
 }
 

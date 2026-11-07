@@ -479,7 +479,7 @@ export default function AdminDashboardClient() {
         <div className="w-16 h-16 rounded-3xl bg-amber-100 flex items-center justify-center mb-4 text-amber-700 shadow-inner">
           <ShieldCheck className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-extrabold text-[#0D2C5B]">Administrator Access Restricted</h2>
+        <h2 className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA]">Administrator Access Restricted</h2>
         <p className="text-xs sm:text-sm text-gray-500 max-w-md mt-2">
           This management workspace is strictly restricted to authorized administrative personnel (<span className="font-semibold text-gray-700">suganeshsugu07@gmail.com</span>).
         </p>
@@ -639,7 +639,7 @@ export default function AdminDashboardClient() {
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
                 Active Studio Jobs
               </span>
-              <p className="text-2xl font-extrabold text-[#0D2C5B] mt-1">{reports.totalJobs}</p>
+              <p className="text-2xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">{reports.totalJobs}</p>
               <span className="text-[10px] text-emerald-600 font-bold mt-1 inline-block">
                 Direct hiring leads
               </span>
@@ -649,7 +649,7 @@ export default function AdminDashboardClient() {
           {/* Quick Action Bar */}
           <div className="bg-[#F8F6F1] p-5 rounded-2xl border border-orange-100 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h3 className="font-bold text-sm text-[#0D2C5B]">Quick Administrative Shortcuts</h3>
+              <h3 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">Quick Administrative Shortcuts</h3>
               <p className="text-xs text-gray-500">Instant shortcuts to update community portals.</p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -695,7 +695,7 @@ export default function AdminDashboardClient() {
 
           {/* Recent XP Audit Trail */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-            <h3 className="font-bold text-base text-[#0D2C5B] mb-4 flex items-center gap-2">
+            <h3 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA] mb-4 flex items-center gap-2">
               <Zap className="w-4 h-4 text-[#E84020]" />
               Recent XP Audit & Merit Transactions
             </h3>
@@ -703,7 +703,7 @@ export default function AdminDashboardClient() {
               {reports.recentTransactions.map((tx: any) => (
                 <div key={tx.id} className="py-3 flex items-center justify-between text-xs">
                   <div>
-                    <span className="font-bold text-[#0D2C5B]">{tx.reason}</span>
+                    <span className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">{tx.reason}</span>
                     <span className="text-gray-400 text-[11px] block">
                       Member ID: {tx.member_id} · {new Date(tx.created_at).toLocaleString()}
                     </span>
@@ -777,7 +777,7 @@ export default function AdminDashboardClient() {
                           className="w-8 h-8 rounded-full object-cover border border-gray-200"
                         />
                         <div>
-                          <p className="font-bold text-[#0D2C5B]">{member.full_name}</p>
+                          <p className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">{member.full_name}</p>
                           <p className="text-[11px] text-gray-400">@{member.username}</p>
                         </div>
                       </div>
@@ -860,7 +860,7 @@ export default function AdminDashboardClient() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-bold text-lg text-[#0D2C5B]">Design & Creator Resources</h2>
+              <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Design & Creator Resources</h2>
               <p className="text-xs text-gray-500">
                 Publish free Figma templates, fonts, brush packs, and video presets for Tamil creators.
               </p>
@@ -903,7 +903,7 @@ export default function AdminDashboardClient() {
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-[#0D2C5B] uppercase">
                     {res.category} · {res.resource_type}
                   </span>
-                  <h4 className="font-bold text-sm text-[#0D2C5B] mt-1.5">{res.title}</h4>
+                  <h4 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA] mt-1.5">{res.title}</h4>
                   <p className="text-xs text-gray-500 mt-1 line-clamp-2">{res.description}</p>
                   <p className="text-[11px] text-gray-400 mt-2 font-mono">
                     {res.download_count} Downloads {res.is_google_drive ? '· Google Drive' : ''}
@@ -966,7 +966,7 @@ export default function AdminDashboardClient() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-bold text-lg text-[#0D2C5B]">Community Events & Workshops</h2>
+              <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Community Events & Workshops</h2>
               <p className="text-xs text-gray-500">
                 Organize Tamil Nadu offline meetups, studio tours, and online creative teardowns.
               </p>
@@ -1007,7 +1007,7 @@ export default function AdminDashboardClient() {
                     </span>
                     <span className="text-xs text-gray-400">{evt.event_date} · {evt.event_time}</span>
                   </div>
-                  <h4 className="font-bold text-base text-[#0D2C5B]">{evt.title}</h4>
+                  <h4 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA]">{evt.title}</h4>
                   <p className="text-xs text-gray-600 mt-1 line-clamp-2">{evt.description}</p>
                   <p className="text-xs text-gray-400 mt-2">📍 {evt.location}</p>
                 </div>
@@ -1070,7 +1070,7 @@ export default function AdminDashboardClient() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-bold text-lg text-[#0D2C5B]">
+              <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">
                 Challenges, Submissions & Winner Selection
               </h2>
               <p className="text-xs text-gray-500">
@@ -1132,7 +1132,7 @@ export default function AdminDashboardClient() {
                           </span>
                           <span className="text-xs text-gray-400">Deadline: {chal.submission_deadline}</span>
                         </div>
-                        <h4 className="font-bold text-base text-[#0D2C5B] mt-1">{chal.title}</h4>
+                        <h4 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">{chal.title}</h4>
                         <p className="text-xs text-gray-500 mt-0.5">
                           1st Prize: <strong className="text-amber-600">{chal.prizes?.first}</strong> · Submissions: <strong>{subs.length}</strong>
                         </p>
@@ -1195,7 +1195,7 @@ export default function AdminDashboardClient() {
                             👑
                           </div>
                           <div className="text-xs">
-                            <span className="font-bold text-[#0D2C5B]">
+                            <span className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">
                               1st Place: {chal.winners.first.member.full_name} (@{chal.winners.first.member.username})
                             </span>
                             <span className="text-gray-500 block text-[11px]">
@@ -1250,7 +1250,7 @@ export default function AdminDashboardClient() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-bold text-lg text-[#0D2C5B]">Client Gigs & Studio Hiring Posts</h2>
+              <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Client Gigs & Studio Hiring Posts</h2>
               <p className="text-xs text-gray-500">
                 Add, manage, and verify freelance opportunities and full-time creative positions.
               </p>
@@ -1295,7 +1295,7 @@ export default function AdminDashboardClient() {
                     </span>
                     <span className="text-xs font-bold text-emerald-600">{job.salary_range}</span>
                   </div>
-                  <h4 className="font-bold text-base text-[#0D2C5B]">{job.title}</h4>
+                  <h4 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA]">{job.title}</h4>
                   <p className="text-xs text-gray-500">{job.company_name} · 📍 {job.location}</p>
                   <p className="text-xs text-gray-600 mt-2 line-clamp-2">{job.description}</p>
                 </div>
@@ -1363,7 +1363,7 @@ export default function AdminDashboardClient() {
           {/* Header & Stats Cards */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-extrabold text-lg text-[#0D2C5B]">Referral & Earn Overview</h3>
+              <h3 className="font-extrabold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Referral & Earn Overview</h3>
               <p className="text-xs text-gray-500">
                 Monitor referral signups, qualifying activities, and automated +50 XP bonus rewards.
               </p>
@@ -1381,7 +1381,7 @@ export default function AdminDashboardClient() {
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Referrals</span>
-              <p className="text-2xl font-black text-[#0D2C5B]">{referralStats?.total_referrals ?? adminReferrals.length}</p>
+              <p className="text-2xl font-black text-[#0D2C5B] dark:text-[#F5F7FA]">{referralStats?.total_referrals ?? adminReferrals.length}</p>
               <p className="text-[11px] text-gray-400">All registered referrals</p>
             </div>
             <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-1">
@@ -1409,7 +1409,7 @@ export default function AdminDashboardClient() {
           {/* Referrals List Table */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h4 className="font-bold text-xs text-[#0D2C5B]">Audit Trail & Attribution Records</h4>
+              <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">Audit Trail & Attribution Records</h4>
               <span className="text-xs text-gray-400">{adminReferrals.length} Total</span>
             </div>
 
@@ -1456,7 +1456,7 @@ export default function AdminDashboardClient() {
                         <td className="p-3.5 capitalize text-gray-600">
                           {r.qualifying_activity_type ? `${r.qualifying_activity_type} (${r.qualifying_activity_id?.slice(0, 8)}...)` : 'None yet'}
                         </td>
-                        <td className="p-3.5 font-bold text-[#0D2C5B]">
+                        <td className="p-3.5 font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">
                           {r.status === 'rewarded' ? `+${r.reward_xp} XP` : '0 XP (Pending)'}
                         </td>
                         <td className="p-3.5 text-gray-400 text-[11px]">
@@ -1510,7 +1510,7 @@ export default function AdminDashboardClient() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-bold text-lg text-[#0D2C5B]">Community Media Asset Library</h2>
+                <h2 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA]">Community Media Asset Library</h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                   Admin Only
                 </span>
@@ -1679,7 +1679,7 @@ export default function AdminDashboardClient() {
 
                       <div className="p-3 space-y-2">
                         <div>
-                          <p className="text-xs font-bold text-[#0D2C5B] truncate" title={item.name}>
+                          <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] truncate" title={item.name}>
                             {item.name}
                           </p>
                           <p className="text-[10px] text-gray-400 font-mono mt-0.5">
@@ -1734,7 +1734,7 @@ export default function AdminDashboardClient() {
       {showResourceModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
-            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+            <h3 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA] mb-1">
               {editingResource ? 'Edit Resource' : 'Publish New Resource'}
             </h3>
             <p className="text-xs text-gray-500 mb-4">
@@ -1850,7 +1850,7 @@ export default function AdminDashboardClient() {
       {showJobModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
-            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+            <h3 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA] mb-1">
               {editingJob ? 'Edit Job Opening' : 'Post New Creative Gig'}
             </h3>
             <p className="text-xs text-gray-500 mb-4">
@@ -2003,7 +2003,7 @@ export default function AdminDashboardClient() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
                   Winner Selection
                 </span>
-                <h3 className="font-bold text-base text-[#0D2C5B] mt-1">
+                <h3 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA] mt-1">
                   {selectedChallengeForSubmissions.title}
                 </h3>
               </div>
@@ -2047,7 +2047,7 @@ export default function AdminDashboardClient() {
                             </div>
                             <div>
                               <div className="flex items-center gap-2 flex-wrap">
-                                <p className="font-bold text-xs text-[#0D2C5B]">{sub.title}</p>
+                                <p className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">{sub.title}</p>
                                 <span
                                   className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
                                     status === 'approved'
@@ -2229,7 +2229,7 @@ export default function AdminDashboardClient() {
       {showXPModal && xpTargetMember && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-scale-up space-y-4">
-            <h3 className="font-bold text-base text-[#0D2C5B]">
+            <h3 className="font-bold text-base text-[#0D2C5B] dark:text-[#F5F7FA]">
               Award Merit XP to {xpTargetMember.full_name}
             </h3>
             <form onSubmit={handleAwardXPSubmit} className="space-y-3 text-xs">
@@ -2283,7 +2283,7 @@ export default function AdminDashboardClient() {
       {showEventModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
-            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+            <h3 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA] mb-1">
               {editingEvent ? 'Edit Community Event' : 'Create New Event'}
             </h3>
             <p className="text-xs text-gray-500 mb-4">
@@ -2423,7 +2423,7 @@ export default function AdminDashboardClient() {
       {showChallengeModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
-            <h3 className="font-bold text-lg text-[#0D2C5B] mb-1">
+            <h3 className="font-bold text-lg text-[#0D2C5B] dark:text-[#F5F7FA] mb-1">
               {editingChallenge ? 'Edit Creative Challenge' : 'Launch New Bounty Challenge'}
             </h3>
             <p className="text-xs text-gray-500 mb-4">

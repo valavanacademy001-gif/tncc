@@ -84,17 +84,17 @@ export default function ResetPasswordPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200/80 dark:border-[#303846] shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative overflow-hidden">
         {/* Top accent bar */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#0D2C5B] via-[#E84020] to-[#00B5C8]" />
 
         {success ? (
           <div className="text-center py-6 space-y-4">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-[#0D2C5B]">Password Updated Successfully!</h2>
-            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-xl font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">Password Updated Successfully!</h2>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Your new password is now active. You are being redirected to the login page...
             </p>
             <Link
@@ -108,10 +108,10 @@ export default function ResetPasswordPage() {
         ) : (
           <>
             <div className="text-center space-y-1">
-              <h1 className="text-xl sm:text-2xl font-black text-[#0D2C5B] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight">
                 Set New Password
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Choose a strong password with at least 8 characters to secure your creator account.
               </p>
             </div>
@@ -212,7 +212,7 @@ export default function ResetPasswordPage() {
             <div className="pt-2 text-center">
               <Link
                 href="/community/auth?mode=login"
-                className="text-xs text-gray-500 hover:text-[#0D2C5B] transition-colors"
+                className="text-xs text-gray-500 hover:text-[#0D2C5B] dark:hover:text-white transition-colors"
               >
                 ← Return to Sign In
               </Link>

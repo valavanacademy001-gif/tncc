@@ -1373,7 +1373,7 @@ export function CommunityProvider({ children }: { children: React.ReactNode }) {
                 ? 'bg-[#0D2C5B] text-white border-[#E84020]'
                 : toast.type === 'success'
                 ? 'bg-[#0D2C5B]/95 text-white border-[#00B5C8]'
-                : 'bg-white text-[#0D2C5B] border-gray-200'
+                : 'bg-white dark:bg-[#1D2430] text-[#0D2C5B] dark:text-[#F5F7FA] border-gray-200 dark:border-[#303846]'
             }`}
           >
             <div

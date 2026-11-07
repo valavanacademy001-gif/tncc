@@ -14,13 +14,13 @@ export default function ChallengeCard({ challenge }: { challenge: CommunityChall
   const getStatusColor = (status: CommunityChallenge['status']) => {
     switch (status) {
       case 'Active':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-green-600 dark:text-emerald-400 bg-green-50 dark:bg-emerald-950/40 border-green-200 dark:border-emerald-800';
       case 'Upcoming':
-        return 'text-[#00B5C8] bg-cyan-50 border-cyan-200';
+        return 'text-[#00B5C8] bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-800';
       case 'Submission Closed':
-        return 'text-amber-600 bg-amber-50 border-amber-200';
+        return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800';
       case 'Completed':
-        return 'text-gray-600 bg-gray-100 border-gray-200';
+        return 'text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700';
     }
   };
 

@@ -27,7 +27,7 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
   if (!challenge) {
     return (
       <div className="text-center py-20 space-y-4">
-        <h2 className="text-xl font-bold text-[#0D2C5B]">Challenge not found</h2>
+        <h2 className="text-xl font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">Challenge not found</h2>
         <Link href="/community/challenges" className="text-xs font-bold text-[#E84020] hover:underline">
           Return to Challenges
         </Link>
@@ -86,19 +86,19 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Description, Requirements & References */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-6 sm:p-8 shadow-sm space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-[#0D2C5B] mb-2">Challenge Overview</h2>
-              <p className="text-sm text-gray-700 leading-relaxed">{challenge.description}</p>
+              <h2 className="text-lg font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-2">Challenge Overview</h2>
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{challenge.description}</p>
             </div>
 
             {/* Design Requirements */}
             {challenge.requirements && challenge.requirements.length > 0 && (
               <div>
-                <h3 className="text-sm font-bold text-[#0D2C5B] mb-3">Design & Submission Requirements</h3>
+                <h3 className="text-sm font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-3">Design & Submission Requirements</h3>
                 <ul className="space-y-2">
                   {challenge.requirements.map((req, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-gray-700">
+                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                       <CheckCircle2 className="w-4 h-4 text-[#00B5C8] shrink-0 mt-0.5" />
                       <span>{req}</span>
                     </li>
@@ -109,11 +109,11 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
 
             {/* Rules & Guidelines */}
             {challenge.rules && challenge.rules.length > 0 && (
-              <div className="pt-4 border-t border-gray-100">
-                <h3 className="text-sm font-bold text-[#0D2C5B] mb-3">Competition Rules</h3>
+              <div className="pt-4 border-t border-gray-100 dark:border-[#303846]">
+                <h3 className="text-sm font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-3">Competition Rules</h3>
                 <ul className="space-y-2">
                   {challenge.rules.map((rule, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-gray-700">
+                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#E84020] shrink-0 mt-2" />
                       <span>{rule}</span>
                     </li>
@@ -124,11 +124,11 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
 
             {/* Reference Images */}
             {challenge.reference_images && challenge.reference_images.length > 0 && (
-              <div className="pt-4 border-t border-gray-100">
-                <h3 className="text-sm font-bold text-[#0D2C5B] mb-3">Creative Reference Material</h3>
+              <div className="pt-4 border-t border-gray-100 dark:border-[#303846]">
+                <h3 className="text-sm font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-3">Creative Reference Material</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {challenge.reference_images.map((ref, idx) => (
-                    <div key={idx} className="rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 border border-gray-200">
+                    <div key={idx} className="rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-[#303846]">
                       <img src={ref} alt={`Reference ${idx + 1}`} className="w-full h-full object-cover" />
                     </div>
                   ))}
@@ -141,53 +141,53 @@ export default function ChallengeDetailsPage({ params }: { params: Promise<{ id:
         {/* Right: Prizes & Submission Call to Action */}
         <div className="lg:col-span-4 space-y-6">
           {/* Prizes Card */}
-          <div className="bg-[#FFF8EC] rounded-3xl border border-orange-200 p-6 shadow-sm space-y-4">
+          <div className="bg-[#FFF8EC] dark:bg-[#1D2430] rounded-3xl border border-orange-200 dark:border-[#303846] p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-[#E84020]" />
-              <h3 className="font-extrabold text-sm text-[#0D2C5B]">Prizes & XP Rewards</h3>
+              <h3 className="font-extrabold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">Prizes & XP Rewards</h3>
             </div>
 
             <div className="space-y-3">
-              <div className="p-3 bg-white rounded-xl border border-orange-100">
+              <div className="p-3 bg-white dark:bg-[#171C24] rounded-xl border border-orange-100 dark:border-[#303846]">
                 <span className="text-[10px] font-extrabold text-[#F5A623] uppercase">👑 1st Place</span>
-                <p className="text-xs font-bold text-[#0D2C5B] mt-0.5">{challenge.prizes.first}</p>
+                <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{challenge.prizes.first}</p>
                 <span className="text-[10px] font-bold text-[#E84020]">+{challenge.bonus_xp_first} XP Bonus</span>
               </div>
 
-              <div className="p-3 bg-white rounded-xl border border-orange-100">
+              <div className="p-3 bg-white dark:bg-[#171C24] rounded-xl border border-orange-100 dark:border-[#303846]">
                 <span className="text-[10px] font-extrabold text-gray-400 uppercase">🥈 2nd Place</span>
-                <p className="text-xs font-bold text-[#0D2C5B] mt-0.5">{challenge.prizes.second}</p>
+                <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{challenge.prizes.second}</p>
                 <span className="text-[10px] font-bold text-[#E84020]">+{challenge.bonus_xp_second} XP Bonus</span>
               </div>
 
-              <div className="p-3 bg-white rounded-xl border border-orange-100">
+              <div className="p-3 bg-white dark:bg-[#171C24] rounded-xl border border-orange-100 dark:border-[#303846]">
                 <span className="text-[10px] font-extrabold text-[#CD7F32] uppercase">🥉 3rd Place</span>
-                <p className="text-xs font-bold text-[#0D2C5B] mt-0.5">{challenge.prizes.third}</p>
+                <p className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mt-0.5">{challenge.prizes.third}</p>
                 <span className="text-[10px] font-bold text-[#00B5C8]">+{challenge.bonus_xp_third} XP Bonus</span>
               </div>
             </div>
           </div>
 
           {/* Submission Action Box */}
-          <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-6 shadow-sm space-y-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                 <Clock className="w-4 h-4 text-[#E84020]" />
-                <span className="font-bold text-[#0D2C5B]">Deadline</span>
+                <span className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">Deadline</span>
               </div>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-600 dark:text-gray-300">
                 {new Date(challenge.submission_deadline).toLocaleString()}
               </p>
             </div>
 
             {isUserSubmitted ? (
-              <div className="p-4 bg-green-50 rounded-2xl border border-green-200 text-center space-y-2">
-                <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto" />
-                <p className="text-xs font-bold text-green-800">Your Entry is Recorded</p>
+              <div className="p-4 bg-green-50 dark:bg-emerald-950/40 rounded-2xl border border-green-200 dark:border-emerald-800 text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-emerald-400 mx-auto" />
+                <p className="text-xs font-bold text-green-800 dark:text-emerald-300">Your Entry is Recorded</p>
                 {memberSubmission && (
-                  <div className="text-[11px] text-gray-700 bg-white/70 p-2.5 rounded-xl border border-green-100 text-left space-y-1">
-                    <p className="font-bold text-[#0D2C5B] truncate">{memberSubmission.title}</p>
-                    <p className="text-[10px] text-gray-500">Format: {memberSubmission.submission_type}</p>
+                  <div className="text-[11px] text-gray-700 dark:text-gray-200 bg-white/70 dark:bg-[#171C24]/80 p-2.5 rounded-xl border border-green-100 dark:border-emerald-900 text-left space-y-1">
+                    <p className="font-bold text-[#0D2C5B] dark:text-[#F5F7FA] truncate">{memberSubmission.title}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">Format: {memberSubmission.submission_type}</p>
                     {memberSubmission.status && (
                       <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
                         memberSubmission.status === 'approved'

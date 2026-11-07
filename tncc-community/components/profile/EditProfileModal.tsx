@@ -88,16 +88,16 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-100 overflow-hidden animate-scale-up max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-[#1D2430] w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-100 dark:border-[#303846] overflow-hidden animate-scale-up max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#303846]">
           <div>
-            <h3 className="font-bold text-sm sm:text-base text-[#0D2C5B]">Edit Creator Profile</h3>
+            <h3 className="font-bold text-sm sm:text-base text-[#0D2C5B] dark:text-[#F5F7FA]">Edit Creator Profile</h3>
             <p className="text-xs text-gray-400">Update your public identity on Tamil Nadu Creators Club</p>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+            className="p-1 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#171C24] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -165,7 +165,7 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
               />
 
               {uploadingAvatar && (
-                <p className="text-[10px] text-[#0D2C5B] font-semibold mt-1 flex items-center gap-1">
+                <p className="text-[10px] text-[#0D2C5B] dark:text-[#F5F7FA] font-semibold mt-1 flex items-center gap-1">
                   <Loader2 className="w-3 h-3 animate-spin text-[#E84020]" />
                   Uploading photo to storage...
                 </p>
@@ -227,8 +227,8 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
           </div>
 
           {/* Social Links */}
-          <div className="pt-2 border-t border-gray-100">
-            <h4 className="text-xs font-bold text-[#0D2C5B] mb-3">Portfolio & Social Handles</h4>
+          <div className="pt-2 border-t border-gray-100 dark:border-[#303846]">
+            <h4 className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-3">Portfolio & Social Handles</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0057FF] mb-1">
@@ -240,7 +240,7 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
                   value={behanceUrl}
                   onChange={(e) => setBehanceUrl(e.target.value)}
                   placeholder="https://behance.net/username"
-                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] dark:bg-[#171C24] dark:text-[#F5F7FA] rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
                 />
               </div>
 
@@ -254,7 +254,7 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
                   value={instagramUrl}
                   onChange={(e) => setInstagramUrl(e.target.value)}
                   placeholder="https://instagram.com/username"
-                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] dark:bg-[#171C24] dark:text-[#F5F7FA] rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
                 />
               </div>
 
@@ -268,12 +268,12 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
                   value={linkedinUrl}
                   onChange={(e) => setLinkedinUrl(e.target.value)}
                   placeholder="https://linkedin.com/in/username"
-                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] dark:bg-[#171C24] dark:text-[#F5F7FA] rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0D2C5B] mb-1">
+                <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#0D2C5B] dark:text-[#F5F7FA] mb-1">
                   <Globe className="w-3.5 h-3.5 text-[#00B5C8]" />
                   <span>Personal Website</span>
                 </label>
@@ -282,7 +282,7 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   placeholder="https://yourdomain.com"
-                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] rounded-lg border border-gray-200 focus:outline-none focus:border-[#0D2C5B]"
+                  className="w-full text-xs px-3 py-2 bg-[#F8F6F1] dark:bg-[#171C24] dark:text-[#F5F7FA] rounded-lg border border-gray-200 dark:border-[#303846] focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8]"
                 />
               </div>
             </div>

@@ -238,7 +238,7 @@ export default function ProfileView() {
         {activeTab === 'posts' && (
           <div className="space-y-6">
             {myPosts.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-200 text-gray-400">
+              <div className="text-center py-12 bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] text-gray-400">
                 <p className="text-sm font-bold">No posts published yet</p>
                 <p className="text-xs mt-1">Share your first creative project to the community feed and earn +10 XP!</p>
               </div>
@@ -248,10 +248,10 @@ export default function ProfileView() {
                   <div
                     key={post.id}
                     onClick={() => setSelectedPost(selectedPost?.id === post.id ? null : post)}
-                    className={`bg-white rounded-2xl border overflow-hidden cursor-pointer transition-all duration-300 group flex flex-col ${
+                    className={`bg-white dark:bg-[#1D2430] rounded-2xl border overflow-hidden cursor-pointer transition-all duration-300 group flex flex-col ${
                       selectedPost?.id === post.id
                         ? 'ring-2 ring-[#E84020] border-[#E84020] shadow-lg scale-[1.02]'
-                        : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        : 'border-gray-200 dark:border-[#303846] hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                     }`}
                   >
                     <div className="aspect-[4/3] bg-slate-100 overflow-hidden relative">
@@ -277,11 +277,11 @@ export default function ProfileView() {
                     </div>
 
                     <div className="p-3 flex-1 flex flex-col justify-between">
-                      <h4 className="font-bold text-xs text-[#0D2C5B] line-clamp-1 group-hover:text-[#E84020] transition-colors">
+                      <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA] line-clamp-1 group-hover:text-[#E84020] transition-colors">
                         {post.caption.slice(0, 45)}
                       </h4>
-                      <div className="flex items-center justify-between text-[10px] text-gray-400 mt-2 pt-2 border-t border-gray-50">
-                        <span className="font-semibold text-gray-500">{post.category}</span>
+                      <div className="flex items-center justify-between text-[10px] text-gray-400 mt-2 pt-2 border-t border-gray-50 dark:border-[#303846]">
+                        <span className="font-semibold text-gray-500 dark:text-gray-400">{post.category}</span>
                         <span className="flex items-center gap-1 font-bold text-[#E84020]">
                           <Heart className="w-3 h-3 fill-[#E84020]" />
                           <span>{post.likes_count}</span>
@@ -295,17 +295,17 @@ export default function ProfileView() {
 
             {/* Click-to-view Details Section below grid */}
             {selectedPost && (
-              <div className="mt-8 p-6 bg-white rounded-3xl border border-gray-200 shadow-xl space-y-4 animate-fade-in" id="post-detail-view">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div className="mt-8 p-6 bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] shadow-xl space-y-4 animate-fade-in" id="post-detail-view">
+                <div className="flex items-center justify-between border-b border-gray-100 dark:border-[#303846] pb-4">
                   <div className="flex items-center gap-3">
                     <img
                       src={selectedPost.author?.avatar_url || currentMember?.avatar_url}
                       alt={selectedPost.author?.full_name || currentMember?.full_name}
-                      className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                      className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-[#303846]"
                     />
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-sm text-[#0D2C5B]">{selectedPost.author?.full_name || currentMember?.full_name}</h3>
+                        <h3 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">{selectedPost.author?.full_name || currentMember?.full_name}</h3>
                         <span className="px-2 py-0.5 bg-[#E84020]/10 text-[#E84020] text-[10px] font-bold rounded-full">
                           ⚡ {selectedPost.author?.total_xp || currentMember?.total_xp} XP
                         </span>
@@ -317,7 +317,7 @@ export default function ProfileView() {
                   </div>
                   <button
                     onClick={() => setSelectedPost(null)}
-                    className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+                    className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#171C24] text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer"
                     title="Close details"
                   >
                     <X className="w-5 h-5" />
@@ -372,7 +372,7 @@ export default function ProfileView() {
         {activeTab === 'portfolio' && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
             {myPortfolio.length === 0 ? (
-              <div className="col-span-full text-center py-12 bg-white rounded-2xl border border-gray-200 text-gray-400">
+              <div className="col-span-full text-center py-12 bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] text-gray-400">
                 <p className="text-sm font-bold">Portfolio Showcase Empty</p>
                 <p className="text-xs mt-1">
                   When you publish a post to the Feed and select &quot;Showcase&quot;, it automatically appears here!
@@ -380,7 +380,7 @@ export default function ProfileView() {
               </div>
             ) : (
               myPortfolio.map((proj) => (
-                <div key={proj.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
+                <div key={proj.id} className="bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
                   <div className="aspect-[4/3] bg-gray-100 overflow-hidden relative group">
                     <img src={proj.preview_url} alt={proj.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] font-bold bg-black/60 text-white backdrop-blur-sm">
@@ -388,9 +388,9 @@ export default function ProfileView() {
                     </span>
                   </div>
                   <div className="p-3 flex-1 flex flex-col justify-between">
-                    <h4 className="font-bold text-xs text-[#0D2C5B] line-clamp-1">{proj.title}</h4>
-                    <p className="text-[11px] text-gray-500 line-clamp-2 mt-1">{proj.description}</p>
-                    <div className="pt-2 mt-2 border-t border-gray-50 flex items-center justify-between text-[10px] text-gray-400">
+                    <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA] line-clamp-1">{proj.title}</h4>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 mt-1">{proj.description}</p>
+                    <div className="pt-2 mt-2 border-t border-gray-50 dark:border-[#303846] flex items-center justify-between text-[10px] text-gray-400">
                       <span>{new Date(proj.created_at).toLocaleDateString()}</span>
                       <span className="text-[#E84020] font-bold">TNCC Verified</span>
                     </div>
@@ -403,32 +403,32 @@ export default function ProfileView() {
 
         {activeTab === 'challenges' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="p-5 bg-white rounded-2xl border border-gray-200 shadow-sm space-y-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700">Participated</span>
-              <h4 className="font-bold text-sm text-[#0D2C5B]">Social Media Poster Design Challenge</h4>
-              <p className="text-xs text-gray-500">Entry recorded with +15 XP bonus. Results evaluating soon.</p>
+            <div className="p-5 bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] shadow-sm space-y-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-50 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300">Participated</span>
+              <h4 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">Social Media Poster Design Challenge</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Entry recorded with +15 XP bonus. Results evaluating soon.</p>
             </div>
-            <div className="p-5 bg-white rounded-2xl border border-gray-200 shadow-sm space-y-2">
+            <div className="p-5 bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] shadow-sm space-y-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E84020] text-white">2nd Place Winner 🥈</span>
-              <h4 className="font-bold text-sm text-[#0D2C5B]">Minimalist Coffee Brand Identity Challenge</h4>
-              <p className="text-xs text-gray-500">Won 2nd place and awarded +60 XP bonus points!</p>
+              <h4 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">Minimalist Coffee Brand Identity Challenge</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Won 2nd place and awarded +60 XP bonus points!</p>
             </div>
           </div>
         )}
 
         {activeTab === 'submissions' && (
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-gray-100 font-bold text-xs text-[#0D2C5B]">
+          <div className="bg-white dark:bg-[#1D2430] rounded-2xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-gray-100 dark:border-[#303846] font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">
               XP Audit Trail (Anti-Farming Transaction Log)
             </div>
-            <div className="divide-y divide-gray-100 text-xs">
+            <div className="divide-y divide-gray-100 dark:divide-[#303846] text-xs">
               {activeXPTransactions.length === 0 ? (
                 <div className="p-6 text-center text-gray-400">No XP transactions logged yet.</div>
               ) : (
                 activeXPTransactions.map((tx) => (
                   <div key={tx.id} className="p-4 flex items-center justify-between">
                     <div>
-                      <p className="font-bold text-gray-800">{tx.reason}</p>
+                      <p className="font-bold text-gray-800 dark:text-gray-200">{tx.reason}</p>
                       <p className="text-[10px] text-gray-400">{new Date(tx.created_at).toLocaleString()}</p>
                     </div>
                     <span className="px-3 py-1 bg-[#E84020]/10 text-[#E84020] font-extrabold rounded-full">
@@ -443,35 +443,35 @@ export default function ProfileView() {
 
         {activeTab === 'achievements' && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-5 bg-gradient-to-br from-[#FFF8EC] to-white rounded-2xl border border-[#F5A623] shadow-sm flex items-center gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#FFF8EC] to-white dark:from-[#1D2430] dark:to-[#171C24] rounded-2xl border border-[#F5A623] shadow-sm flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-[#F5A623] text-[#0D2C5B] flex items-center justify-center font-extrabold text-lg">
                 🥈
               </div>
               <div>
-                <h4 className="font-bold text-xs text-[#0D2C5B]">Silver Trophy</h4>
-                <p className="text-[11px] text-gray-500">2nd place in Coffee Branding</p>
+                <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">Silver Trophy</h4>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">2nd place in Coffee Branding</p>
                 <span className="text-[10px] font-bold text-[#E84020]">+60 XP</span>
               </div>
             </div>
 
-            <div className="p-5 bg-gradient-to-br from-[#E6F9FC] to-white rounded-2xl border border-[#00B5C8] shadow-sm flex items-center gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#E6F9FC] to-white dark:from-[#1D2430] dark:to-[#171C24] rounded-2xl border border-[#00B5C8] shadow-sm flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-[#00B5C8] text-white flex items-center justify-center font-extrabold text-lg">
                 🚀
               </div>
               <div>
-                <h4 className="font-bold text-xs text-[#0D2C5B]">Early Pioneer</h4>
-                <p className="text-[11px] text-gray-500">Founding Member of TNCC</p>
+                <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">Early Pioneer</h4>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Founding Member of TNCC</p>
                 <span className="text-[10px] font-bold text-[#00B5C8]">Verified</span>
               </div>
             </div>
 
-            <div className="p-5 bg-gradient-to-br from-[#FFF0ED] to-white rounded-2xl border border-[#E84020] shadow-sm flex items-center gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#FFF0ED] to-white dark:from-[#1D2430] dark:to-[#171C24] rounded-2xl border border-[#E84020] shadow-sm flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-[#E84020] text-white flex items-center justify-center font-extrabold text-lg">
                 ⚡
               </div>
               <div>
-                <h4 className="font-bold text-xs text-[#0D2C5B]">Active Creator</h4>
-                <p className="text-[11px] text-gray-500">Published verified works</p>
+                <h4 className="font-bold text-xs text-[#0D2C5B] dark:text-[#F5F7FA]">Active Creator</h4>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Published verified works</p>
                 <span className="text-[10px] font-bold text-[#E84020]">Active</span>
               </div>
             </div>

@@ -139,12 +139,12 @@ export default function ChallengeSubmissionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden animate-scale-up">
+      <div className="bg-white dark:bg-[#1D2430] w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 dark:border-[#303846] overflow-hidden animate-scale-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#303846]">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-sm text-[#0D2C5B]">
+              <h3 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">
                 {isUpdate ? 'Update Challenge Entry' : 'Submit Challenge Entry'}
               </h3>
               {!isUpdate && (
@@ -199,8 +199,8 @@ export default function ChallengeSubmissionModal({
                     onClick={() => setSubmissionType(opt.type)}
                     className={`flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
                       isSelected
-                        ? 'border-[#0D2C5B] bg-[#0D2C5B]/5 text-[#0D2C5B]'
-                        : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                        ? 'border-[#0D2C5B] dark:border-[#00B5C8] bg-[#0D2C5B]/5 dark:bg-[#00B5C8]/10 text-[#0D2C5B] dark:text-[#F5F7FA]'
+                        : 'border-gray-200 dark:border-[#303846] text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#171C24]'
                     }`}
                   >
                     <Icon className={`w-4 h-4 ${isSelected ? 'text-[#E84020]' : 'text-gray-400'}`} />
@@ -273,7 +273,7 @@ export default function ChallengeSubmissionModal({
             />
 
             {isUploading && (
-              <p className="text-[11px] text-[#0D2C5B] font-semibold mt-1 flex items-center gap-1">
+              <p className="text-[11px] text-[#0D2C5B] dark:text-[#F5F7FA] font-semibold mt-1 flex items-center gap-1">
                 <Loader2 className="w-3 h-3 animate-spin text-[#E84020]" />
                 Uploading artwork to Supabase Storage...
               </p>

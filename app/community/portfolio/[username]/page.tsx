@@ -26,7 +26,7 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
   if (!member) {
     return (
       <div className="text-center py-20 space-y-4">
-        <h2 className="text-xl font-bold text-[#0D2C5B]">Creator not found</h2>
+        <h2 className="text-xl font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">Creator not found</h2>
         <Link href="/community/portfolio" className="text-xs font-bold text-[#E84020] hover:underline">
           Return to Portfolio Showcase
         </Link>
@@ -49,8 +49,8 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
       </Link>
 
       {/* Profile Cover & Header */}
-      <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm">
-        <div className="h-44 sm:h-60 bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] relative overflow-hidden">
+      <div className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm">
+        <div className="h-44 sm:h-60 bg-gradient-to-r from-[#0D2C5B] to-[#1B3F7E] dark:from-[#171C24] dark:to-[#1D2430] relative overflow-hidden">
           <img
             src={member.cover_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'}
             alt="Cover"
@@ -73,7 +73,7 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
               <img
                 src={member.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                 alt={member.full_name}
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white shadow-xl bg-white shrink-0"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-4 border-white dark:border-[#1D2430] shadow-xl bg-white dark:bg-[#1D2430] shrink-0"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
                 }}
@@ -86,10 +86,10 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
                 <button
                   type="button"
                   onClick={() => toggleFollow(member.username)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5 active:scale-95 ${
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5 active:scale-95 cursor-pointer ${
                     isFollowing(member.username)
-                      ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-gray-200'
-                      : 'bg-[#0D2C5B] hover:bg-[#E84020] text-white'
+                      ? 'bg-gray-100 dark:bg-[#171C24] text-gray-700 dark:text-gray-200 hover:bg-red-50 hover:text-red-600 border border-gray-200 dark:border-[#303846]'
+                      : 'bg-[#0D2C5B] dark:bg-[#00B5C8] hover:bg-[#E84020] dark:hover:bg-[#00B5C8]/80 text-white dark:text-[#101318]'
                   }`}
                 >
                   <span>{isFollowing(member.username) ? 'Following' : '+ Follow'}</span>
@@ -99,36 +99,36 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
             </div>
           </div>
 
-          {/* Creator Information - 100% cleanly on White Card with optimal contrast */}
+          {/* Creator Information - cleanly styled with optimal contrast in both themes */}
           <div className="space-y-3">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] leading-tight">
                 {member.full_name}
               </h1>
-              <p className="text-xs sm:text-sm font-semibold text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">
                 @{member.username} · {member.location}
               </p>
             </div>
 
             <div className="flex items-center gap-3 text-xs">
               <div className="flex items-center gap-1">
-                <span className="font-extrabold text-[#0D2C5B] text-sm">
+                <span className="font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] text-sm">
                   {member.followers_count ?? 320}
                 </span>
-                <span className="text-gray-500 font-medium">Followers</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium">Followers</span>
               </div>
-              <span className="text-gray-300">·</span>
+              <span className="text-gray-300 dark:text-gray-600">·</span>
               <div className="flex items-center gap-1">
-                <span className="font-extrabold text-[#0D2C5B] text-sm">
+                <span className="font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] text-sm">
                   {member.following_count ?? 78}
                 </span>
-                <span className="text-gray-500 font-medium">Following</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium">Following</span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-1.5 pt-1">
               {member.skills?.map((skill, i) => (
-                <span key={i} className="text-xs font-semibold bg-[#F8F6F1] text-gray-700 px-3 py-1 rounded-lg border border-gray-200">
+                <span key={i} className="text-xs font-semibold bg-[#F8F6F1] dark:bg-[#171C24] text-gray-700 dark:text-gray-300 px-3 py-1 rounded-lg border border-gray-200 dark:border-[#303846]">
                   {skill}
                 </span>
               ))}
@@ -136,17 +136,17 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
           </div>
 
           {member.bio && (
-            <div className="pt-4 mt-5 border-t border-gray-100">
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed max-w-4xl">
+            <div className="pt-4 mt-5 border-t border-gray-100 dark:border-[#303846]">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl">
                 {member.bio}
               </p>
             </div>
           )}
 
-          {/* Connected Creator Socials & Portfolios (profile keela) */}
-          <div className="pt-4 mt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F8F6F1]/70 p-4 rounded-2xl border border-gray-100">
+          {/* Connected Creator Socials & Portfolios */}
+          <div className="pt-4 mt-5 border-t border-gray-100 dark:border-[#303846] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F8F6F1]/70 dark:bg-[#171C24] p-4 rounded-2xl border border-gray-100 dark:border-[#303846]">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#0D2C5B] uppercase tracking-wide">Creator Social Profiles:</span>
+              <span className="text-xs font-bold text-[#0D2C5B] dark:text-[#F5F7FA] uppercase tracking-wide">Creator Social Profiles:</span>
               <span className="text-xs text-gray-400 hidden sm:inline">· Verified Handles</span>
             </div>
             <SocialLinks member={member} size="md" showLabels={true} />
@@ -157,7 +157,7 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
       {/* Projects Showcase Header */}
       <div className="flex items-center justify-between pt-2">
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-[#0D2C5B]">Portfolio Gallery</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-[#0D2C5B] dark:text-[#F5F7FA]">Portfolio Gallery</h2>
           <p className="text-xs text-gray-400">
             Automatically synced from approved showcase posts & works ({projects.length} {projects.length === 1 ? 'project' : 'projects'})
           </p>
@@ -166,9 +166,9 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
 
       {/* Projects Gallery Grid */}
       {projects.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 p-8 text-gray-400">
+        <div className="text-center py-16 bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-8 text-gray-400">
           <FolderKanban className="w-12 h-12 mx-auto mb-2 opacity-50" />
-          <p className="font-bold text-sm">No showcase projects published yet</p>
+          <p className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">No showcase projects published yet</p>
           <p className="text-xs mt-1">This creator hasn&apos;t marked any feed posts as showcase yet.</p>
         </div>
       ) : (
@@ -176,9 +176,9 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all group flex flex-col h-full"
+              className="bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] overflow-hidden shadow-sm hover:shadow-lg transition-all group flex flex-col h-full"
             >
-              <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative shrink-0">
+              <div className="aspect-[16/10] bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0">
                 <img
                   src={project.preview_url}
                   alt={project.title}
@@ -194,15 +194,15 @@ export default function CreatorPortfolioPage({ params }: { params: Promise<{ use
 
               <div className="p-5 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-bold text-sm text-[#0D2C5B] leading-snug group-hover:text-[#E84020] transition-colors line-clamp-1 min-h-[1.25rem]">
+                  <h3 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA] leading-snug group-hover:text-[#E84020] dark:group-hover:text-[#00B5C8] transition-colors line-clamp-1 min-h-[1.25rem]">
                     {project.title}
                   </h3>
-                  <p className="text-xs text-gray-600 line-clamp-2 mt-2 leading-relaxed min-h-[2.5rem]">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-2 leading-relaxed min-h-[2.5rem]">
                     {project.description || 'Creative showcase work published to the TNCC Community.'}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
+                <div className="mt-4 pt-3 border-t border-gray-100 dark:border-[#303846] flex items-center justify-between text-[11px] text-gray-400">
                   <span>{new Date(project.created_at).toLocaleDateString()}</span>
                   <span className="text-[#E84020] font-bold">TNCC Showcase</span>
                 </div>

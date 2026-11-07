@@ -50,13 +50,13 @@ export default function PortfolioDirectoryPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#0D2C5B]/10 text-[#0D2C5B] border border-[#0D2C5B]/20">
+          <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-[#00B5C8]/10 text-[#00B5C8] border border-[#00B5C8]/20">
             CREATOR SHOWCASE DIRECTORY
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C5B] dark:text-[#F5F7FA] tracking-tight mt-1">
             Tamil Nadu Creative Portfolios
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             Discover verified creators from Chennai to Kanyakumari. Top XP performers are featured first.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function PortfolioDirectoryPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search creators, skills, locations..."
-            className="w-full pl-10 pr-4 py-2 bg-white rounded-xl border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-[#0D2C5B] shadow-sm"
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-[#1D2430] rounded-xl border border-gray-200 dark:border-[#303846] text-xs sm:text-sm text-[#0D2C5B] dark:text-[#F5F7FA] placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-[#0D2C5B] dark:focus:border-[#00B5C8] shadow-sm transition-colors"
           />
         </div>
       </div>
@@ -82,10 +82,10 @@ export default function PortfolioDirectoryPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 isActive
-                  ? 'bg-[#0D2C5B] text-white shadow-md'
-                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  ? 'bg-[#0D2C5B] dark:bg-[#00B5C8] text-white dark:text-[#101318] shadow-md'
+                  : 'bg-white dark:bg-[#1D2430] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#252E3D] border border-gray-200 dark:border-[#303846]'
               }`}
             >
               {cat}
@@ -96,10 +96,10 @@ export default function PortfolioDirectoryPage() {
 
       {/* Creators Grid (Behance Style) */}
       {filteredMembers.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 p-8">
-          <FolderKanban className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <h3 className="font-bold text-sm text-[#0D2C5B]">No creators matched</h3>
-          <p className="text-xs text-gray-500 mt-1">Try switching creative categories or clear your search.</p>
+        <div className="text-center py-16 bg-white dark:bg-[#1D2430] rounded-3xl border border-gray-200 dark:border-[#303846] p-8">
+          <FolderKanban className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+          <h3 className="font-bold text-sm text-[#0D2C5B] dark:text-[#F5F7FA]">No creators matched</h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Try switching creative categories or clear your search.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
