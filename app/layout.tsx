@@ -58,6 +58,7 @@ export const metadata: Metadata = {
 
 import { UserProvider } from "@/lib/user-context";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import LogoPreloader from "@/components/ui/LogoPreloader";
 
 export default function RootLayout({
   children,
@@ -90,6 +91,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full antialiased bg-white dark:bg-[#101318] text-[#0D2C5B] dark:text-[#F5F7FA] transition-colors duration-200" style={{ fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)" }}>
         <ThemeProvider>
+          <LogoPreloader />
           <UserProvider>
             {children}
           </UserProvider>

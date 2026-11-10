@@ -12,6 +12,11 @@ const Hero3DLogo = dynamic(() => import('./Hero3DLogo'), {
   loading: () => <div className="w-full h-full" />,
 });
 
+// Dynamic import for client-only WebGL fluid wave background
+const FloatingAnimation = dynamic(() => import('@/components/ui/FloatingAnimation'), {
+  ssr: false,
+});
+
 // Floating card component
 function FloatingCard({ children, style, delay = 0 }: { children: React.ReactNode; style?: React.CSSProperties; delay?: number }) {
   return (
@@ -345,6 +350,9 @@ export default function Hero() {
     >
       {/* Background grid */}
       <div className="bg-grid" style={{ position: 'absolute', inset: 0, opacity: 0.6 }} aria-hidden="true" />
+
+      {/* TNCC Logo Colors Fluid Wave Background */}
+      <FloatingAnimation />
 
       {/* TN Silhouette */}
       <TNSilhouette />
